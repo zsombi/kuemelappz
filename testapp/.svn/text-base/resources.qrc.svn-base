@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="View1.qml">qml/testapp/View1.qml</file>
+        <file alias="View2.qml">qml/testapp/View2.qml</file>
+        <file alias="View3.qml">qml/testapp/View3.qml</file>
+        <file alias="View4.qml">qml/testapp/View4.qml</file>
+        <file alias="Back">qml/testapp/back.png</file>
+        <file alias="main.qml">qml/testapp/main.qml</file>
+    </qresource>
+</RCC>

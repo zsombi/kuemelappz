@@ -1,0 +1,33 @@
+plugin widgetset
+
+#stylesets
+IndicatorStyle 1.0 IndicatorStyle.qml
+StatusBarStyle 1.0 StatusBarStyle.qml
+CornerFramerStyle 1.0 CornerFramerStyle.qml
+DockStyle 1.0 DockStyle.qml
+ToolButtonStyle 1.0 ToolButtonStyle.qml
+TextEditStyle 1.0 TextEditStyle.qml
+LabelStyle 1.0 LabelStyle.qml
+ScrollBarStyle 1.0 ScrollBarStyle.qml
+ButtonStyle 1.0 ButtonStyle.qml
+
+ButtonControl 1.0 ButtonControl.qml
+
+ApplicationWindow 1.0 ApplicationWindow.qml
+Page 1.0 Page.qml
+Dock 1.0 Dock.qml
+Label 1.0 Label.qml
+Button 1.0 Button.qml
+ToolButton 1.0 ToolButton.qml
+PageTab 1.0 PageTab.qml
+PageStack 1.0 PageStack.qml
+FaderItem 1.0 FaderItem.qml
+MenuPanel 1.0 MenuPanel.qml
+LineEdit  1.0 LineEdit.qml
+ScrollBar 1.0 ScrollBar.qml
+
+Scrollable 1.0 Scrollable.qml
+BusyIndicator 1.0 BusyIndicator.qml
+
+# Utilities
+CornerFramer 1.0 CornerFramer.qml

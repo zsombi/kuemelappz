@@ -1,0 +1,38 @@
+<RCC>
+    <qresource prefix="/default">
+        <file alias="dock-background">images/bkgd_share.png</file>
+        <file alias="dark-texture-background">images/DarkerTexturedBackgroundColor.png</file>
+        <file alias="navi-back-pressed">images/UINavigationBarBlackBackPressed.png</file>
+        <file alias="navi-back">images/UINavigationBarBlackOpaqueBack.png</file>
+        <file alias="navi-button">images/UINavigationBarMiniBlackTranslucentButton.png</file>
+        <file alias="navi-button-pressed">images/UINavigationBarMiniBlackTranslucentButtonPressed.png</file>
+        <file alias="pushbutton-normal">images/PushButtonNormal.png</file>
+        <file alias="pushbutton-pressed">images/PushButtonPressed.png</file>
+        <file alias="gradient">images/gradient.png</file>
+        <file alias="tool-button">images/toolbutton.png</file>
+        <file alias="check-mark">images/check.png</file>
+        <file alias="quit">images/quit.png</file>
+        <file alias="tab">images/tab.png</file>
+        <file alias="clear">images/clear.png</file>
+        <file alias="busy">images/busy.png</file>
+        <file alias="appwindow-corner-bl">images/appwindow-corner-bottom-left.png</file>
+        <file alias="appwindow-corner-br">images/appwindow-corner-bottom-right.png</file>
+        <file alias="appwindow-corner-tl">images/appwindow-corner-top-left.png</file>
+        <file alias="appwindow-corner-tr">images/appwindow-corner-top-right.png</file>
+        <file alias="toolbutton-normal">images/TSAToolbarButton_N@2x.png</file>
+        <file alias="toolbutton-pressed">images/TSAToolbarButton_P@2x.png</file>
+        <file>images/groupframe_bottom_left.png</file>
+        <file>images/groupframe_bottom_right.png</file>
+        <file>images/groupframe_bottom_stretch.png</file>
+        <file>images/groupframe_left_stretch.png</file>
+        <file>images/groupframe_right_stretch.png</file>
+        <file>images/groupframe_topleft.png</file>
+        <file>images/groupframe_topright.png</file>
+        <file>images/groupframe_top_stretch.png</file>
+        <file alias="search-editline-background">images/SearchBackground.png</file>
+        <file alias="editline-background">images/lineedit-background.png</file>
+        <file alias="page-background-diagonal">images/diagonal_bg.png</file>
+        <file alias="page-background-shape">images/Share Popup Background.png</file>
+        <file alias="keypad">images/keypad_bkgr@2x.png</file>
+    </qresource>
+</RCC>
