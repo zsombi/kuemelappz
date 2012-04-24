@@ -1,5 +1,12 @@
 .pragma library
 
+var pgStack = [];
+
+function getPgStack()
+{
+    return pgStack
+}
+
 function namedParent(obj, name)
 {
     console.debug("obj: " + obj)

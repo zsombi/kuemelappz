@@ -5,11 +5,9 @@ import "." 1.0
 StyledItem {
     id: page
     property string title
-    property bool active: false
     property int status: WidgetSet.PageInactive
-    property url backgroundImage: UI.pageBackgroundImage
-    property color backgroundColor
-    //property PageStack pageStack
+    property string backgroundStyle
+    property PageStack pageStack
     default property alias content: body.data
     signal opened()
     signal closed()
@@ -24,16 +22,11 @@ StyledItem {
             closed()
     }
 
-    Rectangle {
-        z: -1
+    Background {
+        styleName: backgroundStyle
         anchors.fill: parent
-        clip: true
-        color: (!page.backgroundImage && (page.backgroundImage == "")) ? page.backgroundColor : "transparent"
-        Image {
-            anchors.fill: parent
-            source: page.backgroundImage
-        }
     }
+
     Item {
         id: body
         focus: true

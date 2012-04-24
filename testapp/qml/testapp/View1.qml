@@ -15,6 +15,11 @@ PageStack {
             height: pgStack.width
             Column {
                 spacing: 10
+                Label {
+                    color: "white"
+                    text: "Page #" + pgStack.depth
+                    font.pixelSize: THEME.textSizeLarge
+                }
                 Button {
                     text: "Back"
                     onClicked: pgStack.back()
@@ -27,7 +32,7 @@ PageStack {
         }
     }
 
-    Component.onCompleted: pgStack.push("qrc:/View3.qml")
+    Component.onCompleted: pgStack.push(pg1)//"qrc:/View3.qml")
 }
 /*
 Page {

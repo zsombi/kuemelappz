@@ -1,7 +1,9 @@
 plugin widgetset
 
 #stylesets
-IndicatorStyle 1.0 IndicatorStyle.qml
+
+ApplicationWindowStyle 1.0 ApplicationWindowStyle.qml
+BackgroundStyle 1.0 BackgroundStyle.qml
 StatusBarStyle 1.0 StatusBarStyle.qml
 CornerFramerStyle 1.0 CornerFramerStyle.qml
 DockStyle 1.0 DockStyle.qml
@@ -14,6 +16,7 @@ ButtonStyle 1.0 ButtonStyle.qml
 ButtonControl 1.0 ButtonControl.qml
 
 ApplicationWindow 1.0 ApplicationWindow.qml
+Background 1.0 Background.qml
 Page 1.0 Page.qml
 Dock 1.0 Dock.qml
 Label 1.0 Label.qml

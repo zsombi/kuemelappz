@@ -4,15 +4,15 @@ import "." 1.0
 
 /*
   Default theme (and in general a theme) definition file. The root object properties are accessible
-  in the application through UI variable, e.g. UI.appRotationDuration, etc
+  in the application through THEME variable, e.g. THEME.textSizeSmall, etc
   */
 
 Theme {
     name: "default"
     resource: "default_resources"
     // private properties
-    property int appRotationDuration: 500
-    property int pageFadingDuration: 250
+    property int pageFadingDuration: 800
+    property int pageFadingEasing: Easing.InOutExpo
     property int textSizeSmall: 12
     property int textSizeNormal: 16
     property int textSizeLarge: 22
@@ -20,9 +20,25 @@ Theme {
     property int paddingMedium: 8
     property int paddingLarge: 12
     property string defaultFont: "Nokia Sans"
-    property url appBackgroundImage: "qrc:/default/page-background-shape"
     property url pageBackgroundImage//: "qrc:/default/page-background-diagonal"
     // theme styles
+    BackgroundStyle {
+        name: "Header"
+        color: "#EA650A"
+    }
+    BackgroundStyle {
+        name: "AppBackground"
+        image: "qrc:/default/page-background-shape"
+        fillMode: Image.Tile
+    }
+
+    ApplicationWindowStyle {
+        backgroundStyle: "AppBackground"
+        headerStyle: "Header"
+        rotationDuration: 500
+        rotationEasing: Easing.InOutSine
+    }
+
     IndicatorStyle {
         busyIndicatorUrl: "qrc:/default/busy"
     }

@@ -13,7 +13,7 @@ Item {
         objectName: "Scrollable"
         id: scrollable
         anchors.fill: parent
-        anchors.margins: UI.paddingMedium
+        anchors.margins: THEME.paddingMedium
 
         flickableDirection: Flickable.VerticalFlick
         interactive: alwaysScroll || (enableScrolling && (pageContent.height > height))

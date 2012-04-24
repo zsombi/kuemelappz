@@ -30,13 +30,17 @@ Item {
                 return
             console.debug("PageTab.setCurrentPage - " + current + ", len - " + stack.children.length)
             if (prevPage) {
-                if (prevPage.hasOwnProperty("status"))
+                if (prevPage.hasOwnProperty("status")) {
+                    prevPage.status = WidgetSet.PageDeactivating
                     prevPage.status = WidgetSet.PageInactive
+                }
                 prevPage.visible = false
             }
             prevPage = stack.children[current]
-            if (prevPage.hasOwnProperty("status"))
+            if (prevPage.hasOwnProperty("status")) {
+                prevPage.status = WidgetSet.PageActivating
                 prevPage.status = WidgetSet.PageActive
+            }
             prevPage.visible = true
         }
     }

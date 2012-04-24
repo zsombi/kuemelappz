@@ -5,7 +5,7 @@ ApplicationWindow {
     id: app
     width: 640
     height: 480
-    header.visible: false
+    //header.visible: false
     objectName: "AppWin"
 
     PageTab {
@@ -28,7 +28,7 @@ ApplicationWindow {
                 spacing: 10
                 Label {
                     text: "Page 2"
-                    font.pixelSize: UI.textSizeLarge
+                    font.pixelSize: THEME.textSizeLarge
                 }
                 Button {
                     text: "Quit"

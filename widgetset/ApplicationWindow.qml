@@ -19,7 +19,8 @@ Item {
 
     ApplicationItem {
         id: app
-        //rotation: 0
+        styleName: "ApplicationWindow"
+
         anchors.centerIn: parent
         StatusBar {
             id: statusBarItem
@@ -29,11 +30,11 @@ Item {
             height: visible ? 13 : 0
         }
 
-        Image {
+        Background {
+            id: background
             anchors.fill: parent
             anchors.topMargin: statusBarItem.height
-            source: UI.appBackgroundImage
-            fillMode: Image.Tile
+            styleName: app.style.backgroundStyle
         }
 
         CornerFramer {
@@ -43,13 +44,13 @@ Item {
             z: Number.MAX_VALUE
         }
 
-        Rectangle {
+        Background {
             id: pageHeaderItem
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.top: statusBarItem.bottom
             height: visible ? 55 : 0
-            color: "#EA650A"
+            styleName: app.style.headerStyle
         }
 
         Item {
@@ -62,8 +63,8 @@ Item {
         Behavior on rotation {
             RotationAnimation {
                 direction: RotationAnimation.Shortest
-                duration: UI.appRotationDuration
-                easing.type: Easing.InOutSine
+                duration: app.style.rotationDuration
+                easing.type: app.style.rotationEasing
             }
         }
 

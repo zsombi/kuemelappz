@@ -81,7 +81,7 @@ void StyleManager::activateTheme(const QString &theme)
     if (!res.isEmpty() && (res != DEF_THEME))
         QResource::registerResource(res, ":/theme");
 
-    rootContext->setContextProperty("UI", active);
+    rootContext->setContextProperty("THEME", active);
     emit themeChanged();
 }
 

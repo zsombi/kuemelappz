@@ -25,7 +25,7 @@ Page {
             }
             Label {
                 text: "Page 1"
-                font.pixelSize: UI.textSizeLarge
+                font.pixelSize: THEME.textSizeLarge
                 color: "white"
             }
             Button {

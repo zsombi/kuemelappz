@@ -44,7 +44,6 @@ OTHER_FILES = qmldir \
     Button.qml \
     ToolButton.qml \
     PageTab.qml \
-    PageStack.js \
     PageStack.qml \
     qtc_packaging/debian_harmattan/rules \
     qtc_packaging/debian_harmattan/README \
@@ -72,7 +71,10 @@ OTHER_FILES = qmldir \
     ScrollBar.qml \
     Scrollable.qml \
     InputPanel.qml \
-    Utility.js
+    Utility.js \
+    ApplicationWindowStyle.qml \
+    BackgroundStyle.qml \
+    Background.qml
 
 !equals(_PRO_FILE_PWD_, $$OUT_PWD) {
     copy_qmldir.target = $$OUT_PWD/qmldir
@@ -91,7 +93,6 @@ QML_FILES = ApplicationWindow.qml \
     ToolButton.qml \
     PageTab.qml \
     PageStack.qml \
-    PageStack.js \
     StatusBar.qml \
     BusyIndicator.qml \
     FaderItem.qml \
@@ -111,7 +112,10 @@ QML_FILES = ApplicationWindow.qml \
     ScrollBar.qml \
     Scrollable.qml \
     InputPanel.qml \
-    Utility.js
+    Utility.js \
+    ApplicationWindowStyle.qml \
+    BackgroundStyle.qml \
+    Background.qml
 
 qmldir.files = qmldir $$QML_FILES
 symbian {
