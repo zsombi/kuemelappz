@@ -1,13 +1,9 @@
-<<<<<<< .mine
 /**
   PageStack - element that makes possible to navigate between pages. The visited
   pages are kept in a stak in memory and are discarded once they are navigated backwards
   out.
   */
 import QtQuick 1.0
-=======
-import QtQuick 1.0
->>>>>>> .r146
 import "." 1.0
 import "Utility.js" as Utils
 
@@ -35,35 +31,6 @@ Item {
     function push(page, properties) {
         return privates.push(page, properties)
     }
-    property int pageFadingDuration: THEME.pageFadingDuration
-    property int pageFadingEasing: THEME.pageFadingEasing
-
-<<<<<<< .mine
-    function pop(page) {
-        return privates.pop(page)
-    }
-    function back()
-    {
-        var pageStack = Utils.getPgStack()
-        if (pageStack.length > 1)
-            return pop()
-    }
-=======
->>>>>>> .r146
-
-<<<<<<< .mine
-    function clear() {
-        return privates.clear();
-    }
-
-    /**
-      Privates
-      */
-
-=======
-    function push(page, properties) {
-        return privates.push(page, properties)
-    }
 
     function pop(page) {
         return privates.pop(page)
@@ -83,7 +50,6 @@ Item {
       Privates
       */
 
->>>>>>> .r146
     QtObject {
         id: privates
         property int ongoingTransitionCount: 0
@@ -249,7 +215,7 @@ Item {
                 state = "rightEdge";
                 destroyUponExit = true;
             }
-
+            
             // Called when a transition has started.
             function transitionStarted() {
                 privates.ongoingTransitionCount++;
@@ -257,7 +223,7 @@ Item {
                     privates.setPageStatus(page, (state == "") ? WidgetSet.PageActivating : WidgetSet.PageDeactivating);
                 }
             }
-
+            
             // Called when a transition has ended.
             function transitionEnded() {
                 if (state != "") {
