@@ -1,9 +1,14 @@
+/**
+  Page content scroller.
+  */
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 import "." 1.0
 
 Item {
+    // enable or disable content scrolling
     property bool enableScrolling: true
+    // enable automatic scroll
     property bool alwaysScroll: false
     default property alias content: pageContent.data
     clip: true

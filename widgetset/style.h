@@ -9,11 +9,11 @@ class Style : public QObject
     Q_OBJECT
 
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
-    Q_PROPERTY(Set set READ setType WRITE setSetType NOTIFY setChanged)
+    Q_PROPERTY(StyleType type READ type WRITE setType NOTIFY typeChanged)
 
-    Q_ENUMS(Set)
+    Q_ENUMS(StyleType)
 public:
-    enum Set {
+    enum StyleType {
         Normal = 1,     // normal style
         Pressed,        // pressed style
         Dimmed,         // dimmed (disabled) style
@@ -25,27 +25,25 @@ public:
     Style(QObject *parent = 0);
     ~Style();
 
-    void updateStyle();
-
     QString name() const;
     void setName(const QString &name);
-    Set setType() const;
-    void setSetType(Set set);
+    StyleType type() const;
+    void setType(StyleType type);
     
 signals:
 
     void styleChanged();
     void nameChanged();
-    void setChanged();
+    void typeChanged();
     
 public slots:
     
 private:
     QString m_name;
-    Set m_set;
+    StyleType m_type;
 };
 
 QML_DECLARE_TYPE(Style)
-QML_DECLARE_TYPE(Style::Set)
+QML_DECLARE_TYPE(Style::StyleType)
 
 #endif // STYLE_H

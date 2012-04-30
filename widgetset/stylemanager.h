@@ -28,6 +28,7 @@ signals:
     
 public slots:
     void activateTheme(const QString &theme);
+
 private:
 
     QDeclarativeContext *rootContext;

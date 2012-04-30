@@ -11,8 +11,8 @@ class StyledItem : public QDeclarativeItem
     Q_DISABLE_COPY(StyledItem)
     // style properties
     Q_PROPERTY(QString styleName READ styleName WRITE setStyleName NOTIFY styleNameChanged)
-    Q_PROPERTY(Style* style READ style NOTIFY styleChanged)
-    Q_PROPERTY(Style::Set currentStyleSet READ currentStyleSet WRITE setCurrentStyleSet NOTIFY styleChanged)
+    Q_PROPERTY(Style::StyleType styleType READ styleType WRITE setStyleType NOTIFY styleChanged FINAL)
+    Q_PROPERTY(Style* style READ style NOTIFY styleChanged FINAL)
     Q_PROPERTY(QDeclarativeListProperty<Style> localStyles READ localStyles)
     // controlListItem - layout element holding StyledItem derivates; for key focus order handling
     Q_PROPERTY(QDeclarativeItem* controlListItem READ controlListItem WRITE setControlListItem NOTIFY controlListItemChanged)
@@ -24,18 +24,14 @@ public:
 signals:
     void styleChanged();
     void styleNameChanged();
-    void themeTypeChanged();
-    void highlightedChanged();
-    void pressedChanged();
-
     void controlListItemChanged();
 
 protected: // properties
     void keyPressEvent(QKeyEvent *event);
 
     Style *style() const;
-    Style::Set currentStyleSet() const;
-    void setCurrentStyleSet(Style::Set set);
+    Style::StyleType styleType() const;
+    void setStyleType(Style::StyleType type);
     QDeclarativeListProperty<Style> localStyles();
     QString styleName() const;
     void setStyleName(const QString &val);
@@ -49,7 +45,6 @@ private:
 
     Q_PRIVATE_SLOT(d_func(), void _q_handleFocusChange(bool))
     Q_PRIVATE_SLOT(d_func(), void _q_updateKeyOrder())
-    Q_PRIVATE_SLOT(d_func(), void _q_activateTheme())
     Q_PRIVATE_SLOT(d_func(), void _q_activateStyle())
     Q_PRIVATE_SLOT(d_func(), void _q_updateParent())
 };

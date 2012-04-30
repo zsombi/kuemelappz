@@ -11,7 +11,7 @@ public:
     void _q_uncheckPrev(int checkId);
     void _q_updateParent();
     void _q_updateGroupItems();
-    void calculateBodySize();
+    void calculateItemSize();
     void handleRadio(QObject *item);
 
     void addItem(QObject *item, int checkId);
@@ -24,12 +24,12 @@ public:
     QObject *prevItem;
     QObject *activeItem;
     QDeclarativeItem *layout;
-    CheckGroup::BodyType bodyType;
+    Qt::Orientation orientation;
     int activeItemId;
     bool m_autoId;
     int itemSize;
     int itemSpacing;
-    CheckGroup::BodyFit bodyFit;
+    bool bodyFit;
     int lastId;
 };
 

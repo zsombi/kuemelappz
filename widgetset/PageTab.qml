@@ -1,3 +1,12 @@
+/**
+  PageTab - tabbed page stack.
+
+  All the pages handled by the tab are created upon application initialization.
+  Use Loader to delay page initialization if needed.
+
+  PageTab does not provide any transition effect when navigating between pages.
+
+  */
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 import "." 1.0
@@ -5,7 +14,9 @@ import "." 1.0
 Item {
     id: pageTab
 
-    default property alias content: stack.children
+    //page content
+    default property alias content: stack.data
+    // tab alignment
     property variant tabAlign: Qt.AlignTop
 
     property int current: -1
@@ -51,7 +62,7 @@ Item {
         width: parent.width
         anchors.top: (tabAlign == Qt.AlignTop) ? parent.top : undefined
         anchors.bottom: (tabAlign == Qt.AlignBottom) ? parent.bottom : undefined
-        contentFit: CheckGroup.Custom
+        resizeChildrenToDock: true
         onActiveToolIdChanged: pageTab.current = activeToolId
 
         Repeater {
@@ -61,6 +72,8 @@ Item {
                 checkable: true
                 buttonId: index
                 width: pageTab.width / stack.children.length;
+                image: (stack.children[index].hasOwnProperty("image")) ? stack.children[index].image : ""
+                imageActive: (stack.children[index].hasOwnProperty("imageActive")) ? stack.children[index].imageActive : ""
                 text: (stack.children[index].hasOwnProperty("title")) ? stack.children[index].title : ""
                 checked: pageTab.current == index
             }

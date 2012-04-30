@@ -1,3 +1,39 @@
+/**
+  CheckGroup - element grouping radion buttons.
+
+  Properties:
+
+    property autoId: bool
+        Specifies whether CheckGroup should give identifiers to radio items or not.
+
+    proeprty resizeChildrenToGroup: bool
+        Specifies whether group should resize each children element to fill the
+        group or not.
+
+    property orientation: Qt::Orientation
+        Specifies the group children orientation, the default is horizontal.
+
+    property itemSize: int
+        Specifies the item size. The value is considered when resizeChildrenToGroup
+        is true.
+
+    property activeId: int
+        Specifies the active radio component's ID.
+
+    property activeItem: Item read-only
+        Specifies the active radio component.
+
+    default property groupBody: Item
+        Default property holding the group's body component.
+
+  Slots:
+    addGroupItem(item Item)
+        Adds a styled item to the group if the item is a radio component.
+
+    adjustLayout()
+        The method recalculates item size and adjusts the layout.
+
+  */
 #include "checkgroup.h"
 #include "checkgroup_p.h"
 #include "styleditem.h"
@@ -16,11 +52,11 @@ CheckGroupPrivate::CheckGroupPrivate(CheckGroup *qq) :
     prevItem(0),
     activeItem(0),
     layout(0),
-    bodyType(CheckGroup::None),
+    orientation(Qt::Horizontal),
     activeItemId(-1),
     m_autoId(false),
     itemSize(0), itemSpacing(0),
-    bodyFit(CheckGroup::Default),
+    bodyFit(false),
     lastId(-1)
 {
     q_ptr->connect(signalMap, SIGNAL(mapped(int)), SLOT(_q_uncheckPrev(int)));
@@ -46,30 +82,23 @@ void CheckGroupPrivate::_q_updateParent()
 
 void CheckGroupPrivate::_q_updateGroupItems()
 {
-#ifdef TRACE_GROUP
-    qDebug() << __FUNCTION__;
-#endif
     if (!layout)
         return;
-    calculateBodySize();
+    calculateItemSize();
     QList<QGraphicsItem*> children = layout->childItems();
     int childCount = children.length();
     int i = 0, offs = 0;
     foreach (QGraphicsItem *child, children) {
         StyledItem *uiItem = qobject_cast<StyledItem*>(child);
-#ifdef TRACE_GROUP
-        qDebug() << "index:" << i++ << ", count:" << childCount
-                 << uiItem;
-#endif
         if (uiItem) {
             i++;
             if (itemSize > 0) {
-                switch (bodyType) {
-                case CheckGroup::Horizontal:
+                switch (orientation) {
+                case Qt::Horizontal:
                     QDeclarativeProperty::write(uiItem, "width", itemSize);
                     QDeclarativeProperty::write(uiItem, "x", offs);
                     break;
-                case CheckGroup::Vertical:
+                case Qt::Vertical:
                     QDeclarativeProperty::write(uiItem, "height", itemSize);
                     QDeclarativeProperty::write(uiItem, "y", offs);
                     break;
@@ -84,30 +113,23 @@ void CheckGroupPrivate::_q_updateGroupItems()
     }
 }
 
-void CheckGroupPrivate::calculateBodySize()
+void CheckGroupPrivate::calculateItemSize()
 {
-    if (bodyFit != CheckGroup::FitToGroup)
-        return;
-    if (!layout)
+    if (!bodyFit || !layout)
         return;
 
-    // Row, Column or Flow are all enumerated as child items, also thers may ->
-    // these need to be excluded
-    int items = 0;
-    foreach (QGraphicsItem *child, layout->childItems()) {
-        if (qobject_cast<StyledItem*>(child))
-            items++;
-    }
-    if (!items)
+    // calculate element sizes so they fit to the group
+    QList<StyledItem*> items = layout->findChildren<StyledItem*>();
+    if (items.isEmpty())
         return;
 
     Q_Q(CheckGroup);
-    switch (bodyType) {
-    case CheckGroup::Horizontal:
-        itemSize = q->width() / items;
+    switch (orientation) {
+    case Qt::Horizontal:
+        itemSize = q->width() / items.count();
         break;
-    case CheckGroup::Vertical:
-        itemSize = q->height() / items;
+    case Qt::Vertical:
+        itemSize = q->height() / items.count();
         break;
     default:
         break;
@@ -123,37 +145,18 @@ void CheckGroupPrivate::handleRadio(QObject *item)
     if (!item || (item && !item->property("checked").isValid()))
         return;
     if (item->property("checked").toBool()) {
-#ifdef TRACE_GROUP
-        qDebug() << "active:: " << item;
-#endif
         // activation
         activeItem = item;
         activeItemId = item->property("buttonId").toInt();
-#ifdef TRACE_GROUP
-        qDebug() << "Activate control ID" << activeItemId;
-#endif
         if (activeItem && activeItem->property(RADIO_ITEM).isValid()) {
             if (prevItem && (prevItem != activeItem)) {
-#ifdef TRACE_GROUP
-                qDebug() << "START Uncheck prev::" << prevItem;
-#endif
                 prevItem->setProperty("checked", QVariant(false));
-#ifdef TRACE_GROUP
-                qDebug() << "END Uncheck prev:: " << prevItem;
-#endif
             }
-#ifdef TRACE_GROUP
-            else
-                qDebug() << "NO PREV ACTIVE ITEM";
-#endif
             prevItem = activeItem;
         }
         emit q->activeItemChanged();
     } else {
         // deactivation, reset focused property
-#ifdef TRACE_GROUP
-        qDebug() << "deactivate " << item;
-#endif
         if (item->metaObject()->indexOfProperty("focused"))
             item->setProperty("focused", QVariant(false));
     }
@@ -201,7 +204,7 @@ void CheckGroup::componentComplete()
     QDeclarativeItem::componentComplete();
 }
 
-void CheckGroup::updateGroupItem(QObject *item)
+void CheckGroup::addGroupItem(QObject *item)
 {
     if (!item)
         return;
@@ -237,7 +240,7 @@ void CheckGroup::updateGroupItem(QObject *item)
 void CheckGroup::adjustLayout()
 {
     Q_D(CheckGroup);
-    d->calculateBodySize();
+    d->calculateItemSize();
     d->_q_updateGroupItems();
 }
 
@@ -265,7 +268,7 @@ int CheckGroup::itemSize() const
 void CheckGroup::setItemSize(int size)
 {
     Q_D(CheckGroup);
-    if ((size != d->itemSize) && (d->bodyFit != FitToGroup)) {
+    if ((size != d->itemSize) && d->bodyFit) {
         d->itemSize = size;
         emit itemSizeChanged();
         if (d->itemSize)
@@ -317,35 +320,35 @@ void CheckGroup::setLayout(QDeclarativeItem *item)
     }
 }
 
-CheckGroup::BodyType CheckGroup::bodyType() const
+Qt::Orientation CheckGroup::orientation() const
 {
     Q_D(const CheckGroup);
-    return d->bodyType;
+    return d->orientation;
 }
-void CheckGroup::setBodyType(BodyType type)
+void CheckGroup::setOrientation(Qt::Orientation o)
 {
     Q_D(CheckGroup);
-    if (d->bodyType != type) {
-        d->bodyType = type;
-        d->calculateBodySize();
+    if (d->orientation != o) {
+        d->orientation = o;
+        d->calculateItemSize();
         d->_q_updateGroupItems();
-        emit bodyTypeChanged();
+        emit orientationChanged();
     }
 }
 
-CheckGroup::BodyFit CheckGroup::bodyFit() const
+bool CheckGroup::resizeChildrenToGroup() const
 {
     Q_D(const CheckGroup);
     return d->bodyFit;
 }
-void CheckGroup::setBodyFit(BodyFit type)
+void CheckGroup::setResizeChildrenToGroup(bool v)
 {
     Q_D(CheckGroup);
-    if (d->bodyFit != type) {
-        d->bodyFit = type;
-        d->calculateBodySize();
+    if (d->bodyFit != v) {
+        d->bodyFit = v;
+        d->calculateItemSize();
         d->_q_updateGroupItems();
-        emit bodyFitChanged();
+        emit resizeChildrenToGroupChanged();
     }
 }
 

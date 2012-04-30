@@ -1,23 +1,47 @@
+/**
+    Style - non-visual element that defines the basic proeprties of a style element.
+    The element serves as type identification helper.
+
+    A style element is identified by a name and the layout type. The element can be
+    used in defining component styles aswell as defining local styles (see StyledItem
+    for local styles). Component style elements can define component specific proeprties,
+    which will be passed to the components upon use.
+
+    Properties:
+
+        proeprty name: string
+            Defines the style name.
+
+        property type: StyleType
+            Defines the style type. This can be one of the following values:
+            Style.Normal - normal layout
+            Style.Pressed - pressed layout
+            Style.Dimmed - dimmed (disabled) layout
+            Style.Highlighted - higlighted layout, e.g. used when mouse hovering over
+                                the component
+            Style.Expanded - expanded layout, used in expand/collapse type components
+
+  */
 #include "style.h"
 #include "globaldefs.h"
+
+//#define TRACE_STYLE
 
 Style::Style(QObject *parent) :
     QObject(parent),
     m_name(""),
-    m_set(LastStyleType)
+    m_type(LastStyleType)
 {
 }
 
 Style::~Style()
 {
-    qDebug() << "clearing" << m_name << "type" << m_set;
+#ifdef TRACE_STYLE
+    qDebug() << "clearing" << m_name << "type" << m_type;
+#endif
 }
 
-void Style::updateStyle()
-{
-    //TODO: loop through the current properties and reset values
-}
-
+// name property getter/setter
 QString Style::name() const
 {
     return m_name;
@@ -26,23 +50,22 @@ void Style::setName(const QString &name)
 {
     if (name != m_name) {
         m_name = name;
-        if (!m_name.isEmpty() && (m_set == LastStyleType))
-            m_set = Normal;
+        // set the type to Normal if it hasn't been set yet
+        if (!m_name.isEmpty() && (m_type == LastStyleType))
+            m_type = Normal;
         emit nameChanged();
     }
 }
 
-Style::Set Style::setType() const
+// type proeprty getter/setter
+Style::StyleType Style::type() const
 {
-    return m_set;
+    return m_type;
 }
-
-void Style::setSetType(Style::Set set)
+void Style::setType(Style::StyleType set)
 {
-    if (set != m_set) {
-        m_set = set;
-        // TODO: load set values and update properties
-        //qDebug() << "Style:" << m_name << "type" << m_set;
-        emit setChanged();
+    if (set != m_type) {
+        m_type = set;
+        emit typeChanged();
     }
 }

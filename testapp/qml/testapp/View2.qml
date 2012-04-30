@@ -31,7 +31,7 @@ Page {
             Button {
                 id: button
                 text: "Quit"
-                onClicked: {console.debug("QUIT"); Qt.quit()}
+                onClicked: Qt.quit()
             }
             LineEdit {
                 width: 200
@@ -42,28 +42,28 @@ Page {
                 text: "FadeInOut"
                 width:140
                 height: 50
-                onClicked: popupTest.open()
+                onClicked: popupTest.show()
             }
             Button {
                 styleName: "NaviBackStyle"
                 text: "FadeFromLeft"
                 width:140
                 height: 50
-                onClicked: popupTest.open(WidgetSet.FadeFromLeft)
+                onClicked: popupTest.show(WidgetSet.FadeLeft)
             }
             Button {
                 styleName: "NaviBackStyle"
                 text: "FadeFromTop"
                 width:140
                 height: 50
-                onClicked: popupTest.open(WidgetSet.FadeFromTop)
+                onClicked: popupTest.show(WidgetSet.FadeTop)
             }
             Button {
                 styleName: "NaviBackStyle"
                 text: "FadeFromRight"
                 width:140
                 height: 50
-                onClicked: popupTest.open(WidgetSet.FadeFromRight)
+                onClicked: popupTest.show(WidgetSet.FadeRight)
             }
             LineEdit {
                 width: 170
@@ -75,7 +75,7 @@ Page {
                 text: "FadeFromBottom"
                 width:140
                 height: 50
-                onClicked: popupTest.open(WidgetSet.FadeFromBottom)
+                onClicked: popupTest.show(WidgetSet.FadeBottom)
             }
 
         }

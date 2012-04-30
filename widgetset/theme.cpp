@@ -1,3 +1,35 @@
+/**
+    Theme - non-visual element that holds style elements defining the look-and-feel
+    for WidgetSet components. A complete theme (or styleset) should be decrated in
+    a separate component, listing additional properties the component set requires.
+
+    For reference and example see DefaultTheme.qml.
+
+    An application can hold several theme definitions. The application designer can
+    reuse the DefaultTheme and change the name and resource properties. Themes are
+    registered in native code by the StyleManager (see more there). StyledItems can
+    get "styled" by defining a valid style name that coresponds to the styled item
+    (e.g. Button component should use styles declared using ButtonStyle style element).
+
+    Properties:
+
+    proeprty name: string
+        Defines and identifies the styleset (theme).
+
+    property resource: string
+        File name with full path to the binary resource file defining the resources
+        used by the styleset. The resource file will be loaded once the theme is
+        activated, and all th eresources are mounter to the "/theme" prefix, therefore
+        styles accessing the resources should be aware of this. default resources
+        are prefixed with "/default".
+
+    default property styleSet: list<Style> read-only
+        List of Style elements defining the styleset. The list is also hashed to ease
+        searching in the styleset. The hashing happens upon theme component completion
+        or at first access, in case some WidgetSet component does an early access to
+        the theme.
+  */
+
 #include "theme.h"
 #include "globaldefs.h"
 #include "stylemanager.h"
@@ -16,13 +48,13 @@ Theme::~Theme()
 #endif
 }
 
+// QDeclarativeParserStatus methods
 void Theme::classBegin()
 {
-#ifdef TRACE_THEME
-    qDebug() << "Theme component parsing starts";
-#endif
 }
 
+// Hash styleset for fast search
+// some components do access the styleset before this component gets completed...?
 void Theme::componentComplete()
 {
 #ifdef TRACE_THEME
@@ -38,9 +70,9 @@ void Theme::componentComplete()
 
         ThemeSet::const_iterator i = m_styleMap.find(item->name());
         if ((i != m_styleMap.end()) && (i.key() == item->name())) {
-            // set is in, check if type has been added...
+            // style is in, check if type has been added...
             StyleSet set(i.value());
-            Style::Set setType = item->setType();
+            Style::StyleType setType = item->type();
             StyleSet::const_iterator j = set.find(setType);
             if ((j == set.end()) || (j.key() != setType)) {
                 set[setType] = item;
@@ -49,15 +81,15 @@ void Theme::componentComplete()
         } else {
             // set has not been added yet
             StyleSet set;
-            set.insert(item->setType(), item);
+            set.insert(item->type(), item);
             m_styleMap.insert(item->name(), set);
         }
     }
 
     emit styleSetChanged();
-
 }
 
+// name property getter/setter
 QString Theme::name() const
 {
     return m_name;
@@ -71,6 +103,8 @@ void Theme::setName(const QString &s)
         emit nameChanged();
     }
 }
+
+// resource property getter/setter
 QString Theme::resource() const
 {
     return m_resource;
@@ -84,37 +118,24 @@ void Theme::setResource(const QString &s)
     }
 }
 
-void Theme::children_append(QDeclarativeListProperty<Style> *list, Style *item)
-{
-    Theme *theme = static_cast<Theme*>(list->object);
-#ifdef TRACE_THEME
-    qDebug() << "Theme style::" << item->name() << "/" << item->setType();
-#endif
-    theme->m_styleSet << item;
-}
-int Theme::children_count(QDeclarativeListProperty<Style> *list)
-{
-
-}
-Style *Theme::children_at(QDeclarativeListProperty<Style> *list, int index)
-{
-    return 0;
-}
-void Theme::children_clear(QDeclarativeListProperty<Style> *list)
-{
-
-}
-
+// styleset property getter
 QDeclarativeListProperty<Style> Theme::styleSet()
 {
-    //return QDeclarativeListProperty<Style>(this, &m_styleMap, children_append, 0, 0, 0);
     return QDeclarativeListProperty<Style>(this, m_styleSet);
 }
 
-Style *Theme::style(const QString &name, Style::Set set)
+/**
+  Method called by StyleManager to look after a given style and type.
+
+  param name: style name
+  param type: style type (see Style for more)
+
+  returns: Style object or 0 if not found
+  */
+Style *Theme::style(const QString &name, Style::StyleType type)
 {
 #ifdef TRACE_THEME
-    qDebug() << "Locate style" << name << "/" << set;
+    qDebug() << "Locate style" << name << "/" << type;
 #endif
     // some components using styles get initialized before theme is completed...
     if (m_styleMap.isEmpty())
@@ -122,8 +143,8 @@ Style *Theme::style(const QString &name, Style::Set set)
     ThemeSet::const_iterator i = m_styleMap.find(name);
     if ((i != m_styleMap.end()) && (i.key() == name)) {
         StyleSet setMap(i.value());
-        StyleSet::const_iterator j = setMap.find(set);
-        if ((j != setMap.end()) && (j.key() == set)) {
+        StyleSet::const_iterator j = setMap.find(type);
+        if ((j != setMap.end()) && (j.key() == type)) {
 #ifdef TRACE_THEME
             qDebug() << "Found" << j.value();
 #endif

@@ -4,7 +4,7 @@ import "." 1.0
 
 Style {
     name: "ScrollBar"
-    set: Style.Normal
+    type: Style.Normal
 
     property color frameColor
     property color barColor

@@ -1,3 +1,20 @@
+/**
+  StyleManager - internal class managing theme registration and selection.
+  Its functionality can be accessed from QML through <b>themeManager</b> variable,
+  but the active theme is published through the <b>THEME</b> variable. Upon theme
+  activation the theme resources are loaded and mapped to ":/theme".
+
+  Signals:
+    themeChanged()
+        The signal is triggered when the theme is changed and loaded. StyledItem
+        elements are connecting to this signal to update style.
+
+  Slots:
+    activateTheme(string theme)
+        The slot activates a registered theme. Themes activated through this slot
+        must be included in the application, preferably into the root component.
+
+*/
 #include "stylemanager.h"
 #include <QMultiHash>
 #include <QResource>

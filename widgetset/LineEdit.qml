@@ -6,20 +6,26 @@ import "." 1.0
 StyledItem {
     /** public API
       */
+    // hint text
     property alias hint: hintText.text
+    // editor data
     property alias text: editor.text
+    // font object for the hint
     property alias hintFont: hintText.font
+    // font object for the editor
     property alias editorFont: editor.font
+    // specifies whether the input should be secret or not
     property bool password: false
-    property string mask: ''
+    // editor's mask
+    property alias inputMask: editor.inputMask
+    // editor's height - deprecate?
     property alias editorHeight: frame.height
+
     /** Internals
       */
     id: textEdit
     width: 100
     height: frame.height
-    //highlighted: false
-    //pressed: false
     styleName: "LineEdit"
     objectName: "TextEditor"
     //properties.fillColor: "#5e2e2e"

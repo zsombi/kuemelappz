@@ -4,10 +4,13 @@ import "." 1.0
 
 Style {
     name: "StatusBar"
-    set: Style.Normal
+    type: Style.Normal
+    property int height
     property color fillColor
     property string fontFamily
     property color fontColor
     property int fontPixels
     property int fontWeight
+    property int transitionEasing
+    property int transitionDuration
 }

@@ -3,10 +3,14 @@ import QtQuick 1.1
 import "." 1.0
 
 Style {
-    set: Style.Normal
+    type: Style.Normal
 
+    // left-top image
     property url sourceLeftTop
+    // right-top image
     property url sourceRightTop
+    // right-bottom image
     property url sourceRightBottom
+    // left-bottom image
     property url sourceLeftBottom
 }

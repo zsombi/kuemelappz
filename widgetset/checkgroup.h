@@ -12,27 +12,14 @@ class CheckGroup : public QDeclarativeItem
     Q_OBJECT
     Q_DISABLE_COPY(CheckGroup)
     Q_PROPERTY(bool autoId READ autoId WRITE setAutoId NOTIFY autoIdChanged FINAL)
-    Q_PROPERTY(QObject* activeItem READ activeItem NOTIFY activeItemChanged FINAL)
-    Q_PROPERTY(int activeId READ activeId WRITE setActiveId NOTIFY activeItemChanged FINAL)
+    Q_PROPERTY(bool resizeChildrenToGroup READ resizeChildrenToGroup WRITE setResizeChildrenToGroup NOTIFY resizeChildrenToGroupChanged FINAL)
+    Q_PROPERTY(Qt::Orientation orientation READ orientation WRITE setOrientation NOTIFY orientationChanged FINAL)
     Q_PROPERTY(int itemSize READ itemSize WRITE setItemSize NOTIFY itemSizeChanged FINAL)
+    Q_PROPERTY(int activeId READ activeId WRITE setActiveId NOTIFY activeItemChanged FINAL)
+    Q_PROPERTY(QObject* activeItem READ activeItem NOTIFY activeItemChanged FINAL)
     Q_PROPERTY(QDeclarativeItem *groupBody READ layout WRITE setLayout NOTIFY groupBodyChanged DESIGNABLE false)
-    Q_PROPERTY(BodyType bodyType READ bodyType WRITE setBodyType NOTIFY bodyTypeChanged FINAL)
-    Q_PROPERTY(BodyFit bodyFit READ bodyFit WRITE setBodyFit NOTIFY bodyFitChanged FINAL)
     Q_CLASSINFO("DefaultProperty", "groupBody")
-    Q_ENUMS(BodyType BodyFit)
 public:
-    enum BodyType {
-        None = 0,
-        Horizontal,
-        Vertical
-    };
-
-    enum BodyFit {
-        Default = 0,
-        FitToGroup,
-        ExpandGroup,
-        Custom
-    };
 
     explicit CheckGroup(QDeclarativeItem *parent = 0);
     virtual ~CheckGroup();
@@ -49,21 +36,21 @@ private: //getter/setter
     void setActiveId(int id);
     QDeclarativeItem *layout() const;
     void setLayout(QDeclarativeItem *item);
-    BodyType bodyType() const;
-    void setBodyType(BodyType type);
-    BodyFit bodyFit() const;
-    void setBodyFit(BodyFit type);
+    Qt::Orientation orientation() const;
+    void setOrientation(Qt::Orientation o);
+    bool resizeChildrenToGroup() const;
+    void setResizeChildrenToGroup(bool v);
 
 signals:
     void autoIdChanged();
     void itemSizeChanged();
     void activeItemChanged();
     void groupBodyChanged();
-    void bodyTypeChanged();
-    void bodyFitChanged();
+    void orientationChanged();
+    void resizeChildrenToGroupChanged();
 
 public slots:
-    void updateGroupItem(QObject *item);
+    void addGroupItem(QObject *item);
     void adjustLayout();
 
 private:
@@ -77,7 +64,5 @@ private:
 };
 
 QML_DECLARE_TYPE(CheckGroup)
-QML_DECLARE_TYPE(CheckGroup::BodyType)
-QML_DECLARE_TYPE(CheckGroup::BodyFit)
 
 #endif // CHECKGROUP_H

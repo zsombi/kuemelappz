@@ -11,10 +11,12 @@ import "." 1.0
 Style {
     name: "PushButton"
 
-    property url imageUrl
-    property variant imageBorders
+    // button rame style as defined in BackgroundStyle
+    property string frameStyle
+    // fi[ont used in text
     property string fontFamily
+    // font color
     property color fontColor
+    // font size in pixels
     property int fontPixels
-
 }

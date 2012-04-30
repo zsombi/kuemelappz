@@ -1,3 +1,34 @@
+/**
+  StyledItem - base item for all WidgetSet components that support theming.
+  The style is chosen based on the style name and type given. Styles can be defined
+  either by themes or can be local. Upon theme change, themed components get notified
+  about the change and the layout is refreshed automatically because of property binding.
+
+  Properties:
+    property styleName: string
+        Style identifier string i.e. "Button" or "ToolButton"
+
+    property styleType: StyleType
+        Current type of the style. The component's layout can be changed just by altering
+        this property, assuming that the type set has been declared either locally or in
+        the active theme. Upon type change the onStyleChanged signal is emited!
+
+    property style: Style read-only
+        Represents the currently active style set object, either local or theme containing one.
+
+    property localStyles: list<Style>
+        List of locally declared styles. The list should contain only control specific styles,
+        and therefore the amount should be limited to the types needed by the control. Styles
+        declared locally must also have names set and the StyledItem should use the name
+        defined for the styles.
+
+    property controlListItem: Item
+        This item is set by the components that drive several sub-components key handling
+        (i.e. tab-order).
+
+    TODO: method for styles available?
+
+  */
 #include "styleditem.h"
 #include "styleditem_p.h"
 #include "stylemanager.h"
@@ -8,93 +39,97 @@
 #include <QtDeclarative/qdeclarative.h>
 #include <QKeyEvent>
 
-//#define TRACE_THEMEITEM
+//#define TRACE_STYLEDITEM
 
 StyledItemPrivate::StyledItemPrivate(StyledItem *qq) :
     q_ptr(qq),
-    activeTheme(StyleManager::activeTheme()),
     styleName(""),
     currentStyle(Style::LastStyleType),
     controlListItem(0)
 {
+    // connect enableChanged() to handle Dimmed style type
     QObject::connect(q_ptr, SIGNAL(enabledChanged()), q_ptr, SLOT(_q_activateStyle()));
+    // connect parentChanged() to add component to CheckGroup
     QObject::connect(q_ptr, SIGNAL(parentChanged()), q_ptr, SLOT(_q_updateParent()));
+    // this may not be needed after all...
     QObject::connect(q_ptr, SIGNAL(focusChanged(bool)), q_ptr, SLOT(_q_handleFocusChange(bool)));
     // connect to theme manager to activate theme and style changes
-    QObject::connect(StyleManager::instance(), SIGNAL(themeChanged()), q_ptr, SLOT(_q_activateTheme()));
+    QObject::connect(StyleManager::instance(), SIGNAL(themeChanged()), q_ptr, SLOT(_q_activateStyle()));
 }
 
 StyledItemPrivate::~StyledItemPrivate()
 {
-    // for some reason disconnects are not happening in Linux\Windows platforms ?!
+    // for some reason disconnects are not happening automatically on Linux\Windows platforms ?!
     if (controlListItem)
         QObject::disconnect(controlListItem, SIGNAL(childrenChanged()), q_ptr, SLOT(_q_updateKeyOrder()));
-    QObject::disconnect(StyleManager::instance(), SIGNAL(themeChanged()), q_ptr, SLOT(_q_activateTheme()));
+    QObject::disconnect(StyleManager::instance(), SIGNAL(themeChanged()), q_ptr, SLOT(_q_activateStyle()));
     QObject::disconnect(q_ptr, SIGNAL(enabledChanged()), q_ptr, SLOT(_q_activateStyle()));
     QObject::disconnect(q_ptr, SIGNAL(parentChanged()), q_ptr, SLOT(_q_updateParent()));
     QObject::disconnect(q_ptr, SIGNAL(focusChanged(bool)), q_ptr, SLOT(_q_handleFocusChange(bool)));
 }
 
-void StyledItemPrivate::reloadStyle()
-{
-    // try to load the normal one and then check whether alteration is needed
-    currentStyle = Style::Normal;
-    _q_activateStyle();
-}
-
-Style* StyledItemPrivate::styleForSet(Style::Set set) const
+/*
+  lookup for style of a specific type, first in local styles then in theme
+*/
+Style* StyledItemPrivate::styleForType(Style::StyleType type) const
 {
     // 1: check local styles first
     QListIterator<Style*> pl(localStyles);
     while (pl.hasNext()) {
         Style *item = pl.next();
-        if ((item->name() == styleName) && (item->setType() == set))
+        if ((item->name() == styleName) && (item->type() == type))
             return item;
     }
     // if none found check for in theme styles
-    return (activeTheme) ? activeTheme->style(styleName, set) : 0;
+    return (StyleManager::instance()) ? StyleManager::instance()->activeTheme()->style(styleName, type) : 0;
 }
 
-void StyledItemPrivate::_q_activateTheme()
-{
-    activeTheme = StyleManager::activeTheme();
-    _q_activateStyle();
-}
+/*
+  Private slot called either
+    - when Theme manager changes the active theme, so styled items can update
+        the layout with the style values
+    - when style type gets changed
 
+  The method also makes corrections on the style type as the theme/local set may
+  not have the style type declared. In these cases the appropriate style type is
+  chosen.
+*/
 void StyledItemPrivate::_q_activateStyle()
 {
     Q_Q(StyledItem);
-    if (!activeTheme)
+    if (!StyleManager::activeTheme())
         currentStyle = Style::LastStyleType;
     else {
         if (!q->isEnabled())
             currentStyle = Style::Dimmed;
         // todo: cache this!
-        else if (!styleForSet(currentStyle))
+        else if (!styleForType(currentStyle))
             currentStyle = Style::Normal;
     }
     emit q->styleChanged();
 }
 
+/*
+  Handle parent change to add component to CheckGroup
+*/
 void StyledItemPrivate::_q_updateParent()
 {
-    // capture parent update to add control to check-group
     Q_Q(StyledItem);
     QDeclarativeItem *parent = q->parentItem();
     if (!parent || (parent && !parent->parentItem()))
         return;
+    // dirrect parent can be either CheckGroup or a positioner element
     CheckGroup *grp = qobject_cast<CheckGroup*>(parent);
     if (!grp)
         grp = qobject_cast<CheckGroup*>(parent->parentItem());
-    // item is not grouped?
-    if (!grp)
-        return;
-    grp->updateGroupItem(q);
+    // add item to group, group will check the rest
+    if (grp)
+        grp->addGroupItem(q);
 }
 
 void StyledItemPrivate::_q_handleFocusChange(bool f)
 {
-#ifdef TRACE_THEMEITEM
+#ifdef TRACE_STYLEDITEM
     qDebug() << __FUNCTION__ << q_ptr << "focus =" << f;
 #endif
 }
@@ -132,37 +167,42 @@ StyledItem::~StyledItem()
 
 void StyledItem::keyPressEvent(QKeyEvent *event)
 {
+    // TODO: at some point...
     QDeclarativeItem::keyPressEvent(event);
     if (event) {
-#ifdef TRACE_THEMEITEM
+#ifdef TRACE_STYLEDITEM
         qDebug()<< this <<"key pressed:" << event->key();
 #endif
     }
 }
 
+/*******************************************************************************
+    PROPERTY GETTER/SETTER
+*******************************************************************************/
 Style *StyledItem::style() const
 {
     Q_D(const StyledItem);
-    Style *ret = d->styleForSet(d->currentStyle);
-#ifdef TRACE_THEMEITEM
-    qDebug() << "Style:" << ret << "(" << ret->name() << "/" << ret->setType() <<")" << d->currentStyle;
+    Style *ret = d->styleForType(d->currentStyle);
+#ifdef TRACE_STYLEDITEM
+    qDebug() << "Style:" << ret << "(" << ret->name() << "/" << ret->type() <<")" << d->currentStyle;
 #endif
     return ret;
 }
-Style::Set StyledItem::currentStyleSet() const
+
+Style::StyleType StyledItem::styleType() const
 {
     Q_D(const StyledItem);
     return d->currentStyle;
 }
-void StyledItem::setCurrentStyleSet(Style::Set set)
+void StyledItem::setStyleType(Style::StyleType type)
 {
     Q_D(StyledItem);
-    if (d->currentStyle != set) {
-        d->currentStyle = set;
-#ifdef TRACE_THEMEITEM
-        qDebug() << "currentStyle:" << "(" << d->control << "/" << d->currentStyle <<")";
+    if (d->currentStyle != type) {
+        d->currentStyle = type;
+#ifdef TRACE_STYLEDITEM
+        qDebug() << "currentStyle:" << "(" << d->styleName << "/" << d->currentStyle <<")";
 #endif
-        // todo: check if there is such kind of style in the theme set;
+        // check if there is such kind of style in the theme set;
         // if not, apply the closest one
         d->_q_activateStyle();
     }
@@ -171,12 +211,10 @@ void StyledItem::setCurrentStyleSet(Style::Set set)
 QDeclarativeListProperty<Style> StyledItem::localStyles()
 {
     Q_D(StyledItem);
-#ifdef TRACE_THEMEITEM
-    qDebug() << "LOCAL STYLES!!";
-#endif
     return QDeclarativeListProperty<Style>(this, d->localStyles);
 }
 
+// styleName proeprty getter/setter
 QString StyledItem::styleName() const
 {
     Q_D(const StyledItem);
@@ -187,10 +225,14 @@ void StyledItem::setStyleName(const QString &val)
     Q_D(StyledItem);
     if (d->styleName != val) {
         d->styleName = val;
-        d->reloadStyle();
+        // reset style type to Normal and get the style object
+        d->currentStyle = Style::Normal;
+        d->_q_activateStyle();
+
         emit styleNameChanged();
     }
 }
+
 QDeclarativeItem* StyledItem::controlListItem() const
 {
     Q_D(const StyledItem);
@@ -198,7 +240,7 @@ QDeclarativeItem* StyledItem::controlListItem() const
 }
 void StyledItem::setControlListItem(QDeclarativeItem *list)
 {
-#ifdef TRACE_THEMEITEM
+#ifdef TRACE_STYLEDITEM
     qDebug() << __FUNCTION__ << list;
 #endif
     Q_D(StyledItem);

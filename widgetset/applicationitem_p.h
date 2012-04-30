@@ -17,7 +17,6 @@ public:
     bool initialized;
     ApplicationItem::Orientation orientation;
     bool orientationLocked;
-    QDeclarativeItem *inputPanel;
 // private data
     void _q_rotation();
     void _q_sceneUpdate(const QSize &sceneSize);

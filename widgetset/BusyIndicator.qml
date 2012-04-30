@@ -1,14 +1,17 @@
+/**
+  BusyIndicator - component displaying busy indication. The indicator image is
+  specified in "Indicators" style
+*/
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 import "." 1.0
 
 StyledItem {
+    // drive busy indication
     property bool on: false
     styleName: "Indicators"
 
     id: busyIndicator
-    //width: container.sourceSize.width
-    //height: container.sourceSize.height
     Image {
         id: container
         anchors.fill: parent

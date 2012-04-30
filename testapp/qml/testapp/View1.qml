@@ -13,6 +13,13 @@ PageStack {
         Page {
             width: pgStack.width
             height: pgStack.width
+            header.children: [
+                Button {
+                    text: "Quit"
+                    onClicked: Qt.quit()
+                }
+
+            ]
             Column {
                 spacing: 10
                 Label {

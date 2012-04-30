@@ -8,7 +8,8 @@ import "." 1.0
 
 Style {
     name: "Indicators"
-    set: Style.Normal
+    type: Style.Normal
+    // busy indicator
     property url busyIndicatorUrl
 
 }

@@ -3,12 +3,6 @@ import QtQuick 1.1
 import "." 1.0
 
 Style {
-    property url variant //?? deprecate and figure out a better detection approach
-    property url imageUrl
-    property variant imageBorders
-    property color frameColor
-    property int frameWidth
-    property color fillColor
-    property variant gradientSteps
-    property variant gradientTones
+    property string frameStyle
+    property int buttonSpacing
 }

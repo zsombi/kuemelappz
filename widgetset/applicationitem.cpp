@@ -1,3 +1,28 @@
+/**
+  ApplicationItem - application's main window. Handles orientation change and holds layout properties.
+
+  Types:
+    Orientation - application's supported orientations
+        Automatic - automatic orientation
+        Portrait
+        Landscape
+        InverseLandscape
+
+  Properties
+
+    property orientation: Orientation
+        Specifies the current orientation. The property has meaning for mobile platforms,
+        on desktop its value is always Automatic.
+
+    property orientationString: string
+        String representation of orientation property.
+
+    property lockToOrientation: Orientation
+        Specifies to which orientation should teh application window be locked. The lock
+        is reset when Automatic is set.
+
+
+  */
 #include "globaldefs.h"
 #include "applicationitem.h"
 #include "applicationitem_p.h"
@@ -23,7 +48,6 @@ QTM_USE_NAMESPACE
 
 ApplicationItemPrivate::ApplicationItemPrivate(ApplicationItem *qq) :
     q_ptr(qq),
-    initialized(false),
     orientation(ApplicationItem::Landscape),
     orientationLocked(false),
     sensor(0),
@@ -45,6 +69,7 @@ ApplicationItemPrivate::ApplicationItemPrivate(ApplicationItem *qq) :
             );
             Q_UNUSED(error)
 #endif
+            // connect scene update to catch screen size
             q_ptr->connect(appView, SIGNAL(sceneResized(QSize)), SLOT(_q_sceneUpdate(const QSize&)), Qt::QueuedConnection);
             q_ptr->connect(q_ptr, SIGNAL(rotationChanged()), SLOT(_q_rotation()));
             appView->setResizeMode(QDeclarativeView::SizeRootObjectToView);
@@ -55,9 +80,10 @@ ApplicationItemPrivate::ApplicationItemPrivate(ApplicationItem *qq) :
 #if defined(MOBILE_SYSTEM)// && !defined(MEEGO_EDITION_HARMATTAN)
 
 #ifdef MEEGO_EDITION_HARMATTAN
+    // Harmattan launches the application in Landscape mode.
     orientation = ApplicationItem::Landscape;
 #endif
-
+    // use orientation sensors to rotate layout
     sensor = new QOrientationSensor(q_ptr);
     q_ptr->connect(sensor, SIGNAL(readingChanged()), SLOT(_q_sensorUpdate()));
     qobject_cast<QOrientationSensor*>(sensor)->setActive(true);
@@ -92,12 +118,12 @@ QString ApplicationItem::orientationString() const
     QMetaEnum enumerator = metaObject()->enumerator(index);
     return QLatin1String(enumerator.valueToKey(d->orientation));
 }
-ApplicationItem::Orientation ApplicationItem::lockToOrientation() const
+ApplicationItem::Orientation ApplicationItem::lockOnOrientation() const
 {
     Q_D(const ApplicationItem);
     return d->orientation;
 }
-void ApplicationItem::setLockToOrientation(Orientation o)
+void ApplicationItem::setLockOnOrientation(Orientation o)
 {
 #ifdef MOBILE_SYSTEM
     Q_D(ApplicationItem);
@@ -112,21 +138,6 @@ void ApplicationItem::setLockToOrientation(Orientation o)
     }
 #endif
 }
-
-QDeclarativeItem *ApplicationItem::inputPanel() const
-{
-    Q_D(const ApplicationItem);
-    return d->inputPanel;
-}
-void ApplicationItem::setInputPanel(QDeclarativeItem *ip)
-{
-    Q_D(ApplicationItem);
-    if (d->inputPanel != ip) {
-        d->inputPanel = ip;
-        emit inputPanelChanged();
-    }
-}
-
 
 //**************************************************************
 
@@ -157,7 +168,6 @@ void ApplicationItemPrivate::_q_sceneUpdate(const QSize &sceneSize)
 #else
         resize(sceneSize);
 #endif
-        //initialized = sceneSize.isEmpty();
     }
 }
 

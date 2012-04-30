@@ -6,7 +6,7 @@ import "." 1.0
 FaderItem {
     backgroundSource: "qrc:/default/toolbutton-normal"
     Rectangle {
-        visible: parent.isOpen
+        visible: parent.fadedIn
         anchors.fill: parent
         anchors.margins: 10
         anchors.bottomMargin: 100

@@ -2,11 +2,18 @@
 import QtQuick 1.1
 import "." 1.0
 
+// Style component for ApplicationWindow
 Style {
     name: "ApplicationWindow"
 
-    property int rotationDuration
-    property int rotationEasing
-    property string headerStyle
+    // style object to control layout
+    property string pageLayoutStyle
+    // background style object name
     property string backgroundStyle
+    // header style object name
+    property string headerStyle
+    // application layout rotation duration
+    property int rotationDuration
+    // rotation easing
+    property variant rotationEasing
 }

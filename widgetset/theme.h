@@ -6,7 +6,7 @@
 #include <qdeclarative.h>
 #include <QDeclarativeParserStatus>
 
-typedef QHash<Style::Set, Style*> StyleSet;
+typedef QHash<Style::StyleType, Style*> StyleSet;
 typedef QHash<QString, StyleSet> ThemeSet;
 
 class Theme : public QObject, public QDeclarativeParserStatus
@@ -31,7 +31,7 @@ public:
     void setResource(const QString &s);
     QDeclarativeListProperty<Style> styleSet();
 
-    Style *style(const QString &name, Style::Set set);
+    Style *style(const QString &name, Style::StyleType type);
 signals:
 
     void nameChanged();
@@ -45,11 +45,6 @@ private:
     ThemeSet m_styleMap;
     QString m_name;
     QString m_resource;
-
-    static void children_append(QDeclarativeListProperty<Style> *list, Style *item);
-    static int children_count(QDeclarativeListProperty<Style> *list);
-    static Style *children_at(QDeclarativeListProperty<Style> *list, int index);
-    static void children_clear(QDeclarativeListProperty<Style> *list);
 };
 
 QML_DECLARE_TYPE(Theme)

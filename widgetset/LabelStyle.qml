@@ -4,6 +4,7 @@ import "." 1.0
 
 Style {
     name: "Label"
+    // font data
     property url fontFamily
     property color fontColor
     property int fontPixels

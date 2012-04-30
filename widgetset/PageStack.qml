@@ -1,21 +1,66 @@
+<<<<<<< .mine
+/**
+  PageStack - element that makes possible to navigate between pages. The visited
+  pages are kept in a stak in memory and are discarded once they are navigated backwards
+  out.
+  */
 import QtQuick 1.0
+=======
+import QtQuick 1.0
+>>>>>>> .r146
 import "." 1.0
 import "Utility.js" as Utils
 
 Item {
     id: root
-
-    width: parent ? parent.width : 0
-    height: parent ? parent.height : 0
-
+    // page stack depth, aka number of pages in the stack
     property int depth: privates.stackDepth()
+    // points to teh current page
     property Item currentPage: null
-    property Item toolBar
-    property bool busy: privates.ongoingTransitionCount > 0
+    // fading duration and easing: themed, but
     property int pageFadingDuration: THEME.pageFadingDuration
     property int pageFadingEasing: THEME.pageFadingEasing
 
+    // bind system busy state with stack's busy state
+    Binding {
+        target: widgetSet
+        property: "busy"
+        value: privates.busy
+    }
 
+    // no anchoring!!
+    width: parent ? parent.width : 0
+    height: parent ? parent.height : 0
+
+    function push(page, properties) {
+        return privates.push(page, properties)
+    }
+    property int pageFadingDuration: THEME.pageFadingDuration
+    property int pageFadingEasing: THEME.pageFadingEasing
+
+<<<<<<< .mine
+    function pop(page) {
+        return privates.pop(page)
+    }
+    function back()
+    {
+        var pageStack = Utils.getPgStack()
+        if (pageStack.length > 1)
+            return pop()
+    }
+=======
+>>>>>>> .r146
+
+<<<<<<< .mine
+    function clear() {
+        return privates.clear();
+    }
+
+    /**
+      Privates
+      */
+
+=======
     function push(page, properties) {
         return privates.push(page, properties)
     }
@@ -38,10 +83,11 @@ Item {
       Privates
       */
 
+>>>>>>> .r146
     QtObject {
         id: privates
         property int ongoingTransitionCount: 0
-
+        property bool busy: ongoingTransitionCount > 0
         function stackDepth()
         {
             //return (pageStack !== undefined) ? pageStack.length : 0
@@ -203,7 +249,7 @@ Item {
                 state = "rightEdge";
                 destroyUponExit = true;
             }
-            
+
             // Called when a transition has started.
             function transitionStarted() {
                 privates.ongoingTransitionCount++;
@@ -211,7 +257,7 @@ Item {
                     privates.setPageStatus(page, (state == "") ? WidgetSet.PageActivating : WidgetSet.PageDeactivating);
                 }
             }
-            
+
             // Called when a transition has ended.
             function transitionEnded() {
                 if (state != "") {

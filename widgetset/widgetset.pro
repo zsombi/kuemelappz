@@ -35,6 +35,7 @@ HEADERS += \
     theme.h
 
 OTHER_FILES = qmldir \
+    README. \
     theme_descriptor.xml \
     ApplicationWindow.qml \
     Page.qml \
@@ -74,7 +75,9 @@ OTHER_FILES = qmldir \
     Utility.js \
     ApplicationWindowStyle.qml \
     BackgroundStyle.qml \
-    Background.qml
+    Background.qml \
+    PageLayout.qml \
+    PageLayoutStyle.qml
 
 !equals(_PRO_FILE_PWD_, $$OUT_PWD) {
     copy_qmldir.target = $$OUT_PWD/qmldir
@@ -115,7 +118,10 @@ QML_FILES = ApplicationWindow.qml \
     Utility.js \
     ApplicationWindowStyle.qml \
     BackgroundStyle.qml \
-    Background.qml
+    Background.qml \
+    PageLayout.qml \
+    PageLayoutStyle.qml \
+    FaderItemStyle.qml
 
 qmldir.files = qmldir $$QML_FILES
 symbian {

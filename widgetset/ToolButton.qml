@@ -16,13 +16,13 @@ ButtonControl {
 
     onPressedChanged: {
         if (pressed)
-            currentStyleSet = Style.Pressed
+            styleType = Style.Pressed
     }
     onCheckedChanged: {
         if (checked && radio)
-            currentStyleSet = Style.Pressed
+            styleType = Style.Pressed
         else
-            currentStyleSet = Style.Normal
+            styleType = Style.Normal
     }
 
     objectName: text

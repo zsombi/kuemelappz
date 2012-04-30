@@ -3,6 +3,9 @@ import QtQuick 1.1
 import "." 1.0
 import "Utility.js" as Utils
 
+// InputPanel - panel for key inputs
+// UNDER CONSTRUCTION
+
 Rectangle {
 
     /**
@@ -13,6 +16,7 @@ Rectangle {
     property int fadeOutDelay: 100
     property int inputHeight: 180
     property bool usePlatformInput: false
+
     function openInput(control, inputMethod)
     {
         privates.focusControl = control;

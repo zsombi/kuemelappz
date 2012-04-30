@@ -1,12 +1,25 @@
+/**
+  Button - push button. Suports image and text combined in its layout. The image
+  can be either on theleft side of the text or above the text, and either the image
+  or the text can be missing.
+
+  The style of the button is specified by the ButtonStyle element. The default style
+  object used by the button is "PushButton"
+
+  */
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 import "." 1.0
 
 ButtonControl {
     // public API
+    // button text
     property string text: ""
+    // button image when normal mode
     property url image: ""
+    // button image when pressed
     property url imagePressed: image
+    // image-text layout
     property int layout: Qt.Horizontal
 
     // style
@@ -16,16 +29,14 @@ ButtonControl {
     width: 100
     height: 50
     clip: true
-    onPressedChanged: currentStyleSet = (pressed ? Style.Pressed : (highlighted ? Style.Highlighted : Style.Normal))
+    // handle style type change
+    onPressedChanged: styleType = (pressed ? Style.Pressed : (highlighted ? Style.Highlighted : Style.Normal))
 
-    BorderImage {
+    Background {
         id: frame
         anchors.fill: parent
-        source: pushButton.style.imageUrl
-        border.left: pushButton.style.imageBorders[0]
-        border.top: pushButton.style.imageBorders[1]
-        border.right: pushButton.style.imageBorders[2]
-        border.bottom: pushButton.style.imageBorders[3]
+        styleName: pushButton.style.frameStyle
+        styleType: pushButton.styleType
     }
 
     Item {
@@ -33,7 +44,7 @@ ButtonControl {
         property variant imageSize: [0, 0]
         property int offset: -2
         property string layoutState: ""
-        property Item control
+        //property Item control
 
         anchors {left: parent.left; top: parent.top; bottom: parent.bottom; right: parent.right}
         Image {

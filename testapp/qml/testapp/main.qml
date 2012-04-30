@@ -23,6 +23,14 @@ ApplicationWindow {
             title: "Page2"
             anchors.fill: parent
             //anchors.topMargin: toolbar.height
+            header.children: [
+                Button {
+                    text: "Quit"
+                    onClicked: Qt.quit()
+                    anchors.left: parent.left
+                    anchors.margins: 10
+                }
+            ]
 
             Column {
                 spacing: 10
@@ -31,8 +39,14 @@ ApplicationWindow {
                     font.pixelSize: THEME.textSizeLarge
                 }
                 Button {
-                    text: "Quit"
-                    onClicked: {console.debug("QUIT, root = " + widgetSet.rootBodyItem()); Qt.quit()}
+                    text: "show/hide header"
+                    width:200
+                    onClicked: widgetSet.headerPanel.hidden = !widgetSet.headerPanel.hidden
+                }
+                Button {
+                    text: "show/hide statusBar"
+                    width:200
+                    onClicked: widgetSet.statusBar.hidden = !widgetSet.statusBar.hidden
                 }
             }
         }

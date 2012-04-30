@@ -1,32 +1,48 @@
+/**
+  FaderItem - base item for popup type components. Styling comes from the inherited
+  components.
+
+  */
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 import "." 1.0
-
-// todo: Old component, should it be styled?
 
 Rectangle {
     id: faderItem
     /*** @public interface
       */
-    property double fadeOpacity: 1.0
-    property url backgroundSource: ""
+    // specifies the parent to be used when fader gets visible
     property Item visualParent: null
-    property int fadeOutDelay: 175
-    property int fadeInDuration: 175
-    property int fadeOutDuration: 175
-    property int fadeStyle: WidgetSet.FadeInOut
-    property bool isOpen: false
-    property bool closeOnInactiveAreaClick: true
+    // indicates whether the fader is visible or not
+    property bool fadedIn: false
+    // property driving automatic hide (fadeOut) when inactive area is clicked
+    property bool hideOnInactiveAreaClicked: true
+    // fader margins, calculated from the visibleParent
     property int faderMarginLeft: -1
     property int faderMarginTop: -1
     property int faderMarginRight: -1
     property int faderMarginBottom: -1
 
-    signal outerFrameClicked()
-    signal opened()
-    signal closed()
+    // Stylable properties
+    // specifies the opacity value used when component is faded in
+    property double opacityWhenFadeIn: 1.0
+    // deprecate: background source image
+    property url backgroundSource: ""
+    // delay used before fadeOut animation starts
+    property int fadeOutDelay: 175
+    // duration of fadeIn animation
+    property int fadeInDuration: 175
+    // duration of fadeOut animation
+    property int fadeOutDuration: 175
+    // Specifies how to fade in/out, from which direction (see WidgetSet.FaderStyle); default is FadeInOut
+    property int fadeStyle: WidgetSet.FadeInOut
 
-    function open(withFadeStyle)
+    // signal triggered when inactive area clicked
+    signal inactiveAreaClicked()
+
+    // shows the fader (fadeIn); the faderStyle can be specified separately so the same fader component
+    // can be used to fade in and out in different way
+    function show(withFadeStyle)
     {
         if (withFadeStyle == undefined)
             fadeStyle = WidgetSet.FadeInOut
@@ -34,66 +50,68 @@ Rectangle {
             fadeStyle = withFadeStyle
         state = 'visible'
     }
-    function close()
+    // hides the fader
+    function hide()
     {
         state = ''
     }
 
     /*** @internals
       */
-    onOuterFrameClicked: if (closeOnInactiveAreaClick) close()
+    // automatic close
+    onInactiveAreaClicked: if (hideOnInactiveAreaClicked) hide()
     color: backgroundSource != "" ? "transparent" : Qt.rgba(0.05, 0.05, 0.05, privates.alpha)
     z: Number.MAX_VALUE
     anchors {
         margins: -1 // enlarge it to avoid artefacts appearing upon orientation change
         leftMargin: {
-            if (fadeStyle == WidgetSet.FadeFromLeft)
+            if (fadeStyle == WidgetSet.FadeLeft)
                 return -1
             return faderMarginLeft
         }
         left: {
-            if (fadeStyle == WidgetSet.FadeFromLeft)
+            if (fadeStyle == WidgetSet.FadeLeft)
                 return undefined
-            else if (fadeStyle == WidgetSet.FadeFromRight)
+            else if (fadeStyle == WidgetSet.FadeRight)
                 return parent.right
             return parent.left
         }
 
         topMargin: {
-            if (fadeStyle == WidgetSet.FadeFromTop)
+            if (fadeStyle == WidgetSet.FadeTop)
                 return -1
             return faderMarginTop
         }
         top: {
-            if (fadeStyle == WidgetSet.FadeFromTop)
+            if (fadeStyle == WidgetSet.FadeTop)
                 return undefined
-            else if (fadeStyle == WidgetSet.FadeFromBottom)
+            else if (fadeStyle == WidgetSet.FadeBottom)
                 return parent.bottom
             return parent.top
         }
 
         rightMargin: {
-            if (fadeStyle == WidgetSet.FadeFromRight)
+            if (fadeStyle == WidgetSet.FadeRight)
                 return -1
             return faderMarginRight
         }
         right: {
-            if (fadeStyle == WidgetSet.FadeFromRight)
+            if (fadeStyle == WidgetSet.FadeRight)
                 return undefined
-            else if (fadeStyle == WidgetSet.FadeFromLeft)
+            else if (fadeStyle == WidgetSet.FadeLeft)
                 return parent.left
             return parent.right
         }
 
         bottomMargin: {
-            if (fadeStyle == WidgetSet.FadeFromBottom)
+            if (fadeStyle == WidgetSet.FadeBottom)
                 return -1
             return faderMarginBottom
         }
         bottom: {
-            if (fadeStyle == WidgetSet.FadeFromBottom)
+            if (fadeStyle == WidgetSet.FadeBottom)
                 return undefined
-            else if (fadeStyle == WidgetSet.FadeFromTop)
+            else if (fadeStyle == WidgetSet.FadeTop)
                 return parent.top
             return parent.bottom
         }
@@ -125,13 +143,11 @@ Rectangle {
                  console.log("Error: Cannot find root");
               }
           }
-          faderItem.isOpen = true
-          faderItem.opened()
+          faderItem.fadedIn = true
       }
       function hideFader()
       {
-          faderItem.isOpen = false
-          faderItem.closed()
+          faderItem.fadedIn = false
           if (privates.originalParent)
               faderItem.parent = privates.originalParent;
       }
@@ -141,15 +157,13 @@ Rectangle {
         id: eventEater
         anchors.fill: parent
         enabled: privates.alpha != 0.0
-        onClicked: parent.outerFrameClicked()
+        onClicked: parent.inactiveAreaClicked()
         hoverEnabled: true
         onPressedChanged: {
             if (!pressed)
                 return
-            console.debug("pressed")
             if (!containsMouse) {
-                console.debug("outside click")
-                parent.outerFrameClicked()
+                parent.inactiveAreaClicked()
             }
 
         }
@@ -177,7 +191,7 @@ Rectangle {
             name: "visible"
             PropertyChanges {
                 target: privates
-                alpha: fadeOpacity
+                alpha: opacityWhenFadeIn
             }
             AnchorChanges {
                 target: faderItem
@@ -199,7 +213,7 @@ Rectangle {
                 ScriptAction {script: privates.showFader() }
                 ParallelAnimation {
                     AnchorAnimation {alwaysRunToEnd: true; duration: fadeInDuration; easing.type: Easing.OutCubic}
-                    PropertyAnimation {target: privates; properties: "alpha"; from: 0.0; to: fadeOpacity; duration: fadeInDuration; easing.type: Easing.OutCubic; }
+                    PropertyAnimation {target: privates; properties: "alpha"; from: 0.0; to: opacityWhenFadeIn; duration: fadeInDuration; easing.type: Easing.OutCubic; }
                 }
             }
         },
@@ -209,7 +223,7 @@ Rectangle {
                 PauseAnimation { duration: fadeOutDelay }
                 ParallelAnimation {
                     AnchorAnimation {alwaysRunToEnd: true; duration: fadeOutDuration; easing.type: Easing.OutCubic}
-                    PropertyAnimation {target: privates; properties: "alpha"; from: fadeOpacity; to: 0.0; duration: fadeOutDuration; easing.type: Easing.OutCubic; }
+                    PropertyAnimation {target: privates; properties: "alpha"; from: opacityWhenFadeIn; to: 0.0; duration: fadeOutDuration; easing.type: Easing.OutCubic; }
                 }
                 ScriptAction {script: privates.hideFader() }
             }

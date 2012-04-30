@@ -2,37 +2,41 @@
 import QtQuick 1.1
 import "." 1.0
 
-Rectangle {
+StyledItem {
     id: statusBar
+    property bool hidden: false
+
     width: 200
-    height: 12
-    color: theme.style.fillColor
-    //todo: add sensing to open menu panel when pressed or swiped
+    styleName: "StatusBar"
 
+    anchors.left: parent.left
+    anchors.top: parent.top
+    anchors.right: parent.right
+    height: statusBar.style.height
+
+    // mouse area to capture gesture activating panel menu
     MouseArea {
-        id: tap
+        id: tapArea
         anchors.fill: parent
-        onClicked: {menuPanel.open(WidgetSet.FadeFromTop)}
+        onClicked: {menuPanel.show(WidgetSet.FadeTop)}
     }
-
     MenuPanel {
         id: menuPanel
-        //fadeStyle: WidgetSet.FadeFromTop
-        parent: widgetSet.rootBodyItem()
+        //fadeStyle: WidgetSet.FadeTop
+        parent: widgetSet.applicationBody
     }
 
-    StyledItem {
-        id: theme
-        styleName: "StatusBar"
+    Rectangle {
         anchors.fill: parent
+        color: statusBar.style.fillColor
         Label {
             id: dateTimeText
             width: 52
             height: 26
-            color: theme.style.fontColor
-            font.family: theme.style.fontFamily
-            font.weight: theme.style.fontWeight
-            font.pixelSize: theme.style.fontPixels
+            color: statusBar.style.fontColor
+            font.family: statusBar.style.fontFamily
+            font.weight: statusBar.style.fontWeight
+            font.pixelSize: statusBar.style.fontPixels
             anchors.top: parent.top
             anchors.topMargin: 0
             anchors.bottom: parent.bottom
@@ -59,7 +63,34 @@ Rectangle {
             height: statusBar.height
             width: statusBar.height
             anchors.left: dateTimeText.right
-            on: true
+            on: widgetSet.busy
         }
     }
+
+    states: [
+        State {
+            name: "hidden"
+            when: statusBar.hidden
+            PropertyChanges {
+                target: statusBar
+                opacity: 0.0
+            }
+            AnchorChanges {
+                target: statusBar
+                anchors.top: undefined
+                anchors.bottom: parent.top
+            }
+        }
+    ]
+    transitions: [
+        Transition {
+            from: ""
+            to: "hidden"
+            reversible: true
+            ParallelAnimation {
+                AnchorAnimation { easing.type: statusBar.style.transitionEasing; duration: statusBar.style.transitionDuration }
+                PropertyAnimation { properties: "opacity"; duration: statusBar.style.transitionDuration}
+            }
+        }
+    ]
 }

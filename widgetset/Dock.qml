@@ -8,10 +8,15 @@ import "." 1.0
 
 StyledItem {
 
+    // active tool ID
     property alias activeToolId: group.activeId
+    // assign ID to tool buttons automatically
     property alias autoId: group.autoId
+    // default property to hold content
     default property alias content: body.data
-    property alias contentFit: group.bodyFit
+    // resize content to fill dock entirely
+    property alias resizeChildrenToDock: group.resizeChildrenToGroup
+    // how to align tool buttons in the dock
     property variant alignment: Qt.AlignJustify
 
     styleName: "DockStyle"
@@ -19,74 +24,22 @@ StyledItem {
     width: 100
     height: 62
 
-    Component {
-        id: imageFrame
-        BorderImage {
-            anchors.fill: parent
-            source: dock.style.imageUrl
-            border.left: dock.style.imageBorders[0]
-            border.top: dock.style.imageBorders[1]
-            border.right: dock.style.imageBorders[2]
-            border.bottom: dock.style.imageBorders[3]
-        }
-    }
-
-    Component {
-        id: gradientFrame
-        Rectangle {
-            anchors.fill: parent
-            Rectangle {
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.right: parent.right
-                height: 2
-                color: dock.style.frameColor
-                border.color: dock.style.frameColor
-                border.width: dock.style.frameWidth
-            }
-            gradient: Gradient {
-                GradientStop {
-                    color: Qt.lighter(dock.style.fillColor, dock.style.gradientTones[0])
-                    position: dock.style.gradientSteps[0]
-                }
-                GradientStop {
-                    color: Qt.lighter(dock.style.fillColor, dock.style.gradientTones[1])
-                    position: dock.style.gradientSteps[1]
-                }
-                GradientStop {
-                    color: Qt.lighter(dock.style.fillColor, dock.style.gradientTones[2])
-                    position: dock.style.gradientSteps[2]
-                }
-                GradientStop {
-                    color: dock.style.fillColor
-                    position: dock.style.gradientSteps[3]
-                }
-            }
-        }
-    }
-
-    Loader {
-        id: styleFrame
-        z: -1
+    Background {
+        id: frame
         anchors.fill: parent
-        function setupFrame()
-        {
-            if (dock.style.imageUrl && (dock.style.imageUrl != undefined))
-                sourceComponent = imageFrame
-            else
-                sourceComponent = gradientFrame
-        }
+        styleName: dock.style.frameStyle
+        styleType: dock.styleType
     }
 
     CheckGroup {
         id: group
         anchors.fill: parent
         autoId: true
-        bodyFit: CheckGroup.FitToGroup
+        resizeChildrenToGroup: false
         Row {
             id: body
             property int marginOffset: 0
-            property real defSpacing: 5
+            property int defSpacing: dock.style.buttonSpacing
             anchors {
                 fill: parent
                 leftMargin: 1 + marginOffset
@@ -98,8 +51,12 @@ StyledItem {
             spacing: layoutChildren()
             function layoutChildren()
             {
-                if (group.bodyFit != CheckGroup.FitToGroup)
-                    return 1
+                if (group.resizeChildrenToGroup) {
+                    console.debug("dock resizes its children")
+                    return defSpacing
+                }
+
+                // todo: rework this a bit...
                 var icount = body.children.length
                 var fw = styleFrame.width - 2
                 switch (dock.alignment) {
@@ -116,12 +73,4 @@ StyledItem {
             }
         }
     }
-    Component.onCompleted: {
-        styleFrame.setupFrame()
-        //body.layoutChildren()
-    }
-    onStyleChanged: styleFrame.setupFrame()
-    //onControlChanged: styleFrame.setupFrame()
-    //onAlignmentChanged: body.layoutChildren()
-
 }

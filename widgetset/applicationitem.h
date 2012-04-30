@@ -11,8 +11,7 @@ class ApplicationItem : public StyledItem
 
     Q_PROPERTY(Orientation orientation READ orientation NOTIFY orientationChanged FINAL)
     Q_PROPERTY(QString orientationString READ orientationString NOTIFY orientationChanged FINAL)
-    Q_PROPERTY(Orientation lockToOrientation READ lockToOrientation WRITE setLockToOrientation NOTIFY orientationChanged FINAL)
-    Q_PROPERTY(QDeclarativeItem *inputPanel READ inputPanel WRITE setInputPanel NOTIFY inputPanelChanged)
+    Q_PROPERTY(Orientation lockOnOrientation READ lockOnOrientation WRITE setLockOnOrientation NOTIFY orientationChanged FINAL)
 
     Q_ENUMS(Orientation)
 public:
@@ -29,17 +28,14 @@ public:
 signals:
 
     void orientationChanged();
-    void inputPanelChanged();
     
 public slots:
 
 public:
     Orientation orientation() const;
     QString orientationString() const;
-    Orientation lockToOrientation() const;
-    void setLockToOrientation(Orientation o);
-    QDeclarativeItem *inputPanel() const;
-    void setInputPanel(QDeclarativeItem *ip);
+    Orientation lockOnOrientation() const;
+    void setLockOnOrientation(Orientation o);
 protected:
     virtual void componentComplete();
 private:
