@@ -4,6 +4,7 @@ import com.zesoft.widgetset 1.0
 Page {
     title: "Page1"
     anchors.fill: parent
+    header.visible: false
 
     FaderItem {
         id: popupTest

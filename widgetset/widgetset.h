@@ -17,7 +17,6 @@ class WidgetSet : public QObject
     Q_PROPERTY(QDeclarativeItem *applicationBody READ rootBodyItem NOTIFY applicationBodyChanged)
     Q_PROPERTY(QDeclarativeItem *statusBar READ statusBar NOTIFY statusBarChanged)
     Q_PROPERTY(QDeclarativeItem *inputPanel READ inputPanel NOTIFY inputPanelChanged)
-    Q_PROPERTY(QDeclarativeItem *headerPanel READ headerPanel NOTIFY headerPanelChanged)
     Q_PROPERTY(bool busy READ busy WRITE setBusy NOTIFY busyChanged)
     Q_ENUMS(FaderStyle PageStatus)
 public:
@@ -48,7 +47,6 @@ public:
     QDeclarativeItem *rootBodyItem();
     QDeclarativeItem *statusBar();
     QDeclarativeItem *inputPanel();
-    QDeclarativeItem *headerPanel();
     bool busy() const;
     void setBusy(bool v);
 
@@ -62,7 +60,6 @@ signals:
     void applicationBodyChanged();
     void statusBarChanged();
     void inputPanelChanged();
-    void headerPanelChanged();
     
 public slots:
 

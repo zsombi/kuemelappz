@@ -9,7 +9,7 @@
         <file alias="pushbutton-normal">images/PushButtonNormal.png</file>
         <file alias="pushbutton-pressed">images/PushButtonPressed.png</file>
         <file alias="gradient">images/gradient.png</file>
-        <file alias="tool-button">images/toolbutton.png</file>
+        <file alias="tab-button">images/toolbutton.png</file>
         <file alias="check-mark">images/check.png</file>
         <file alias="quit">images/quit.png</file>
         <file alias="tab">images/tab.png</file>

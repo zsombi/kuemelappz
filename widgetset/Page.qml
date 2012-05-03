@@ -1,11 +1,11 @@
 /**
-  Page - page element.
+  Page - page element. Encapsulates the page layout.
   */
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 import "." 1.0
 
-StyledItem {
+Item {
     id: page
     // page title string - used by the PageTab to display and identify page
     property string title
@@ -16,12 +16,17 @@ StyledItem {
     // page status
     property int status: WidgetSet.PageInactive
     // style of the background
-    property string backgroundStyle
-    // PageStack component set if the page is included in a page stack
-    property PageStack pageStack
+    property alias backgroundStyle: background.styleName
+    // page layout style
+    property alias layoutStyle: layout.styleName
     // page data holder
     default property alias content: layout.content
+    // page header component
     property alias header: layout.header
+    // header layout; if not set, header is hidden automatically
+    property alias headerLayout: layout.headerLayout
+    // PageStack component set if the page is included in a page stack
+    property PageStack pageStack
 
     // signal emitted when page got opened
     signal opened()
@@ -39,14 +44,14 @@ StyledItem {
     }
 
     Background {
-        styleName: backgroundStyle
+        id: background
         anchors.fill: parent
     }
 
     PageLayout {
         id: layout
         anchors.fill: parent
-        styleName: "PageLayout"
-        headerHidden: widgetSet.headerPanel.hidden
+        // header is invisible if no layout got connected to it
+        headerHidden: (layout.headerLayout == null)
     }
 }

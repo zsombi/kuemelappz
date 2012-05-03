@@ -1,3 +1,7 @@
+/**
+  StatusBar - component hosting indicators and other system elements. In addition
+  can bring up application menu panel.
+  */
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 import "." 1.0
@@ -5,6 +9,8 @@ import "." 1.0
 StyledItem {
     id: statusBar
     property bool hidden: false
+    // menu panel item to be shown
+    property MenuPanel menu
 
     width: 200
     styleName: "StatusBar"
@@ -18,12 +24,14 @@ StyledItem {
     MouseArea {
         id: tapArea
         anchors.fill: parent
-        onClicked: {menuPanel.show(WidgetSet.FadeTop)}
-    }
-    MenuPanel {
-        id: menuPanel
-        //fadeStyle: WidgetSet.FadeTop
-        parent: widgetSet.applicationBody
+        onClicked: {
+            if (menu) {
+                if (!menu.fadedIn)
+                    menu.show()
+                else
+                    menu.hide()
+            }
+        }
     }
 
     Rectangle {

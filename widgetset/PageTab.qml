@@ -18,10 +18,12 @@ Item {
     default property alias content: stack.data
     // tab alignment
     property variant tabAlign: Qt.AlignTop
+    // tab style
+    property alias tabStyle: control.styleName
+    // current page Index
+    property int currentIndex: -1
 
-    property int current: -1
-
-    onCurrentChanged: privates.setCurrentPage()
+    onCurrentIndexChanged: privates.setCurrentPage()
     Component.onCompleted: privates.setOpacities()
 
     QtObject {
@@ -31,43 +33,47 @@ Item {
             for (var i = 0; i < stack.children.length; ++i) {
                 if (stack.children[i].hasOwnProperty("status"))
                     stack.children[i].status = WidgetSet.PageInactive
+                stack.children[i].opacity = 0.0
                 stack.children[i].visible = false
             }
             setCurrentPage()
         }
         function setCurrentPage()
         {
-            if ((current < 0) || (current > stack.children.length))
+            if ((currentIndex < 0) || (currentIndex > stack.children.length))
                 return
-            console.debug("PageTab.setCurrentPage - " + current + ", len - " + stack.children.length)
+            //console.debug("PageTab.setCurrentPage - " + currentIndex + ", len - " + stack.children.length)
             if (prevPage) {
                 if (prevPage.hasOwnProperty("status")) {
                     prevPage.status = WidgetSet.PageDeactivating
                     prevPage.status = WidgetSet.PageInactive
                 }
+                prevPage.opacity = 0.0
                 prevPage.visible = false
             }
-            prevPage = stack.children[current]
+            prevPage = stack.children[currentIndex]
             if (prevPage.hasOwnProperty("status")) {
                 prevPage.status = WidgetSet.PageActivating
                 prevPage.status = WidgetSet.PageActive
             }
+            prevPage.opacity = 1.0
             prevPage.visible = true
         }
     }
 
     Dock {
         id: control
-        styleName: "ToolBar"
+        styleName: "ThemeToolbar"
         width: parent.width
         anchors.top: (tabAlign == Qt.AlignTop) ? parent.top : undefined
         anchors.bottom: (tabAlign == Qt.AlignBottom) ? parent.bottom : undefined
         resizeChildrenToDock: true
-        onActiveToolIdChanged: pageTab.current = activeToolId
+        onActiveToolIdChanged: pageTab.currentIndex = activeToolId
 
         Repeater {
             model: stack.children.length
             delegate: ToolButton {
+                styleName: control.style.buttonStyle
                 radio: true
                 checkable: true
                 buttonId: index
@@ -75,7 +81,7 @@ Item {
                 image: (stack.children[index].hasOwnProperty("image")) ? stack.children[index].image : ""
                 imageActive: (stack.children[index].hasOwnProperty("imageActive")) ? stack.children[index].imageActive : ""
                 text: (stack.children[index].hasOwnProperty("title")) ? stack.children[index].title : ""
-                checked: pageTab.current == index
+                checked: pageTab.currentIndex == index
             }
         }
     }

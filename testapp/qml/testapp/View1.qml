@@ -3,6 +3,8 @@ import com.zesoft.widgetset 1.0
 
 PageStack {
     property string title: "PageStack"
+    property url image
+    property url imageActive
     id: pgStack
     anchors.fill: parent
     width: parent.width
@@ -13,13 +15,12 @@ PageStack {
         Page {
             width: pgStack.width
             height: pgStack.width
-            header.children: [
+            headerLayout: PageHeader {
                 Button {
                     text: "Quit"
                     onClicked: Qt.quit()
                 }
-
-            ]
+            }
             Column {
                 spacing: 10
                 Label {

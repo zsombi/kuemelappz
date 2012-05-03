@@ -136,7 +136,7 @@ Rectangle {
           if (visualParent != null) {
               faderItem.parent = visualParent
           } else {
-              var root = widgetSet.rootBodyItem();
+              var root = widgetSet.applicationBody;
               if (root != null) {
                   faderItem.parent = root;
               } else {

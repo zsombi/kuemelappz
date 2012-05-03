@@ -8,29 +8,41 @@ ApplicationWindow {
     //header.visible: false
     objectName: "AppWin"
 
+    // application menu
+    mainMenu: MenuPanel {
+        id: menuPanel
+        fadeStyle: WidgetSet.FadeTop
+        parent: app
+        headerHidden: true
+        //parent: widgetSet.applicationBody
+        bottomMargin: 120
+        rightMargin: 40
+    }
+
     PageTab {
         anchors.fill: parent
         tabAlign: Qt.AlignBottom
-        current: 2
-        View2 {
-        }
+        //currentIndex: 2
+        Component.onCompleted: currentIndex = 1
+        View2 { image:"qrc:/default/quit"; imageActive: "qrc:/default/check-mark"}
 
-        View1 {
-
-        }
+        View1 { image:"qrc:/default/quit"; imageActive: "qrc:/default/check-mark"}
 
         Page {
+            image:"qrc:/default/quit"; imageActive: "qrc:/default/check-mark"
+            id: embeddedPage
             title: "Page2"
             anchors.fill: parent
             //anchors.topMargin: toolbar.height
-            header.children: [
+            headerLayout: PageHeader {
+                anchors.fill: parent
                 Button {
                     text: "Quit"
                     onClicked: Qt.quit()
                     anchors.left: parent.left
                     anchors.margins: 10
                 }
-            ]
+            }
 
             Column {
                 spacing: 10
@@ -41,7 +53,7 @@ ApplicationWindow {
                 Button {
                     text: "show/hide header"
                     width:200
-                    onClicked: widgetSet.headerPanel.hidden = !widgetSet.headerPanel.hidden
+                    onClicked: embeddedPage.header.hidden = !embeddedPage.header.hidden
                 }
                 Button {
                     text: "show/hide statusBar"

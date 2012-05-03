@@ -1,33 +1,39 @@
+/**
+  PageLayout - Defines the layout for application and page. Header animation is
+  controlled through theme styles. By defaul tit is styled to "ThemePageLayout"
+  */
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 import "." 1.0
 
-/**
-  * Defines the layout for application and page. Header animation is controlled through theme styles
-  */
 StyledItem {
     id: layout
     // header item
     property alias header: headerItem
+    // header layout
+    property Item headerLayout
     // for property binding
     property alias headerHidden: headerItem.hidden
-    // body item
-    property alias body: bodyItem
     // body content
-    default property alias content: bodyItem.children
+    default property alias content: bodyItem.data
 
     // internals
     width: 400
     height: 800
+    styleName: "ThemePageLayout"
 
-    localStyles: [
-        Style {
-            name: "Layout"
-            property int transitionEasing: Easing.InOutExpo
-            property int transitionDuration: 800
+    onHeaderLayoutChanged: {
+        if (headerLayout) {
+            headerLayout.parent = headerItem
         }
-    ]
-    styleName: "Layout"
+    }
+
+    Binding {
+        target: headerLayout
+        property: "styleName"
+        value: layout.style.headerStyle
+        when: headerLayout != undefined
+    }
 
     Item {
         id: headerItem

@@ -14,18 +14,21 @@ TextEditStyle 1.0 TextEditStyle.qml
 LabelStyle 1.0 LabelStyle.qml
 ScrollBarStyle 1.0 ScrollBarStyle.qml
 ButtonStyle 1.0 ButtonStyle.qml
+PageHeaderStyle 1.0 PageHeaderStyle.qml
 
 ButtonControl 1.0 ButtonControl.qml
 
 ApplicationWindow 1.0 ApplicationWindow.qml
 Background 1.0 Background.qml
 Page 1.0 Page.qml
+PageLayout 1.0 PageLayout.qml
+PageHeader 1.0 PageHeader.qml
+PageTab 1.0 PageTab.qml
+PageStack 1.0 PageStack.qml
 Dock 1.0 Dock.qml
 Label 1.0 Label.qml
 Button 1.0 Button.qml
 ToolButton 1.0 ToolButton.qml
-PageTab 1.0 PageTab.qml
-PageStack 1.0 PageStack.qml
 FaderItem 1.0 FaderItem.qml
 MenuPanel 1.0 MenuPanel.qml
 LineEdit  1.0 LineEdit.qml

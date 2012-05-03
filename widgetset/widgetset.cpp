@@ -33,9 +33,6 @@
     property statusBar: Item
         Specifies the application's status bar item.
 
-    property headerPanel: Item
-        Specifies the application's header item.
-
     property inputPanel: Item
         Specifies the application's input panel item.
 
@@ -118,21 +115,6 @@ QDeclarativeItem *WidgetSet::inputPanel()
         return qobject_cast<QDeclarativeItem*>(ho);
     }
     return 0;
-}
-
-QDeclarativeItem *WidgetSet::headerPanel()
-{
-    QDeclarativeItem *ret = 0;
-    ApplicationItem *appItem = qobject_cast<ApplicationItem*>(appWindow);
-    if (appItem) {
-        QVariant hdr = QDeclarativeProperty::read(appItem, "headerPanel");
-        QObject *ho = hdr.value<QObject*>();
-        ret = qobject_cast<QDeclarativeItem*>(ho);
-    }
-#ifdef TRACE_WIDGETSET
-    qDebug() << "headerItem::" << ret;
-#endif
-    return ret;
 }
 
 bool WidgetSet::busy() const

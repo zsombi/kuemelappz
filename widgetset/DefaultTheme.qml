@@ -1,11 +1,13 @@
+/*
+  Default theme (and in general a theme) definition file. The root object properties are accessible
+  in the application through THEME variable, e.g. THEME.textSizeSmall, etc.
+
+  As convention, every style name that belongs to a theme should start with "Theme" prefix.
+  */
+
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 import "." 1.0
-
-/*
-  Default theme (and in general a theme) definition file. The root object properties are accessible
-  in the application through THEME variable, e.g. THEME.textSizeSmall, etc
-  */
 
 Theme {
     name: "default"
@@ -13,6 +15,7 @@ Theme {
     // theme global properties
     property int pageFadingDuration: 800
     property int pageFadingEasing: Easing.InOutExpo
+    property int pageHeaderLayoutMargins: 6
     property int textSizeSmall: 12
     property int textSizeNormal: 16
     property int textSizeLarge: 22
@@ -22,22 +25,15 @@ Theme {
     property int paddingLarge: 12
     property string defaultFont: "Nokia Sans"
 
+    property color __headerColor: "#007dA9"
+    property color __highlightColor: "#00aacb"
+
     // theme styles
     /*------------------ApplicationWindow-----------------------------------------*/
     BackgroundStyle {
-        name: "Header"
-        color: "#007dc9"
-    }
-    BackgroundStyle {
-        name: "AppBackground"
+        name: "ThemeAppBackground"
         image: "qrc:/default/page-background-shape"
         fillMode: Image.Tile
-    }
-    PageLayoutStyle {
-        name: "PageLayout"
-        headerHeight: 55
-        transitionDuration: 200
-        transitionEasing: Easing.InOutExpo
     }
     IndicatorStyle {
         busyIndicatorUrl: "qrc:/default/busy"
@@ -53,31 +49,84 @@ Theme {
         transitionDuration: 200
     }
     ApplicationWindowStyle {
-        pageLayoutStyle: "PageLayout"
-        headerStyle: "Header"
-        backgroundStyle: "AppBackground"
+        name: "ThemeApplicationWindow"
+        backgroundStyle: "ThemeAppBackground"
         rotationDuration: 500
         rotationEasing: Easing.InOutExpo
     }
 
     CornerFramerStyle {
-        name: "AppRoundCorners"
+        name: "ThemeAppRoundCorners"
         sourceLeftTop: "qrc:/default/appwindow-corner-tl"
         sourceRightTop: "qrc:/default/appwindow-corner-tr"
         sourceRightBottom: "qrc:/default/appwindow-corner-br"
         sourceLeftBottom: "qrc:/default/appwindow-corner-bl"
     }
+    /*------------------MainMenu-----------------------------------------*/
+    PageHeaderStyle {
+        name: "ThemeMenuHeader"
+        color: "#FF8500"
+        headerMargins: 5
+    }
+    BackgroundStyle {
+        name: "ThemeMenuBackground"
+        color: "darkgray"
+        radius: 15
+    }
+
+    PageLayoutStyle {
+        name: "ThemeMenuLayout"
+        headerHeight: 45
+        headerStyle: "ThemeMenuHeader"
+        property string backgroundStyle: "ThemeMenuBackground"
+    }
+    /*------------------PageLayout-----------------------------------------*/
+    PageHeaderStyle {
+        name: "ThemePageHeader"
+        color: __headerColor
+        headerMargins: 5
+    }
+    PageLayoutStyle {
+        name: "ThemePageLayout"
+        headerHeight: 55
+        headerStyle: "ThemePageHeader"
+        transitionDuration: 200
+        transitionEasing: Easing.InOutExpo
+    }
 
     /*------------------ToolBar-----------------------------------------*/
 
     BackgroundStyle {
-        name: "toolbarFrame"
+        name: "ThemeToolbarFrame"
         image: "qrc:/default/gradient"
     }
-
+    ToolButtonStyle {
+        name: "PageTabButton"
+        type:Style.Normal
+        fontFamily: defaultFont
+        fontColor: "silver"
+        fontPixels: textSizeNormal
+    }
+    ToolButtonStyle {
+        name: "PageTabButton"
+        type:Style.Pressed
+        imageUrl: "qrc:/default/tab-button"
+        fontFamily: defaultFont
+        fontColor: __highlightColor
+        fontPixels: textSizeNormal
+    }
+    ToolButtonStyle {
+        name: "PageTabButton"
+        type:Style.Highlighted
+        imageUrl: "qrc:/default/tab-button"
+        fontFamily: defaultFont
+        fontColor: __highlightColor
+        fontPixels: textSizeNormal
+    }
     DockStyle {
-        name: "ToolBar"
-        frameStyle: "toolbarFrame"
+        name: "ThemeToolbar"
+        frameStyle: "ThemeToolbarFrame"
+        buttonStyle: "PageTabButton"
         buttonSpacing: 3
     }
 
@@ -95,26 +144,30 @@ Theme {
     }
 
     ToolButtonStyle {
-        name: "ToolButton"
+        name: "ThemeToolButton"
         type:Style.Normal
+        imageUrl: "qrc:/default/toolbutton-normal"
+        imageBorders: [8,8,8,8]
         fontFamily: defaultFont
         fontColor: "silver"
         fontPixels: textSizeNormal
     }
     ToolButtonStyle {
-        name: "ToolButton"
+        name: "ThemeToolButton"
         type:Style.Pressed
-        imageUrl: "qrc:/default/tool-button"
+        imageUrl: "qrc:/default/toolbutton-pressed"
+        imageBorders: [8,8,8,8]
         fontFamily: defaultFont
-        fontColor: "#00aacb"
+        fontColor: __highlightColor
         fontPixels: textSizeNormal
     }
     ToolButtonStyle {
-        name: "ToolButton"
+        name: "ThemeToolButton"
         type:Style.Highlighted
-        imageUrl: "qrc:/default/tool-button"
+        imageUrl: "qrc:/default/toolbutton-normal"
+        imageBorders: [8,8,8,8]
         fontFamily: defaultFont
-        fontColor: "#00aacb"
+        fontColor: __highlightColor
         fontPixels: textSizeNormal
     }
 

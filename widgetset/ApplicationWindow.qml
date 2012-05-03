@@ -4,17 +4,17 @@ import "." 1.0
 
 Item {
     // default property holding aplication content
-    default property alias content: layout.data//content
+    default property alias content: layout.data
     // status bas item
     property alias statusBar: statusBarItem
-    // page header layout
-    property alias header: layout.header
     // current orientation
     property alias orientation: app.orientation
     // string representation of orientation
     property alias orientationString: app.orientationString
     // locked orientation
     property alias lockOnOrientation: app.lockOnOrientation
+    // menu panel
+    property alias mainMenu: statusBarItem.menu
 
     /* load the default theme, just to make sure we have a valid
        theme  */
@@ -25,11 +25,10 @@ Item {
 
     ApplicationItem {
         id: app
-        styleName: "ApplicationWindow"
+        styleName: "ThemeApplicationWindow"
         // properties to store item instances, transfered to native code
         property alias statusBar: statusBarItem
-        property alias headerPanel: layout.header
-        property alias body: layout.body
+        property alias body: layout
         property alias inputPanel: inputPanelItem
 
         anchors.centerIn: parent
@@ -49,7 +48,7 @@ Item {
         }
 
         CornerFramer {
-            styleName: "AppRoundCorners"
+            styleName: "ThemeAppRoundCorners"
             anchors.top: statusBarItem.bottom
             anchors.bottom: parent.bottom
             anchors.left: parent.left
@@ -57,20 +56,13 @@ Item {
             z: Number.MAX_VALUE
         }
 
-        PageLayout {
+        // content item
+        Item {
             id: layout
             anchors.top: statusBarItem.bottom
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
-            styleName: app.style.pageLayoutStyle
-
-            Background {
-                parent: header
-                styleName: app.style.headerStyle
-                anchors.fill: parent
-                z: -1
-            }
         }
 
         // animate rotation
@@ -84,7 +76,7 @@ Item {
         // input panel
         InputPanel {
             id: inputPanelItem
-            parent: layout.body
+            parent: layout
         }
     }
 }
