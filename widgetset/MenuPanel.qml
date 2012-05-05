@@ -12,23 +12,35 @@ FaderItem {
     property int rightMargin: 0
     property int bottomMargin: 100
 
-    property alias headerHidden: menuLayout.headerHidden
-    default property alias content: menuLayout.content
+    //property alias headerHidden: menuLayout.headerHidden
+    default property alias content: panel.data
+
+    property alias panelItem: panel
 
     backgroundSource: "qrc:/default/toolbutton-normal"
     id: menuPanel
 
-    Background {
-        styleName: "ThemeMenuBackground"
+    Item {
+        id: panel
         visible: parent.fadedIn
         anchors.fill: parent
         anchors.leftMargin: leftMargin
         anchors.topMargin: topMargin
         anchors.rightMargin: rightMargin
         anchors.bottomMargin: bottomMargin
+        // capture mouse gestures from the panel area
         MouseArea {
             anchors.fill: parent
         }
+    }
+
+    /*
+    Background {
+        styleName: "ThemeMenuBackground"
+        MouseArea {
+            anchors.fill: parent
+        }
+
         PageLayout {
             id: menuLayout
             visible: menuPanel.fadedIn
@@ -39,6 +51,7 @@ FaderItem {
             }
         }
     }
+    */
 
     /*
     Rectangle {

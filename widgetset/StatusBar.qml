@@ -27,7 +27,7 @@ StyledItem {
         onClicked: {
             if (menu) {
                 if (!menu.fadedIn)
-                    menu.show()
+                    menu.show(WidgetSet.FadeTop)
                 else
                     menu.hide()
             }

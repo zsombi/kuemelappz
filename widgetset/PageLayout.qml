@@ -77,6 +77,7 @@ StyledItem {
 
     Item {
         id: bodyItem
+        clip: true
         anchors.right: parent.right
         anchors.rightMargin: 0
         anchors.left: parent.left

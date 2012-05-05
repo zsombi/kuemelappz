@@ -19,6 +19,9 @@
     PageActive - the page is active
     PageDeactivating - the page is on teh way to be deactivated
 
+  BaseInputLayout - base layout style flags of the input panel
+    Input
+
   Properties:
     property mobilePlatform: boolean
         Specifies whether the platform used is a mobile or desktop platform

@@ -79,7 +79,8 @@ OTHER_FILES = qmldir \
     PageLayout.qml \
     PageLayoutStyle.qml \
     PageHeader.qml \
-    PageHeaderStyle.qml
+    PageHeaderStyle.qml \
+    InputPanelStyle.qml
 
 !equals(_PRO_FILE_PWD_, $$OUT_PWD) {
     copy_qmldir.target = $$OUT_PWD/qmldir
@@ -125,7 +126,8 @@ QML_FILES = ApplicationWindow.qml \
     PageLayoutStyle.qml \
     FaderItemStyle.qml \
     PageHeader.qml \
-    PageHeaderStyle.qml
+    PageHeaderStyle.qml \
+    InputPanelStyle.qml
 
 qmldir.files = qmldir $$QML_FILES
 symbian {

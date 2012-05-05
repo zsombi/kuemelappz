@@ -48,9 +48,20 @@ Theme {
         transitionEasing: Easing.InOutExpo
         transitionDuration: 200
     }
+    InputPanelStyle {
+        name: "ThemeInputPanel"
+        fadeInDuration: 175
+        fadeOutDuration: 175
+        fadeOutDelay: 100
+        fadeEasing: Easing.OutCubic
+        borderColor: "silver"
+        backgroundImageUrl: "qrc:/default/keypad"
+    }
+
     ApplicationWindowStyle {
         name: "ThemeApplicationWindow"
         backgroundStyle: "ThemeAppBackground"
+        inputPanelStyle: "ThemeInputPanel"
         rotationDuration: 500
         rotationEasing: Easing.InOutExpo
     }
@@ -67,6 +78,7 @@ Theme {
         name: "ThemeMenuHeader"
         color: "#FF8500"
         headerMargins: 5
+        radius: 15
     }
     BackgroundStyle {
         name: "ThemeMenuBackground"

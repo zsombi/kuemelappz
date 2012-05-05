@@ -1,11 +1,14 @@
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 import "." 1.0
+import "Utility.js" as Utils
 
 // Single line editor, themable with TextEditStyle
 StyledItem {
     /** public API
       */
+    // input panel flags (see WidgetSet.InputLayoutFlags)
+    property int inputFlags: WidgetSet.InputWithClose
     // hint text
     property alias hint: hintText.text
     // editor data
@@ -37,7 +40,7 @@ StyledItem {
         anchors.top: parent.top
         anchors.right: parent.right
         height: 30
-        z: 50
+        //z: 50
         border.left: textEdit.style.imageBorders[0]; border.top: textEdit.style.imageBorders[1]
         border.right: textEdit.style.imageBorders[2]; border.bottom: textEdit.style.imageBorders[3]
 
@@ -69,21 +72,21 @@ StyledItem {
             font.pixelSize: textEdit.style.editorFontPixels
             echoMode: (password) ? TextInput.Password : TextInput.Normal
 
-            activeFocusOnPress: widgetSet.inputPanel.usePlatformInput
+            activeFocusOnPress: Utils.usePlatformInput()
             MouseArea {
                 anchors.fill: parent
-                enabled: !widgetSet.inputPanel.usePlatformInput
+                enabled: !editor.activeFocusOnPress
                 onClicked: {
                     if (!editor.activeFocus) {
                         editor.forceActiveFocus()
-                        widgetSet.inputPanel.openInput(editor, "QWERTY")
+                        Utils.openInputPanel(editor, inputFlags, "QWERTY")
                     } else {
                         editor.focus = false;
-                        widgetSet.inputPanel.closeInput()
+                        Utils.closeInputPanel(editor)
                     }
                 }
                 onPressAndHold: {
-                    widgetSet.inputPanel.closeInput()
+                    Utils.closeInputPanel(editor)
                 }
             }
         }

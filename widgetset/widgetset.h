@@ -19,6 +19,7 @@ class WidgetSet : public QObject
     Q_PROPERTY(QDeclarativeItem *inputPanel READ inputPanel NOTIFY inputPanelChanged)
     Q_PROPERTY(bool busy READ busy WRITE setBusy NOTIFY busyChanged)
     Q_ENUMS(FaderStyle PageStatus)
+    Q_FLAGS(InputLayout InputLayoutFlags)
 public:
 
     enum FaderStyle {
@@ -37,6 +38,13 @@ public:
         PageDeactivating
     };
 
+    enum InputLayout {
+        InputWithClose = 0x01,
+        InputWithNavigators = 0x02,
+        InputWithEditor = 0x04,
+        InputWithClear = 0x08
+    };
+    Q_DECLARE_FLAGS(InputLayoutFlags, InputLayout)
 
     WidgetSet(QObject *parent = 0);
     ~WidgetSet();
@@ -71,5 +79,6 @@ public:
 QML_DECLARE_TYPE(WidgetSet)
 QML_DECLARE_TYPE(WidgetSet::FaderStyle)
 QML_DECLARE_TYPE(WidgetSet::PageStatus)
+QML_DECLARE_TYPE(WidgetSet::InputLayout)
 
 #endif // WIDGETSET_H

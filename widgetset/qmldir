@@ -5,6 +5,7 @@ plugin widgetset
 ApplicationWindowStyle 1.0 ApplicationWindowStyle.qml
 BackgroundStyle 1.0 BackgroundStyle.qml
 PageLayoutStyle 1.0 PageLayoutStyle.qml
+InputPanelStyle 1.0 InputPanelStyle.qml
 FaderItemStyle 1.0 FaderItemStyle.qml
 StatusBarStyle 1.0 StatusBarStyle.qml
 CornerFramerStyle 1.0 CornerFramerStyle.qml

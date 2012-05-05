@@ -6,6 +6,8 @@ import "." 1.0
 Style {
     // background style object name
     property string backgroundStyle
+    // input panel style
+    property string inputPanelStyle
     // application layout rotation duration
     property int rotationDuration
     // rotation easing

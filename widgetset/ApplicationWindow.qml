@@ -13,6 +13,8 @@ Item {
     property alias orientationString: app.orientationString
     // locked orientation
     property alias lockOnOrientation: app.lockOnOrientation
+    // alter this property if system's input panel is required
+    property bool usePlatformInput: false
     // menu panel
     property alias mainMenu: statusBarItem.menu
 
@@ -76,6 +78,7 @@ Item {
         // input panel
         InputPanel {
             id: inputPanelItem
+            styleName: app.style.inputPanelStyle
             parent: layout
         }
     }
