@@ -3,16 +3,25 @@ import "." 1.0
 
 StyledItem {
     //public API
-    property bool radio: false      // set to true if radio button
-    //property bool enabled: true     //overrides Item's enabled
-    property bool checked: false    // check state
-    property bool checkable: false  // is checkable
-    property bool pressed: false    // pressed state
+    // set to true if radio button
+    property bool radio: false
+    // check state
+    property bool checked: false
+    // is checkable
+    property bool checkable: false
+    // pressed state
+    property bool pressed: false
     property bool highlighted: pressed
-    property bool autoRepeat: false // auto-repeat
-    property bool longPress: false  // emits long-presses?
-    property int buttonId: -1       // button identifier
-    property bool focused: false    // focused property, true when it is the active button
+    // auto-repeat
+    property bool autoRepeat: false
+    // emits long-presses?
+    property bool longPress: false
+    // button identifier
+    property int buttonId: -1
+    // do auto-focus on pressed or not
+    property bool autoFocusOnPress: true
+    // focused property, true when it is the active button
+    property bool focused: false
     //property bool grouped: (group !== null)
 
     signal clicked
@@ -49,7 +58,8 @@ StyledItem {
         function activate(mouse)
         {
             buttonControl.pressed = true
-            buttonControl.forceActiveFocus()
+            if (autoFocusOnPress)
+                buttonControl.forceActiveFocus()
             if (!buttonControl.checkable && buttonControl.autoRepeat && !buttonControl.longPress)
                 tapRepeatTimer.restart()
         }
@@ -64,7 +74,8 @@ StyledItem {
         {
             if (buttonControl.pressed) {
                 buttonControl.pressed = false
-                buttonControl.focused = true
+                if (autoFocusOnPress)
+                    buttonControl.focused = true
                 if (buttonControl.checkable) {
                     if (radio) {
                         if (!buttonControl.checked)

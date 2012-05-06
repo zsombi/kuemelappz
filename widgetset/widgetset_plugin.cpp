@@ -12,6 +12,8 @@
 #include <QDeclarativeContext>
 #include <QApplication>
 
+#include <QFont>
+
 void WidgetsetPlugin::initializeEngine(QDeclarativeEngine *engine, const char *uri)
 {
     QDeclarativeExtensionPlugin::initializeEngine(engine, uri);

@@ -36,6 +36,7 @@ Item {
         anchors.centerIn: parent
         StatusBar {
             id: statusBarItem
+            styleName: app.style.statusBarStyle
             width: parent.width
             anchors.top: parent.top
             visible: widgetSet.mobilePlatform
@@ -80,6 +81,7 @@ Item {
             id: inputPanelItem
             styleName: app.style.inputPanelStyle
             parent: layout
+            height: app.orientation == ApplicationItem.Portrait ? 440 : 200
         }
     }
 }

@@ -7,10 +7,8 @@ Style {
     type: Style.Normal
     property int height
     property color fillColor
-    property string fontFamily
+    property variant font
     property color fontColor
-    property int fontPixels
-    property int fontWeight
     property int transitionEasing
     property int transitionDuration
 }

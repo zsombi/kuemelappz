@@ -69,7 +69,7 @@ bool WidgetSet::mobilePlatform()
 #ifdef MOBILE_SYSTEM
     return true;
 #else
-    return true;
+    return false;
 #endif
 
 }

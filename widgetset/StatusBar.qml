@@ -42,9 +42,7 @@ StyledItem {
             width: 52
             height: 26
             color: statusBar.style.fontColor
-            font.family: statusBar.style.fontFamily
-            font.weight: statusBar.style.fontWeight
-            font.pixelSize: statusBar.style.fontPixels
+            font: statusBar.style.font
             anchors.top: parent.top
             anchors.topMargin: 0
             anchors.bottom: parent.bottom

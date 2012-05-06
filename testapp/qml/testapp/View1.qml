@@ -26,7 +26,7 @@ PageStack {
                 Label {
                     color: "white"
                     text: "Page #" + pgStack.depth
-                    font.pixelSize: THEME.textSizeLarge
+                    font: THEME.largeFont
                 }
                 Button {
                     text: "Back"

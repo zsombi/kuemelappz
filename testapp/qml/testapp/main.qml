@@ -13,17 +13,25 @@ ApplicationWindow {
         id: menuPanel
         fadeStyle: WidgetSet.FadeTop
         parent: app
-        headerHidden: true
-        //parent: widgetSet.applicationBody
+        Page {
+            parent: menuPanel.panelItem
+            anchors.fill: parent
+            backgroundStyle: "ThemeMenuBackground"
+            layoutStyle: "ThemeMenuLayout"
+            headerLayout: PageHeader {
+            }
+        }
+
         bottomMargin: 120
         rightMargin: 40
+        leftMargin: 40
     }
 
     PageTab {
         anchors.fill: parent
         tabAlign: Qt.AlignBottom
         //currentIndex: 2
-        Component.onCompleted: currentIndex = 1
+        Component.onCompleted: currentIndex = 2
         View2 { image:"qrc:/default/quit"; imageActive: "qrc:/default/check-mark"}
 
         View1 { image:"qrc:/default/quit"; imageActive: "qrc:/default/check-mark"}
@@ -45,10 +53,11 @@ ApplicationWindow {
             }
 
             Column {
-                spacing: 10
+                anchors.fill: parent
+                spacing: 30
                 Label {
                     text: "Page 2"
-                    font.pixelSize: THEME.textSizeLarge
+                    font: THEME.largeFont
                 }
                 Button {
                     text: "show/hide header"
@@ -59,6 +68,9 @@ ApplicationWindow {
                     text: "show/hide statusBar"
                     width:200
                     onClicked: widgetSet.statusBar.hidden = !widgetSet.statusBar.hidden
+                }
+                LineEdit {
+                    hint: "whatever"
                 }
             }
         }

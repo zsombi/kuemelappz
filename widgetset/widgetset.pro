@@ -36,7 +36,6 @@ HEADERS += \
 
 OTHER_FILES = qmldir \
     README. \
-    theme_descriptor.xml \
     ApplicationWindow.qml \
     Page.qml \
     Dock.qml \
@@ -65,7 +64,6 @@ OTHER_FILES = qmldir \
     StatusBarStyle.qml \
     CornerFramerStyle.qml \
     DockStyle.qml \
-    ToolButtonStyle.qml \
     TextEditStyle.qml \
     LabelStyle.qml \
     ScrollBarStyle.qml \
@@ -80,7 +78,8 @@ OTHER_FILES = qmldir \
     PageLayoutStyle.qml \
     PageHeader.qml \
     PageHeaderStyle.qml \
-    InputPanelStyle.qml
+    InputPanelStyle.qml \
+    KeyItem.qml
 
 !equals(_PRO_FILE_PWD_, $$OUT_PWD) {
     copy_qmldir.target = $$OUT_PWD/qmldir
@@ -111,7 +110,6 @@ QML_FILES = ApplicationWindow.qml \
     StatusBarStyle.qml \
     CornerFramerStyle.qml \
     DockStyle.qml \
-    ToolButtonStyle.qml \
     TextEditStyle.qml \
     LabelStyle.qml \
     ScrollBarStyle.qml \
@@ -127,7 +125,8 @@ QML_FILES = ApplicationWindow.qml \
     FaderItemStyle.qml \
     PageHeader.qml \
     PageHeaderStyle.qml \
-    InputPanelStyle.qml
+    InputPanelStyle.qml \
+    KeyItem.qml
 
 qmldir.files = qmldir $$QML_FILES
 symbian {

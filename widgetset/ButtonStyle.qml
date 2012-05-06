@@ -9,14 +9,10 @@ import "." 1.0
   */
 
 Style {
-    name: "PushButton"
-
     // button rame style as defined in BackgroundStyle
     property string frameStyle
-    // fi[ont used in text
-    property string fontFamily
+    // font
+    property variant font
     // font color
     property color fontColor
-    // font size in pixels
-    property int fontPixels
 }

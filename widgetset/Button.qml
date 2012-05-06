@@ -21,6 +21,8 @@ ButtonControl {
     property url imagePressed: image
     // image-text layout
     property int layout: Qt.Horizontal
+    // font
+    property alias font: buttonText.font
 
     // style
     styleName: "PushButton"
@@ -63,16 +65,17 @@ ButtonControl {
             anchors {verticalCenter: parent.verticalCenter; horizontalCenter: parent.horizontalCenter}
 
             color: pushButton.style.fontColor
-            font.family: pushButton.style.fontFamily
+            //font.family: pushButton.style.fontFamily
+            //font.pixelSize: pushButton.style.fontPixels
+            font: pushButton.style.font
             styleColor: Qt.darker(color, 2)
             style: Text.Outline
-            font.bold: true
+            //font.bold: true
             //wrapMode: Text.WordWrap
             elide: Text.ElideRight
             smooth: true
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
-            font.pixelSize: pushButton.style.fontPixels
             text: pushButton.text
         }
 

@@ -35,7 +35,7 @@ StyledItem {
 
     BorderImage {
         id: frame
-        source: textEdit.style.imageUrl
+        source: textEdit.style.image
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.right: parent.right
@@ -46,7 +46,7 @@ StyledItem {
 
         Text {
             id: hintText
-            color: textEdit.style.hintFontColor
+            color: textEdit.style.hintColor
             text: "<Entry>"
             smooth: true
             anchors.rightMargin: 5
@@ -55,9 +55,7 @@ StyledItem {
             anchors.topMargin: 5
             anchors.fill: parent
             verticalAlignment: Text.AlignVCenter
-            font.family: textEdit.style.hintFontFamily
-            font.pixelSize: textEdit.style.hintFontPixels
-            font.italic: textEdit.style.hintFontItalic
+            font: textEdit.style.hintFont
             visible: (editor.text == "") && (editor.focus == false)
         }
 
@@ -68,8 +66,7 @@ StyledItem {
             anchors.rightMargin: textEdit.style.imageBorders[2]; anchors.bottomMargin: textEdit.style.imageBorders[3]
             width: parent.width
             clip: true
-            font.family: textEdit.style.editorFontFamily
-            font.pixelSize: textEdit.style.editorFontPixels
+            font: textEdit.style.editorFont
             echoMode: (password) ? TextInput.Password : TextInput.Normal
 
             activeFocusOnPress: Utils.usePlatformInput()

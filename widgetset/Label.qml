@@ -9,10 +9,7 @@ Text {
     height: paintedHeight
     StyledItem { id: labelTheme; styleName: "Label"}
 
-    font.family: (labelTheme.style) ? labelTheme.style.fontFamily : undefined
-    font.pixelSize: labelTheme.textSize
-    font.weight: labelTheme.style.fontWeight
-    font.bold: label.bold
-    font.italic: label.italic
+    color: (labelTheme.style) ? labelTheme.style.fontColor : undefined
+    font: (labelTheme.style) ? labelTheme.style.font : undefined
     verticalAlignment: Text.AlignVCenter
 }

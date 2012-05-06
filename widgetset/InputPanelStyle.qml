@@ -15,4 +15,8 @@ Style {
     property color borderColor
     // panel's background
     property url backgroundImageUrl
+    // key button style
+    property string keyButtonStyle
+    // control button style
+    property string controlButtonStyle
 }

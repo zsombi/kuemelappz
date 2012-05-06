@@ -22,12 +22,6 @@
         activated, and all th eresources are mounter to the "/theme" prefix, therefore
         styles accessing the resources should be aware of this. default resources
         are prefixed with "/default".
-
-    default property styleSet: list<Style> read-only
-        List of Style elements defining the styleset. The list is also hashed to ease
-        searching in the styleset. The hashing happens upon theme component completion
-        or at first access, in case some WidgetSet component does an early access to
-        the theme.
   */
 
 #include "theme.h"
@@ -36,8 +30,13 @@
 
 //#define TRACE_THEME
 
-Theme::Theme(QObject *parent) :
-    QObject(parent)
+/**
+  Onherited from QDeclarativeItem to be able to add items (i.e. Text) to declare
+  font sizes and resolution based layout items.
+  */
+Theme::Theme(QDeclarativeItem *parent) :
+    //QObject(parent)
+    QDeclarativeItem(parent)
 {
 }
 
@@ -61,9 +60,11 @@ void Theme::componentComplete()
     qDebug() << "Theme component parsing ends";
 #endif
     // parse theme list and classify in styleSets
-    QListIterator<Style*> pl(m_styleSet);
-    while (pl.hasNext()) {
-        Style *item = pl.next();
+    //QListIterator<Style*> pl(m_styleSet);
+    //while (pl.hasNext()) {
+        //Style *item = pl.next();
+    QList<Style*> cl = findChildren<Style*>();
+    foreach(Style *item, cl) {
 #ifdef TRACE_THEME
         qDebug() << "Hashing style::" << item->name() << "/" << item->setType();
 #endif
@@ -116,12 +117,6 @@ void Theme::setResource(const QString &s)
         m_resource = s;
         emit resourceChanged();
     }
-}
-
-// styleset property getter
-QDeclarativeListProperty<Style> Theme::styleSet()
-{
-    return QDeclarativeListProperty<Style>(this, m_styleSet);
 }
 
 /**

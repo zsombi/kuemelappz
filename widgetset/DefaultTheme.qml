@@ -16,19 +16,88 @@ Theme {
     property int pageFadingDuration: 800
     property int pageFadingEasing: Easing.InOutExpo
     property int pageHeaderLayoutMargins: 6
-    property int textSizeSmall: 12
-    property int textSizeNormal: 16
-    property int textSizeLarge: 22
     property int paddingThin: 2
     property int paddingLow: 4
     property int paddingMedium: 8
     property int paddingLarge: 12
-    property string defaultFont: "Nokia Sans"
+    property alias smallFont: smallFontItem.font
+    property alias normalFont: normalFontItem.font
+    property alias largeFont: largeFontItem.font
 
     property color __headerColor: "#007dA9"
     property color __highlightColor: "#00aacb"
+    /*--------------------FONTS*/
+    Text {
+        id: smallFontItem
+        font.family: "Nokia Sans"
+        font.pixelSize: 12
+        font.weight: Font.Light
+    }
+    Text {
+        id: smallBoldFont
+        font.family: "Nokia Sans"
+        font.pixelSize: 12
+        font.weight: Font.Bold
+    }
+    Text {
+        id: normalFontItem
+        font.family: "Nokia Sans"
+        font.pixelSize: 16
+        font.weight: Font.Normal
+    }
+    Text {
+        id: normalItalicFont
+        font.family: "Nokia Sans"
+        font.pixelSize: 16
+        font.weight: Font.Normal
+        font.italic: true
+    }
+    Text {
+        id: largeFontItem
+        font.family: "Nokia Sans"
+        font.pixelSize: 22
+        font.weight: Font.DemiBold
+    }
 
     // theme styles
+    /*-------------------InputPanel----------------------------------------*/
+    BackgroundStyle {
+        name: "keyBtnFrame"
+        type: Style.Normal
+        image: "qrc:/default/toolbutton-normal"
+        imageBorders: [6,6,6,6]
+    }
+    BackgroundStyle {
+        name: "keyBtnFrame"
+        type: Style.Pressed
+        image: "qrc:/default/toolbutton-pressed"
+        imageBorders: [6,6,6,6]
+    }
+    ButtonStyle {
+        name: "keyButton"
+        type: Style.Normal
+        font: normalFontItem.font
+        frameStyle: "toolBtnFrame"
+        fontColor: "white"
+    }
+    ButtonStyle {
+        name: "keyButton"
+        type: Style.Pressed
+        frameStyle: "toolBtnFrame"
+        font: normalFontItem.font
+        fontColor: "lightgray"
+    }
+    InputPanelStyle {
+        name: "ThemeInputPanel"
+        fadeInDuration: 175
+        fadeOutDuration: 175
+        fadeOutDelay: 100
+        fadeEasing: Easing.OutCubic
+        borderColor: "silver"
+        backgroundImageUrl: "qrc:/default/keypad"
+        keyButtonStyle: "keyButton"
+        controlButtonStyle: "PushButton"
+    }
     /*------------------ApplicationWindow-----------------------------------------*/
     BackgroundStyle {
         name: "ThemeAppBackground"
@@ -39,29 +108,20 @@ Theme {
         busyIndicatorUrl: "qrc:/default/busy"
     }
     StatusBarStyle {
-        height: 15
+        height: 17
+        name: "statusBar"
         fillColor: "black"
-        fontFamily: defaultFont
         fontColor: "white"
-        fontPixels: textSizeSmall
-        fontWeight: Font.Bold
+        font: smallBoldFont.font
         transitionEasing: Easing.InOutExpo
         transitionDuration: 200
-    }
-    InputPanelStyle {
-        name: "ThemeInputPanel"
-        fadeInDuration: 175
-        fadeOutDuration: 175
-        fadeOutDelay: 100
-        fadeEasing: Easing.OutCubic
-        borderColor: "silver"
-        backgroundImageUrl: "qrc:/default/keypad"
     }
 
     ApplicationWindowStyle {
         name: "ThemeApplicationWindow"
         backgroundStyle: "ThemeAppBackground"
         inputPanelStyle: "ThemeInputPanel"
+        statusBarStyle: "statusBar"
         rotationDuration: 500
         rotationEasing: Easing.InOutExpo
     }
@@ -112,28 +172,43 @@ Theme {
         name: "ThemeToolbarFrame"
         image: "qrc:/default/gradient"
     }
-    ToolButtonStyle {
+    BackgroundStyle {
+        name: "pgTabFrame"
+        type:Style.Normal
+        color: "transparent"
+    }
+    BackgroundStyle {
+        name: "pgTabFrame"
+        type:Style.Pressed
+        image: "qrc:/default/tab-button"
+        //imageBorders: [8,8,8,8]
+    }
+    BackgroundStyle {
+        name: "pgTabFrame"
+        type:Style.Highlighted
+        image: "qrc:/default/tab-button"
+        //imageBorders: [8,8,8,8]
+    }
+    ButtonStyle {
         name: "PageTabButton"
         type:Style.Normal
-        fontFamily: defaultFont
+        frameStyle: "pgTabFrame"
+        font: normalFontItem.font
         fontColor: "silver"
-        fontPixels: textSizeNormal
     }
-    ToolButtonStyle {
+    ButtonStyle {
         name: "PageTabButton"
         type:Style.Pressed
-        imageUrl: "qrc:/default/tab-button"
-        fontFamily: defaultFont
+        frameStyle: "pgTabFrame"
+        font: normalFontItem.font
         fontColor: __highlightColor
-        fontPixels: textSizeNormal
     }
-    ToolButtonStyle {
+    ButtonStyle {
         name: "PageTabButton"
         type:Style.Highlighted
-        imageUrl: "qrc:/default/tab-button"
-        fontFamily: defaultFont
+        frameStyle: "pgTabFrame"
+        font: normalFontItem.font
         fontColor: __highlightColor
-        fontPixels: textSizeNormal
     }
     DockStyle {
         name: "ThemeToolbar"
@@ -155,32 +230,39 @@ Theme {
         buttonSpacing: 3
     }
 
-    ToolButtonStyle {
+    /*-------------------ToolButton----------------------------------------*/
+    BackgroundStyle {
+        name: "toolBtnFrame"
+        type:Style.Normal
+        image: "qrc:/default/toolbutton-normal"
+        imageBorders: [8,8,8,8]
+    }
+    BackgroundStyle {
+        name: "toolBtnFrame"
+        type:Style.Pressed
+        image: "qrc:/default/toolbutton-pressed"
+        imageBorders: [8,8,8,8]
+    }
+    ButtonStyle {
         name: "ThemeToolButton"
         type:Style.Normal
-        imageUrl: "qrc:/default/toolbutton-normal"
-        imageBorders: [8,8,8,8]
-        fontFamily: defaultFont
+        frameStyle: "toolBtnFrame"
+        font: normalFontItem.font
         fontColor: "silver"
-        fontPixels: textSizeNormal
     }
-    ToolButtonStyle {
+    ButtonStyle {
         name: "ThemeToolButton"
         type:Style.Pressed
-        imageUrl: "qrc:/default/toolbutton-pressed"
-        imageBorders: [8,8,8,8]
-        fontFamily: defaultFont
-        fontColor: __highlightColor
-        fontPixels: textSizeNormal
+        frameStyle: "toolBtnFrame"
+        font: normalFontItem.font
+        fontColor: "silver"
     }
-    ToolButtonStyle {
+    ButtonStyle {
         name: "ThemeToolButton"
         type:Style.Highlighted
-        imageUrl: "qrc:/default/toolbutton-normal"
-        imageBorders: [8,8,8,8]
-        fontFamily: defaultFont
-        fontColor: __highlightColor
-        fontPixels: textSizeNormal
+        frameStyle: "toolBtnFrame"
+        font: normalFontItem.font
+        fontColor: "silver"
     }
 
     /*-------------------PushButton----------------------------------------*/
@@ -196,18 +278,22 @@ Theme {
         imageBorders: [6,6,6,6]
     }
     ButtonStyle {
+        name: "PushButton"
         type: Style.Normal
         frameStyle: "btnFrame"
-        fontFamily: "Arial"
+        font: normalFontItem.font
+        //fontFamily: "Arial"
         fontColor: "white"
-        fontPixels: textSizeNormal
+        //fontPixels: textSizeNormal
     }
     ButtonStyle {
+        name: "PushButton"
         type: Style.Pressed
         frameStyle: "btnFrame"
-        fontFamily: "Arial"
+        font: normalFontItem.font
+        //fontFamily: "Arial"
         fontColor: "lightgray"
-        fontPixels: textSizeNormal
+        //fontPixels: textSizeNormal
     }
 
     /*----------------NaviBack-------------------------------------------*/
@@ -225,37 +311,34 @@ Theme {
     ButtonStyle {
         name: "NaviBackStyle"
         frameStyle: "btnBackFrame"
-        fontFamily: "Nokia Sans"
+        font: normalFontItem.font
+        //fontFamily: "Nokia Sans"
         fontColor: "white"
-        fontPixels: textSizeNormal
+        //fontPixels: textSizeNormal
     }
     ButtonStyle {
         name: "NaviBackStyle"
         frameStyle: "btnBackFrame"
-        fontFamily: "Nokia Sans"
+        font: normalFontItem.font
+        //fontFamily: "Nokia Sans"
         fontColor: "white"
-        fontPixels: textSizeNormal
+        //fontPixels: textSizeNormal
     }
 
     /*----------------LineEdit-------------------------------------------*/
     TextEditStyle {
         name: "LineEdit"
-        imageUrl: "qrc:/default/editline-background"
+        image: "qrc:/default/editline-background"
         imageBorders: [10,5,10,5]
-        hintFontFamily: defaultFont
-        hintFontPixels: textSizeNormal
-        hintFontItalic: true
-        hintFontColor: "#a2a2a2"
-        editorFontFamily: defaultFont
-        editorFontPixels: textSizeNormal
+        hintFont: normalItalicFont.font
+        editorFont: normalFontItem.font
+        hintColor: "#a2a2a2"
     }
 
     /*----------------Label-------------------------------------------*/
     LabelStyle {
-        fontFamily: "Nokia Sans"
-        fontColor: "silver"
-        fontPixels: textSizeNormal
-        fontWeight: Font.DemiBold
+        font: normalFont
+        fontColor: "white"
     }
 
     /*----------------Scrollbar-------------------------------------------*/

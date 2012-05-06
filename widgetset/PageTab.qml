@@ -20,6 +20,8 @@ Item {
     property variant tabAlign: Qt.AlignTop
     // tab style
     property alias tabStyle: control.styleName
+    // tab height
+    property alias tabHeight: control.height
     // current page Index
     property int currentIndex: -1
 

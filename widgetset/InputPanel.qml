@@ -12,7 +12,7 @@ StyledItem {
       API
       */
     // app screen proportion to be used when faded in
-    property int inputHeight: 180
+    //property int inputHeight: 20
 
     function openInput(control, flags, inputMethod)
     {
@@ -41,7 +41,7 @@ StyledItem {
     anchors.right: parent.right
     anchors.bottom: undefined
     anchors.top: parent.bottom
-    height: inputHeight
+    height: 10
 
     QtObject {
         id: privates
@@ -71,11 +71,11 @@ StyledItem {
             holderBottom = Utils.screenY(holder) + holder.height
             // check if the holder layout is a Scrollable
             holderLayout = Utils.namedParent(holder, "Scrollable")
+            //console.debug("rollUp:: focus="+focusControl+", holder="+holder+", layout="+holderLayout)
+            scrollableHolderLayout = (holderLayout != null)
             if (!holderLayout) {
                 // it is not, so it might be a positioner (TODO: what if not?)
                 holderLayout = holder.parent
-            } else {
-                scrollableHolderLayout = true
             }
             isOpen = true
         }
@@ -126,13 +126,21 @@ StyledItem {
         {
             animating = false
             focusControl = null
+            scrollableHolderLayout = false
             flags = 0
         }
     }
 
+    // eat presses!
+    MouseArea {
+        anchors.fill: parent
+    }
+
     Rectangle {
+        id: stripe
         anchors.left: parent.left
         anchors.top: parent.top
+        anchors.topMargin: 2
         anchors.right: parent.right
         height: 1
         border.color: inputPanel.style.borderColor
@@ -141,10 +149,30 @@ StyledItem {
     }
 
     Image {
-        anchors.fill: parent
+        anchors.left: parent.left
+        anchors.top: stripe.bottom
         anchors.topMargin: 1
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
         source: inputPanel.style.backgroundImageUrl
+        Item {
+            id: layout
+            anchors.fill: parent
+            anchors.margins: 3
+            Button {
+                styleName: inputPanel.style.controlButtonStyle
+                id: btnClose
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                width: 55
+                height: 30
+                autoFocusOnPress: false
+                text: qsTr("Done")
+                onClicked: closeInput()
+            }
+        }
     }
+
 
     states: [
         State {

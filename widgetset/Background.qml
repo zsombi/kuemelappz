@@ -40,10 +40,10 @@ StyledItem {
             anchors.fill: parent
             source: background.style.image
 
-            border.left: background.style.imageBorders[0]
-            border.top:  background.style.imageBorders[1]
-            border.right: background.style.imageBorders[2]
-            border.bottom: background.style.imageBorders[3]
+            border.left: (background.style.imageBorders == undefined) ? 0 : background.style.imageBorders[0]
+            border.top:  (background.style.imageBorders == undefined) ? 0 : background.style.imageBorders[1]
+            border.right: (background.style.imageBorders == undefined) ? 0 : background.style.imageBorders[2]
+            border.bottom: (background.style.imageBorders == undefined) ? 0 : background.style.imageBorders[3]
 
         }
     }
@@ -91,6 +91,7 @@ StyledItem {
         {
             if (!background.style)
                 return
+            //console.debug("background.style= "+background.style)
             if (background.style.image && (background.style.image !== undefined) && (background.style.image != "")) {
                 if (background.style.imageBorders != undefined)
                     sourceComponent = borderImageBackground

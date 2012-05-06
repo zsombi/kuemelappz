@@ -158,6 +158,7 @@ StyledItem::StyledItem(QDeclarativeItem *parent):
     setImplicitWidth(100);
     setImplicitHeight(80);
     //setFlag(ItemIsFocusable);
+    //setFlag(ItemIsFocusScope);
     //setFlag(ItemIsSelectable);
 }
 
@@ -184,7 +185,10 @@ Style *StyledItem::style() const
     Q_D(const StyledItem);
     Style *ret = d->styleForType(d->currentStyle);
 #ifdef TRACE_STYLEDITEM
-    qDebug() << "Style:" << ret << "(" << ret->name() << "/" << ret->type() <<")" << d->currentStyle;
+    if (!ret)
+        qDebug() << "Style: " <<ret << "for type" << d->currentStyle;
+    else
+        qDebug() << "Style:" << ret << "(" << ret->name() << "/" << ret->type() <<")" << d->currentStyle;
 #endif
     return ret;
 }

@@ -44,7 +44,7 @@ QTM_USE_NAMESPACE
 #include <aknappui.h>
 #endif
 
-#define TRACE_APPITEM
+//#define TRACE_APPITEM
 
 ApplicationItemPrivate::ApplicationItemPrivate(ApplicationItem *qq) :
     q_ptr(qq),

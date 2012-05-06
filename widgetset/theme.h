@@ -5,20 +5,19 @@
 #include "style.h"
 #include <qdeclarative.h>
 #include <QDeclarativeParserStatus>
+#include <QDeclarativeItem>
 
 typedef QHash<Style::StyleType, Style*> StyleSet;
 typedef QHash<QString, StyleSet> ThemeSet;
 
-class Theme : public QObject, public QDeclarativeParserStatus
+class Theme : public QDeclarativeItem
 {
     Q_OBJECT
     Q_INTERFACES(QDeclarativeParserStatus)
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(QString resource READ resource WRITE setResource NOTIFY resourceChanged)
-    Q_PROPERTY(QDeclarativeListProperty<Style> styleSet READ styleSet NOTIFY styleSetChanged DESIGNABLE false)
-    Q_CLASSINFO("DefaultProperty", "styleSet")
 public:
-    Theme(QObject *parent = 0);
+    Theme(QDeclarativeItem *parent = 0);
     ~Theme();
 
     // from QDeclarativeParserStatus
@@ -29,7 +28,6 @@ public:
     void setName(const QString &s);
     QString resource() const;
     void setResource(const QString &s);
-    QDeclarativeListProperty<Style> styleSet();
 
     Style *style(const QString &name, Style::StyleType type);
 signals:
@@ -41,7 +39,6 @@ signals:
 public slots:
 
 private:
-    QList<Style*> m_styleSet;
     ThemeSet m_styleMap;
     QString m_name;
     QString m_resource;

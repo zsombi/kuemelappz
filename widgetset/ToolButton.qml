@@ -14,10 +14,10 @@ ButtonControl {
     property string text: ""
     // action assigned when activated
     property variant action: text
+    // font property
+    property alias font: buttonText.font
     // style
     styleName: "ThemeToolButton"
-
-    //onStyleChanged: console.debug("ToolButton #"+buttonId+" style: " + styleName + ", type: " + styleType + ": style: " + style)
 
     id: toolButton
     height: parent.height
@@ -38,16 +38,12 @@ ButtonControl {
 
     objectName: text
 
-    BorderImage {
+    Background {
         anchors.fill: parent
-        source: toolButton.style.imageUrl
-        border {
-            left: (toolButton.style.imageBorders != undefined) ? toolButton.style.imageBorders[0] : 0
-            top: (toolButton.style.imageBorders != undefined) ? toolButton.style.imageBorders[1] : 0
-            right: (toolButton.style.imageBorders != undefined) ? toolButton.style.imageBorders[2] : 0
-            bottom: (toolButton.style.imageBorders != undefined) ? toolButton.style.imageBorders[3] : 0
-        }
+        styleName: toolButton.style.frameStyle
+        styleType: toolButton.styleType
     }
+
     Item {
         id: buttonData
         anchors.fill: parent
@@ -81,8 +77,7 @@ ButtonControl {
             anchors.leftMargin: 2
             verticalAlignment: Text.AlignBottom
             clip: true
-            font.family: toolButton.style.fontFamily
-            font.pixelSize: toolButton.style.fontPixels
+            font: toolButton.style.font
         }
 
         states: [

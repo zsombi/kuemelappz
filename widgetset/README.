@@ -5,9 +5,10 @@ platforms, and to be able to change their look-and-feel runtime.
 
 TODOs
 =====
-- register theme that contains styleset component; create component
+- register theme (rc) that contains styleset component; create component
 - more themes
 - StyledItem: method to query available style types
 - Style:multiType - define a style element that can be used for several style types
 - fix header layout
 - fix PageTab toolbar's placement
+- add support in theme for different screen resolutions; DPI support

@@ -20,13 +20,14 @@ Page {
             objectName: "columner"
             spacing: 10
             width: parent.width
+            //height: parent.height
             LineEdit {
                 width: 200
                 //height: 25
             }
             Label {
                 text: "Page 1"
-                font.pixelSize: THEME.textSizeLarge
+                font: THEME.largeFont
                 color: "white"
             }
             Button {

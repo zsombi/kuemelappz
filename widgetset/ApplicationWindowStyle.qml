@@ -8,6 +8,8 @@ Style {
     property string backgroundStyle
     // input panel style
     property string inputPanelStyle
+    // status bar style
+    property string statusBarStyle
     // application layout rotation duration
     property int rotationDuration
     // rotation easing
