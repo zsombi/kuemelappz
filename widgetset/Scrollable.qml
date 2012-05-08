@@ -9,7 +9,7 @@ Item {
     // enable or disable content scrolling
     property bool enableScrolling: true
     // enable automatic scroll
-    property bool alwaysScroll: false
+    property bool alwaysScroll: true
     default property alias content: pageContent.data
     clip: true
 

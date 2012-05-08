@@ -30,6 +30,7 @@
 #include <QApplication>
 #include <QDeclarativeView>
 #include <QDeclarativeProperty>
+#include "screen.h"
 
 #ifdef MOBILE_SYSTEM
 #include <QOrientationSensor>
@@ -44,7 +45,7 @@ QTM_USE_NAMESPACE
 #include <aknappui.h>
 #endif
 
-//#define TRACE_APPITEM
+#define TRACE_APPITEM
 
 ApplicationItemPrivate::ApplicationItemPrivate(ApplicationItem *qq) :
     q_ptr(qq),
@@ -69,11 +70,12 @@ ApplicationItemPrivate::ApplicationItemPrivate(ApplicationItem *qq) :
             );
             Q_UNUSED(error)
 #endif
-            // connect scene update to catch screen size
-            q_ptr->connect(appView, SIGNAL(sceneResized(QSize)), SLOT(_q_sceneUpdate(const QSize&)), Qt::QueuedConnection);
             q_ptr->connect(q_ptr, SIGNAL(rotationChanged()), SLOT(_q_rotation()));
             appView->setResizeMode(QDeclarativeView::SizeRootObjectToView);
             appView->setAttribute(Qt::WA_LockPortraitOrientation);
+            // connect scene update to catch screen size
+            //q_ptr->connect(appView, SIGNAL(sceneResized(QSize)), SLOT(_q_sceneUpdate(const QSize&)), Qt::QueuedConnection);
+            _q_sceneUpdate(QSize(Screen::instance()->width(),Screen::instance()->height()));
             break;
         }
     }

@@ -22,8 +22,13 @@ Item {
        theme  */
     DefaultTheme {}
 
-    width: 400
-    height: 400
+    width: screen.width
+    height: screen.height
+
+    Connections {
+        target: screen
+        onDisplayChanged: console.debug("screenW= "+screen.width+", screenH= "+screen.height)
+    }
 
     ApplicationItem {
         id: app
