@@ -64,6 +64,7 @@ Theme {
     BackgroundStyle {
         name: "keyBtnFrame"
         type: Style.Normal
+        types: [Style.Normal, Style.Pressed]
         image: "qrc:/default/toolbutton-normal"
         imageBorders: [6,6,6,6]
     }

@@ -14,7 +14,10 @@ PKG_DEPLOY = folder_01
 # Additional import path used to resolve QML modules in Creator's code model
 QML_IMPORT_PATH += com/zesoft/widgetset
 
-symbian:TARGET.UID3 = 0xEDDAEDDA
+symbian: {
+    TARGET.UID3 = 0xEDDAEDDA
+    load(armcc_warnings)
+}
 #symbian: TARGET.UID3 = 0x101F84EB # File Manager UID, to try out eclipsing
 
 # Allow network access on Symbian
@@ -48,8 +51,8 @@ QML_FILES = \
 
 TARGETPATH = qml/testapp/
 
-RESOURCE_FILES += apptheme.qrc
-RESOURCE_TARGET = $$TARGETPATH
+#RESOURCE_FILES += apptheme.qrc
+#RESOURCE_TARGET = $$TARGETPATH
 CONFIG += binresource
 RESOURCES += resources.qrc
 

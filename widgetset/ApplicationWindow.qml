@@ -22,8 +22,10 @@ Item {
        theme  */
     DefaultTheme {}
 
-    width: 400
-    height: 400
+    Connections {
+        target: screen
+        onDisplayChanged: console.debug("screenW= "+screen.width+", screenH= "+screen.height)
+    }
 
     ApplicationItem {
         id: app
@@ -39,7 +41,7 @@ Item {
             styleName: app.style.statusBarStyle
             width: parent.width
             anchors.top: parent.top
-            visible: widgetSet.mobilePlatform
+            hidden: !widgetSet.mobilePlatform
             // be the topmost component
             z: Number.MAX_VALUE
         }

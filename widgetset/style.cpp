@@ -69,3 +69,13 @@ void Style::setType(Style::StyleType set)
         emit typeChanged();
     }
 }
+QVariantList Style::types() const
+{
+    return m_types;
+}
+
+void Style::setTypes(const QVariantList &t)
+{
+    m_types = t;
+    qDebug() << "Types=" << t;
+}

@@ -10,6 +10,7 @@ class Style : public QObject
 
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(StyleType type READ type WRITE setType NOTIFY typeChanged)
+    Q_PROPERTY(QVariantList types READ types WRITE setTypes NOTIFY typesChanged)
 
     Q_ENUMS(StyleType)
 public:
@@ -29,18 +30,22 @@ public:
     void setName(const QString &name);
     StyleType type() const;
     void setType(StyleType type);
+    QVariantList types() const;
+    void setTypes(const QVariantList &t);
     
 signals:
 
     void styleChanged();
     void nameChanged();
     void typeChanged();
+    void typesChanged();
     
 public slots:
     
 private:
     QString m_name;
     StyleType m_type;
+    QVariantList m_types;
 };
 
 QML_DECLARE_TYPE(Style)

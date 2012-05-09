@@ -18,7 +18,8 @@ SOURCES += \
     checkgroup.cpp \
     widgetset.cpp \
     style.cpp \
-    theme.cpp
+    theme.cpp \
+    screen.cpp
 
 HEADERS += \
     widgetset_plugin.h \
@@ -32,7 +33,8 @@ HEADERS += \
     checkgroup_p.h \
     widgetset.h \
     style.h \
-    theme.h
+    theme.h \
+    screen.h
 
 OTHER_FILES = qmldir \
     README. \
@@ -122,7 +124,6 @@ QML_FILES = ApplicationWindow.qml \
     Background.qml \
     PageLayout.qml \
     PageLayoutStyle.qml \
-    FaderItemStyle.qml \
     PageHeader.qml \
     PageHeaderStyle.qml \
     InputPanelStyle.qml \
@@ -131,6 +132,21 @@ QML_FILES = ApplicationWindow.qml \
 qmldir.files = qmldir $$QML_FILES
 symbian {
     TARGET.EPOCALLOWDLLDATA = 1
+
+    importFiles.sources = $$OUT_PWD/$${TARGET}.dll qmldir $$QML_FILES
+    importFiles.path = $${QT_IMPORTS_BASE_DIR}/$$replace(uri, \\., /)
+    DEPLOYMENT += importFiles
+
+    TARGET.UID3 = 0xEDDA2000
+    load(armcc_warnings)
+    LIBS += -lfbscli
+    LIBS += -lws32
+    LIBS += -lcone
+    LIBS += -lapgrfx
+    LIBS += -leikcoctl
+    LIBS += -leikcore
+    LIBS += -lavkon
+    LIBS += -lhal
 } else:unix {
     maemo5 | !isEmpty(MEEGO_VERSION_MAJOR) {
         installPath = /usr/lib/qt4/imports/$$replace(uri, \\., /)

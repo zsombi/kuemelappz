@@ -6,6 +6,7 @@
 #include "widgetset.h"
 #include "style.h"
 #include "theme.h"
+#include "screen.h"
 
 #include <QtDeclarative/qdeclarative.h>
 #include <QDeclarativeEngine>
@@ -20,9 +21,14 @@ void WidgetsetPlugin::initializeEngine(QDeclarativeEngine *engine, const char *u
 
     QCoreApplication *app = QApplication::instance();
     connect(engine, SIGNAL(quit()), app, SLOT(quit()));
+    QDeclarativeContext *context = engine->rootContext();
 
-    StyleManager::initialize(engine->rootContext());
-    WidgetSet::initialize(engine->rootContext());
+    WidgetSet::initialize(context);
+    // screen uses WidgetSet features to initialize itself
+    Screen *screen = Screen::instance();
+    context->setContextProperty("screen", screen);
+    // setup theme manager as last
+    StyleManager::initialize(context);
 }
 
 void WidgetsetPlugin::registerTypes(const char *uri)
