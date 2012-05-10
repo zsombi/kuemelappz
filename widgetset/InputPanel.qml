@@ -37,11 +37,11 @@ StyledItem {
     //privates
     id: inputPanel
     width: parent.width
+    height: THEME.measures.inputPanelHeight
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.bottom: undefined
     anchors.top: parent.bottom
-    height: 10
 
     QtObject {
         id: privates
@@ -107,8 +107,10 @@ StyledItem {
                 if (points < 0) {
                     if (scrollableHolderLayout)
                         holderLayout.contentY -= points
-                    else
+                    else {
                         holderLayout.anchors.topMargin += parseInt(points)
+                        console.debug("adjustHolder topMargin="+holderLayout.anchors.topMargin)
+                    }
                 }
             } else {
                 if (points > 0) {
@@ -131,6 +133,8 @@ StyledItem {
         }
     }
 
+    // hide it if not open; without this the panel is visible upon rotation7
+    visible: privates.isOpen
     // eat presses!
     MouseArea {
         anchors.fill: parent
@@ -176,7 +180,7 @@ StyledItem {
 
     states: [
         State {
-            name: 'visible'
+            name: 'rollUp'
             when: privates.isOpen
             AnchorChanges {
                 target: inputPanel
@@ -187,7 +191,7 @@ StyledItem {
     ]
     transitions: [
         Transition {
-            from: ""; to: "visible"
+            from: ""; to: "rollUp"
             SequentialAnimation {
                 ScriptAction {script: privates.animating = true;}
                 AnchorAnimation {alwaysRunToEnd: true; duration: inputPanel.style.fadeInDuration; easing.type: inputPanel.style.fadeEasing}
@@ -195,7 +199,7 @@ StyledItem {
             }
         },
         Transition {
-            from: "visible"; to: ""
+            from: "rollUp"; to: ""
             SequentialAnimation {
                 ScriptAction {script: privates.animating = true;}
                 PauseAnimation { duration: inputPanel.style.fadeOutDelay }

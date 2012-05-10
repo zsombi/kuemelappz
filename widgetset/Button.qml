@@ -29,7 +29,7 @@ ButtonControl {
 
     id: pushButton
     width: 100
-    height: 50
+    height: THEME.measures.defButtonHeight
     clip: true
     // handle style type change
     onPressedChanged: styleType = (pressed ? Style.Pressed : (highlighted ? Style.Highlighted : Style.Normal))

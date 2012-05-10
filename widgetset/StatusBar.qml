@@ -18,7 +18,7 @@ StyledItem {
     anchors.left: parent.left
     anchors.top: parent.top
     anchors.right: parent.right
-    height: statusBar.style.height
+    height: THEME.measures.statusBarHeight
 
     // mouse area to capture gesture activating panel menu
     MouseArea {

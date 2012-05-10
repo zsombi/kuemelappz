@@ -3,8 +3,8 @@ import com.zesoft.widgetset 1.0
 
 ApplicationWindow {
     id: app
-    width: 640
-    height: 480
+    width: 800
+    height: 600
     //header.visible: false
     objectName: "AppWin"
 

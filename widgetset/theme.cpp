@@ -27,23 +27,66 @@
 #include "theme.h"
 #include "globaldefs.h"
 #include "stylemanager.h"
+#include "widgetset.h"
+#include "applicationitem.h"
 
 //#define TRACE_THEME
 
+class ThemePrivate {
+    Q_DECLARE_PUBLIC(Theme)
+public:
+    ThemePrivate(Theme *qq);
+    ~ThemePrivate(){}
+
+    void _q_updateMeasurementObject();
+
+    Theme *q_ptr;
+    ThemeSet m_styleMap;
+    Style *m_measurements;
+    QString m_name;
+    QString m_resource;
+};
+
+ThemePrivate::ThemePrivate(Theme *qq) :
+    q_ptr(qq),
+    m_measurements(0)
+{
+    // capture orientation changes to chose the proper measurements
+    QObject::connect(Screen::instance(), SIGNAL(orientationChanged()), q_ptr, SLOT(_q_updateMeasurementObject()));
+}
+
+void ThemePrivate::_q_updateMeasurementObject()
+{
+    //todo: implement
+    Q_Q(Theme);
+    Screen::Orientation o = Screen::instance()->orientation();
+    if (o == Screen::Portrait)
+        m_measurements = q->style("PortraitMeasures");
+    else
+        m_measurements = q->style("LandscapeMeasures");
+//#ifdef TRACE_THEME
+    qDebug() << "Theme measurement: "<<m_measurements << "for orientation:" << o;
+//#endif
+}
+
+/***********************************************************************************
+***********************************************************************************/
+
 /**
-  Onherited from QDeclarativeItem to be able to add items (i.e. Text) to declare
+  Inherited from QDeclarativeItem to be able to add items (i.e. Text) to declare
   font sizes and resolution based layout items.
   */
 Theme::Theme(QDeclarativeItem *parent) :
     //QObject(parent)
-    QDeclarativeItem(parent)
+    QDeclarativeItem(parent),
+    d_ptr(new ThemePrivate(this))
 {
 }
 
 Theme::~Theme()
 {
 #ifdef TRACE_THEME
-    qDebug() << "Theme" << m_name << "unloaded";
+    qDebug() << "Theme" << d_ptr->m_name << "unloaded";
 #endif
 }
 
@@ -56,6 +99,7 @@ void Theme::classBegin()
 // some components do access the styleset before this component gets completed...?
 void Theme::componentComplete()
 {
+    Q_D(Theme);
 #ifdef TRACE_THEME
     qDebug() << "Theme component parsing ends";
 #endif
@@ -66,39 +110,43 @@ void Theme::componentComplete()
     QList<Style*> cl = findChildren<Style*>();
     foreach(Style *item, cl) {
 #ifdef TRACE_THEME
-        qDebug() << "Hashing style::" << item->name() << "/" << item->setType();
+        qDebug() << "Hashing style::" << item->name() << "/" << item->type();
 #endif
 
-        ThemeSet::const_iterator i = m_styleMap.find(item->name());
-        if ((i != m_styleMap.end()) && (i.key() == item->name())) {
+        ThemeSet::const_iterator i = d->m_styleMap.find(item->name());
+        if ((i != d->m_styleMap.end()) && (i.key() == item->name())) {
             // style is in, check if type has been added...
             StyleSet set(i.value());
             Style::StyleType setType = item->type();
             StyleSet::const_iterator j = set.find(setType);
             if ((j == set.end()) || (j.key() != setType)) {
                 set[setType] = item;
-                m_styleMap.insert(item->name(), set);
+                d->m_styleMap.insert(item->name(), set);
             }
         } else {
             // set has not been added yet
             StyleSet set;
             set.insert(item->type(), item);
-            m_styleMap.insert(item->name(), set);
+            d->m_styleMap.insert(item->name(), set);
         }
     }
 
+    // update measurement element
+    d->_q_updateMeasurementObject();
     emit styleSetChanged();
 }
 
 // name property getter/setter
 QString Theme::name() const
 {
-    return m_name;
+    Q_D(const Theme);
+    return d->m_name;
 }
 void Theme::setName(const QString &s)
 {
-    if (m_name != s)  {
-        m_name = s;
+    Q_D(Theme);
+    if (d->m_name != s)  {
+        d->m_name = s;
         // register theme
         StyleManager::registerTheme(this);
         emit nameChanged();
@@ -108,15 +156,22 @@ void Theme::setName(const QString &s)
 // resource property getter/setter
 QString Theme::resource() const
 {
-    return m_resource;
+    Q_D(const Theme);
+    return d->m_resource;
 }
 void Theme::setResource(const QString &s)
 {
-    if (m_resource != s) {
+    Q_D(Theme);
+    if (d->m_resource != s) {
         // todo: check if theme is active, then unregister resources
-        m_resource = s;
+        d->m_resource = s;
         emit resourceChanged();
     }
+}
+Style *Theme::measures() const
+{
+    Q_D(const Theme);
+    return d->m_measurements;
 }
 
 /**
@@ -129,14 +184,15 @@ void Theme::setResource(const QString &s)
   */
 Style *Theme::style(const QString &name, Style::StyleType type)
 {
+    Q_D(Theme);
 #ifdef TRACE_THEME
     qDebug() << "Locate style" << name << "/" << type;
 #endif
     // some components using styles get initialized before theme is completed...
-    if (m_styleMap.isEmpty())
+    if (d->m_styleMap.isEmpty())
         componentComplete();
-    ThemeSet::const_iterator i = m_styleMap.find(name);
-    if ((i != m_styleMap.end()) && (i.key() == name)) {
+    ThemeSet::const_iterator i = d->m_styleMap.find(name);
+    if ((i != d->m_styleMap.end()) && (i.key() == name)) {
         StyleSet setMap(i.value());
         StyleSet::const_iterator j = setMap.find(type);
         if ((j != setMap.end()) && (j.key() == type)) {
@@ -148,3 +204,5 @@ Style *Theme::style(const QString &name, Style::StyleType type)
     }
     return 0;
 }
+
+#include "moc_theme.cpp"

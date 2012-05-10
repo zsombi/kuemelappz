@@ -12,18 +12,21 @@ public:
     ApplicationItemPrivate(ApplicationItem *qq);
     ~ApplicationItemPrivate(){}
 
+protected: // platform specific APIs
+    void initializePlatform();
+    void platformResize(const QSize &sceneSize);
+    void platformCompleted();
+    // generic API for all mobile platforms
+public: // slot to catch sensor activity, generic for mobile
+    void _q_sensorUpdate();
+public: // members
     ApplicationItem *q_ptr;
 
     bool initialized;
-    ApplicationItem::Orientation orientation;
-    bool orientationLocked;
 // private data
-    void _q_rotation();
     void _q_sceneUpdate(const QSize &sceneSize);
-    void _q_sensorUpdate();
     void resize(const QSize &size);
-    void setOrientation(ApplicationItem::Orientation o);
-    QObject *sensor;
+    void setOrientation(Screen::Orientation o);
     QSize screenSize;
     QDeclarativeView *appView;
 

@@ -10,8 +10,14 @@ Style {
     property string inputPanelStyle
     // status bar style
     property string statusBarStyle
+    // animation starting pause
+    property int rotationStartPause
     // application layout rotation duration
     property int rotationDuration
+    // scaling duration
+    property int scalingDuration
     // rotation easing
     property variant rotationEasing
+    // scaling upon rotation
+    property real animationScaling
 }

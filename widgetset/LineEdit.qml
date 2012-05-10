@@ -39,7 +39,7 @@ StyledItem {
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.right: parent.right
-        height: 30
+        height: THEME.measures.defLineEditHeight
         //z: 50
         border.left: textEdit.style.imageBorders[0]; border.top: textEdit.style.imageBorders[1]
         border.right: textEdit.style.imageBorders[2]; border.bottom: textEdit.style.imageBorders[3]

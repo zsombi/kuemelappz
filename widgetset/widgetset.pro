@@ -19,7 +19,21 @@ SOURCES += \
     widgetset.cpp \
     style.cpp \
     theme.cpp \
-    screen.cpp
+    screen.cpp \
+    screen_p_mobile.cpp
+
+#platform specifioc sources
+symbian {
+    SOURCES += applicationitem_p_symbian.cpp
+} else:unix {
+    contains(MEEGO_EDITION, harmattan) {
+        SOURCES += applicationitem_p_harmattan.cpp
+    } else {
+        SOURCES += applicationitem_p.cpp
+    }
+} else {
+    SOURCES += applicationitem_p.cpp
+}
 
 HEADERS += \
     widgetset_plugin.h \
@@ -34,7 +48,8 @@ HEADERS += \
     widgetset.h \
     style.h \
     theme.h \
-    screen.h
+    screen.h \
+    screen_p.h
 
 OTHER_FILES = qmldir \
     README. \
@@ -81,7 +96,8 @@ OTHER_FILES = qmldir \
     PageHeader.qml \
     PageHeaderStyle.qml \
     InputPanelStyle.qml \
-    KeyItem.qml
+    KeyItem.qml \
+    Measurements.qml
 
 !equals(_PRO_FILE_PWD_, $$OUT_PWD) {
     copy_qmldir.target = $$OUT_PWD/qmldir
@@ -127,7 +143,8 @@ QML_FILES = ApplicationWindow.qml \
     PageHeader.qml \
     PageHeaderStyle.qml \
     InputPanelStyle.qml \
-    KeyItem.qml
+    KeyItem.qml \
+    Measurements.qml
 
 qmldir.files = qmldir $$QML_FILES
 symbian {

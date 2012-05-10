@@ -10,12 +10,14 @@
 typedef QHash<Style::StyleType, Style*> StyleSet;
 typedef QHash<QString, StyleSet> ThemeSet;
 
+class ThemePrivate;
 class Theme : public QDeclarativeItem
 {
     Q_OBJECT
     Q_INTERFACES(QDeclarativeParserStatus)
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(QString resource READ resource WRITE setResource NOTIFY resourceChanged)
+    Q_PROPERTY(Style* measures READ measures NOTIFY measuresChanged)
 public:
     Theme(QDeclarativeItem *parent = 0);
     ~Theme();
@@ -28,20 +30,24 @@ public:
     void setName(const QString &s);
     QString resource() const;
     void setResource(const QString &s);
+    Style *measures() const;
 
-    Style *style(const QString &name, Style::StyleType type);
+    Q_INVOKABLE Style *style(const QString &name, Style::StyleType type = Style::Normal);
 signals:
 
     void nameChanged();
     void resourceChanged();
     void styleSetChanged();
+    void measuresChanged();
     
 public slots:
 
 private:
-    ThemeSet m_styleMap;
-    QString m_name;
-    QString m_resource;
+    Q_DISABLE_COPY(Theme)
+    Q_DECLARE_PRIVATE(Theme)
+    QScopedPointer<ThemePrivate> d_ptr;
+
+    Q_PRIVATE_SLOT(d_func(), void _q_updateMeasurementObject())
 };
 
 QML_DECLARE_TYPE(Theme)

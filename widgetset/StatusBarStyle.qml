@@ -5,7 +5,6 @@ import "." 1.0
 Style {
     name: "StatusBar"
     type: Style.Normal
-    property int height
     property color fillColor
     property variant font
     property color fontColor

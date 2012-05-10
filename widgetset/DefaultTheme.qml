@@ -30,33 +30,62 @@ Theme {
     Text {
         id: smallFontItem
         font.family: "Nokia Sans"
-        font.pixelSize: 12
+        font.pixelSize: mm(3.5)
         font.weight: Font.Light
     }
     Text {
         id: smallBoldFont
         font.family: "Nokia Sans"
-        font.pixelSize: 12
+        font.pixelSize: mm(3.5)
         font.weight: Font.Bold
     }
     Text {
         id: normalFontItem
         font.family: "Nokia Sans"
-        font.pixelSize: 16
+        font.pixelSize: mm(5.5)
         font.weight: Font.Normal
     }
     Text {
         id: normalItalicFont
         font.family: "Nokia Sans"
-        font.pixelSize: 16
+        font.pixelSize: mm(5.5)
         font.weight: Font.Normal
         font.italic: true
     }
     Text {
         id: largeFontItem
         font.family: "Nokia Sans"
-        font.pixelSize: 22
+        font.pixelSize: mm(10)
         font.weight: Font.DemiBold
+    }
+
+    /*-------------------Portrait/Landscape measurements-------------------*/
+    function mm(value)
+    {
+        return Math.round(screen.dpi * value / 25.4)
+    }
+
+    Measurements {
+        name: "PortraitMeasures"
+        statusBarHeight: mm(4.5)
+        headerHeight: mm(17)
+        pageTabHeight: mm(18)
+        inputPanelHeight: mm(55)
+        defButtonHeight: mm(14)
+        defLineEditHeight:mm(13)
+        spacingSmall:0
+        spacingMedium:0
+        spacingNormal:0
+        spacingLarge:0
+    }
+    Measurements {
+        name: "LandscapeMeasures"
+        statusBarHeight: mm(4.5)
+        headerHeight: mm(16)
+        pageTabHeight: mm(17)
+        inputPanelHeight: mm(48)
+        defButtonHeight: mm(14)
+        defLineEditHeight:mm(13)
     }
 
     // theme styles
@@ -109,7 +138,6 @@ Theme {
         busyIndicatorUrl: "qrc:/default/busy"
     }
     StatusBarStyle {
-        height: 17
         name: "statusBar"
         fillColor: "black"
         fontColor: "white"
@@ -123,8 +151,11 @@ Theme {
         backgroundStyle: "ThemeAppBackground"
         inputPanelStyle: "ThemeInputPanel"
         statusBarStyle: "statusBar"
+        rotationStartPause: 200
+        scalingDuration: 175
         rotationDuration: 500
         rotationEasing: Easing.InOutExpo
+        animationScaling: 0.7
     }
 
     CornerFramerStyle {
@@ -149,7 +180,7 @@ Theme {
 
     PageLayoutStyle {
         name: "ThemeMenuLayout"
-        headerHeight: 45
+        headerHeight: THEME.measures.headerHeight
         headerStyle: "ThemeMenuHeader"
         property string backgroundStyle: "ThemeMenuBackground"
     }
@@ -161,7 +192,7 @@ Theme {
     }
     PageLayoutStyle {
         name: "ThemePageLayout"
-        headerHeight: 55
+        headerHeight: THEME.measures.headerHeight
         headerStyle: "ThemePageHeader"
         transitionDuration: 200
         transitionEasing: Easing.InOutExpo
