@@ -32,9 +32,6 @@ ScreenPrivate::ScreenPrivate(Screen *qq) :
 }
 ScreenPrivate::~ScreenPrivate()
 {
-    if (sensor)
-        QObject::disconnect(sensor, SIGNAL(readingChanged()), q_ptr, SLOT(_q_updateSensorData()));
-    QObject::disconnect(desktop, SIGNAL(screenCountChanged(int)), q_ptr, SLOT(_q_updateScreenCount(int)));
 }
 
 void ScreenPrivate::_q_updateScreenCount(int count)
@@ -122,6 +119,11 @@ qreal Screen::rotationAngle() const
 {
     Q_D(const Screen);
     return d->screenRotation;
+}
+
+Screen::DisplayType Screen::displayType() const
+{
+    return Desktop;
 }
 
 #include "moc_screen.cpp"

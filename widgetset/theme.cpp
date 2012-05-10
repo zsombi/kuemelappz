@@ -64,9 +64,9 @@ void ThemePrivate::_q_updateMeasurementObject()
         m_measurements = q->style("PortraitMeasures");
     else
         m_measurements = q->style("LandscapeMeasures");
-//#ifdef TRACE_THEME
+#ifdef TRACE_THEME
     qDebug() << "Theme measurement: "<<m_measurements << "for orientation:" << o;
-//#endif
+#endif
 }
 
 /***********************************************************************************

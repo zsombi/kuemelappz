@@ -32,9 +32,10 @@ void ScreenPrivate::_q_updateSensorData()
 
 void ScreenPrivate::initializeSensors()
 {
+    Q_Q(Screen);
     // use orientation sensors to rotate layout
-    sensor = new QOrientationSensor(q_ptr);
-    q_ptr->connect(sensor, SIGNAL(readingChanged()), SLOT(_q_updateSensorData()));
+    sensor = new QOrientationSensor(q);
+    QObject::connect(sensor, SIGNAL(readingChanged()), q, SLOT(_q_updateSensorData()));
     qobject_cast<QOrientationSensor*>(sensor)->setActive(true);
 
 #ifdef MEEGO_EDITION_HARMATTAN

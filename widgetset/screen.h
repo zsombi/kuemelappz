@@ -15,8 +15,9 @@ class Screen : public QObject
     Q_PROPERTY(QString orientationString READ orientationString NOTIFY orientationChanged FINAL)
     Q_PROPERTY(Orientation lockOnOrientation READ lockOnOrientation WRITE setLockOnOrientation NOTIFY orientationChanged FINAL)
     Q_PROPERTY(qreal rotation READ rotationAngle NOTIFY orientationChanged FINAL)
+    Q_PROPERTY(DisplayType displayType READ displayType NOTIFY displayTypeChanged)
 
-    Q_ENUMS(Orientation)
+    Q_ENUMS(Orientation DisplayType)
 public:
     enum Orientation {
         Automatic,
@@ -24,6 +25,13 @@ public:
         Landscape,
         InverseLandscape
     };
+    enum DisplayType {
+        Small = 1,
+        Medium,
+        Large,
+        Desktop
+    };
+
     Screen(QObject *parent = 0);
     ~Screen();
 
@@ -37,9 +45,11 @@ public:
     Orientation lockOnOrientation() const;
     void setLockOnOrientation(Orientation o);
     qreal rotationAngle() const;
+    DisplayType displayType() const;
 
 Q_SIGNALS:
     void displayChanged();
+    void displayTypeChanged();
     void orientationChanged();
     
 public Q_SLOTS:
@@ -56,5 +66,6 @@ private:
 
 QML_DECLARE_TYPE(Screen)
 QML_DECLARE_TYPE(Screen::Orientation)
+QML_DECLARE_TYPE(Screen::DisplayType)
 
 #endif // SCREEN_H
