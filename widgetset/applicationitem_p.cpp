@@ -16,6 +16,8 @@ void ApplicationItemPrivate::initializePlatform()
 #ifdef Q_WS_SIMULATOR
     // we need this for simulator support
     _q_sceneUpdate(QSize(Screen::instance()->width(), Screen::instance()->height()));
+#else
+    q_ptr->connect(appView, SIGNAL(sceneResized(QSize)), SLOT(_q_sceneUpdate(const QSize&)), Qt::QueuedConnection);
 #endif
 }
 
