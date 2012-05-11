@@ -15,9 +15,12 @@ class Screen : public QObject
     Q_PROPERTY(QString orientationString READ orientationString NOTIFY orientationChanged FINAL)
     Q_PROPERTY(Orientation lockOnOrientation READ lockOnOrientation WRITE setLockOnOrientation NOTIFY orientationChanged FINAL)
     Q_PROPERTY(qreal rotation READ rotationAngle NOTIFY orientationChanged FINAL)
-    Q_PROPERTY(DisplayType displayType READ displayType NOTIFY displayTypeChanged)
+    Q_PROPERTY(DisplayType displayType READ displayType CONSTANT FINAL)
+    Q_PROPERTY(QString typeString READ typeString CONSTANT FINAL)
+    Q_PROPERTY(DisplayDensity displayDensity READ displayDensity CONSTANT FINAL)
+    Q_PROPERTY(QString densityString READ densityString CONSTANT FINAL)
 
-    Q_ENUMS(Orientation DisplayType)
+    Q_ENUMS(Orientation DisplayType DisplayDensity)
 public:
     enum Orientation {
         Automatic,
@@ -26,10 +29,17 @@ public:
         InverseLandscape
     };
     enum DisplayType {
-        Small = 1,
-        Medium,
+        Small,
+        Normal,
         Large,
         Desktop
+    };
+
+    enum DisplayDensity {
+        Low,
+        Medium,
+        High,
+        ExtraHigh
     };
 
     Screen(QObject *parent = 0);
@@ -46,6 +56,9 @@ public:
     void setLockOnOrientation(Orientation o);
     qreal rotationAngle() const;
     DisplayType displayType() const;
+    QString typeString() const;
+    DisplayDensity displayDensity() const;
+    QString densityString() const;
 
 Q_SIGNALS:
     void displayChanged();
@@ -67,5 +80,6 @@ private:
 QML_DECLARE_TYPE(Screen)
 QML_DECLARE_TYPE(Screen::Orientation)
 QML_DECLARE_TYPE(Screen::DisplayType)
+QML_DECLARE_TYPE(Screen::DisplayDensity)
 
 #endif // SCREEN_H

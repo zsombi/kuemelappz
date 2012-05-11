@@ -25,7 +25,7 @@ ButtonControl {
     property alias font: buttonText.font
 
     // style
-    styleName: "PushButton"
+    styleName: "ThemePushButton"
 
     id: pushButton
     width: 100
@@ -54,7 +54,6 @@ ButtonControl {
             smooth: true
             source: pushButton.image
             fillMode: Image.PreserveAspectFit
-            //anchors.fill: parent
             anchors {left: parent.left; top: parent.top; bottom: parent.bottom; right: parent.right }
             anchors.margins: imageButtonLayout.offset
         }
@@ -65,13 +64,9 @@ ButtonControl {
             anchors {verticalCenter: parent.verticalCenter; horizontalCenter: parent.horizontalCenter}
 
             color: pushButton.style.fontColor
-            //font.family: pushButton.style.fontFamily
-            //font.pixelSize: pushButton.style.fontPixels
             font: pushButton.style.font
             styleColor: Qt.darker(color, 2)
             style: Text.Outline
-            //font.bold: true
-            //wrapMode: Text.WordWrap
             elide: Text.ElideRight
             smooth: true
             verticalAlignment: Text.AlignVCenter

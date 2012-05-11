@@ -159,17 +159,21 @@ StyledItem {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         source: inputPanel.style.backgroundImageUrl
+        // todo: put this out in layout definition document
         Item {
             id: layout
             anchors.fill: parent
             anchors.margins: 3
+
+            property int rows: 4
+            property real keyHeight: height/rows - THEME.measures.spacingNormal//4 rows
             Button {
                 styleName: inputPanel.style.controlButtonStyle
                 id: btnClose
+                width: 100
+                height: layout.keyHeight
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
-                width: 55
-                height: 30
                 autoFocusOnPress: false
                 text: qsTr("Done")
                 onClicked: closeInput()

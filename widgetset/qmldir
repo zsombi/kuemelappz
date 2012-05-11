@@ -1,7 +1,7 @@
 plugin widgetset
 
 #stylesets
-
+Measurements 1.0 Measurements.qml
 ApplicationWindowStyle 1.0 ApplicationWindowStyle.qml
 BackgroundStyle 1.0 BackgroundStyle.qml
 PageLayoutStyle 1.0 PageLayoutStyle.qml
@@ -34,6 +34,7 @@ FaderItem 1.0 FaderItem.qml
 MenuPanel 1.0 MenuPanel.qml
 LineEdit  1.0 LineEdit.qml
 ScrollBar 1.0 ScrollBar.qml
+ScrollBarDecorator 1.0 ScrollBarDecorator.qml
 
 Scrollable 1.0 Scrollable.qml
 BusyIndicator 1.0 BusyIndicator.qml

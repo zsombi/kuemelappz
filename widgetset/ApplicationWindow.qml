@@ -27,6 +27,15 @@ Item {
         onDisplayChanged: console.debug("screenW= "+screen.width+", screenH= "+screen.height)
     }
 
+    Component.onCompleted: {
+        console.debug("screen info:")
+        console.debug("screen.width= "+screen.width)
+        console.debug("screen.height= "+screen.height)
+        console.debug("screen.dpi= "+screen.dpi)
+        console.debug("screen.displayDensity= "+screen.densityString)
+        console.debug("screen.displayType= "+screen.typeString)
+    }
+
     ApplicationItem {
         id: app
         styleName: "ThemeApplicationWindow"

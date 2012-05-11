@@ -10,7 +10,7 @@ FaderItem {
     property int leftMargin: 0
     property int topMargin: 0
     property int rightMargin: 0
-    property int bottomMargin: 100
+    property int bottomMargin: 0
 
     //property alias headerHidden: menuLayout.headerHidden
     default property alias content: panel.data

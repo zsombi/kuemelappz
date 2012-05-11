@@ -19,10 +19,10 @@ StyledItem {
     // how to align tool buttons in the dock
     property variant alignment: Qt.AlignJustify
 
-    styleName: "DockStyle"
+    styleName: "ThemeDockStyle"
     id: dock
-    width: 100
-    height: 62
+    width: parent.width
+    height: THEME.measures.dockHeight
 
     Background {
         id: frame

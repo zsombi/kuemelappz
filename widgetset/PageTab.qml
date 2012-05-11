@@ -24,6 +24,8 @@ Item {
     property alias tabHeight: control.height
     // current page Index
     property int currentIndex: -1
+    // control page title visibility in tab control
+    property bool hidePageTitles: false
 
     onCurrentIndexChanged: privates.setCurrentPage()
     Component.onCompleted: privates.setOpacities()
@@ -83,7 +85,7 @@ Item {
                 width: pageTab.width / stack.children.length;
                 image: (stack.children[index].hasOwnProperty("image")) ? stack.children[index].image : ""
                 imageActive: (stack.children[index].hasOwnProperty("imageActive")) ? stack.children[index].imageActive : ""
-                text: (stack.children[index].hasOwnProperty("title")) ? stack.children[index].title : ""
+                text: (stack.children[index].hasOwnProperty("title") && !pageTab.hidePageTitles) ? stack.children[index].title : ""
                 checked: pageTab.currentIndex == index
             }
         }

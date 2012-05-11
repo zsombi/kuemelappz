@@ -1,13 +1,18 @@
+/**
+  ScrollBar - based on ScrollBarDecorator, but this supposed to be an active one.
+  */
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 import "." 1.0
+
+// TODO: rework
 
 StyledItem {
     property bool autohide: false
     property variant flickableItem
     property variant orientation: Qt.Vertical
     // style properties
-    styleName: "ScrollBar"
+    styleName: "ThemeScrollBar"
 
     id: scrollbar
     anchors.margins: 1

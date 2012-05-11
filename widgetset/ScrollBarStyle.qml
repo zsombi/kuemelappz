@@ -3,7 +3,6 @@ import QtQuick 1.1
 import "." 1.0
 
 Style {
-    name: "ScrollBar"
     type: Style.Normal
 
     property color frameColor

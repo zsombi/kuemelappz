@@ -12,8 +12,8 @@ StyledItem {
     // menu panel item to be shown
     property MenuPanel menu
 
-    width: 200
-    styleName: "StatusBar"
+    width: parent.width
+    styleName: "ThemeStatusBar"
 
     anchors.left: parent.left
     anchors.top: parent.top

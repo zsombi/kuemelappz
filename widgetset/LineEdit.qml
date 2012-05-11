@@ -28,8 +28,8 @@ StyledItem {
       */
     id: textEdit
     width: 100
-    height: frame.height
-    styleName: "LineEdit"
+    height: THEME.measures.defLineEditHeight
+    styleName: "ThemeLineEdit"
     objectName: "TextEditor"
     //properties.fillColor: "#5e2e2e"
 
@@ -39,7 +39,7 @@ StyledItem {
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.right: parent.right
-        height: THEME.measures.defLineEditHeight
+        height: parent.height
         //z: 50
         border.left: textEdit.style.imageBorders[0]; border.top: textEdit.style.imageBorders[1]
         border.right: textEdit.style.imageBorders[2]; border.bottom: textEdit.style.imageBorders[3]

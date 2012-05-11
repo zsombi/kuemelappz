@@ -30,62 +30,105 @@ Theme {
     Text {
         id: smallFontItem
         font.family: "Nokia Sans"
-        font.pixelSize: mm(3.5)
+        font.pixelSize: THEME.measures.smallFontSize
         font.weight: Font.Light
     }
     Text {
         id: smallBoldFont
         font.family: "Nokia Sans"
-        font.pixelSize: mm(3.5)
+        font.pixelSize: THEME.measures.smallFontSize
         font.weight: Font.Bold
     }
     Text {
         id: normalFontItem
         font.family: "Nokia Sans"
-        font.pixelSize: mm(5.5)
+        font.pixelSize: THEME.measures.normalFontSize
         font.weight: Font.Normal
     }
     Text {
         id: normalItalicFont
         font.family: "Nokia Sans"
-        font.pixelSize: mm(5.5)
+        font.pixelSize: THEME.measures.normalFontSize
         font.weight: Font.Normal
         font.italic: true
     }
     Text {
         id: largeFontItem
         font.family: "Nokia Sans"
-        font.pixelSize: mm(10)
+        font.pixelSize: THEME.measures.largeFontSize
         font.weight: Font.DemiBold
     }
 
     /*-------------------Portrait/Landscape measurements-------------------*/
-    function mm(value)
-    {
-        return Math.round(screen.dpi * value / 25.4)
+
+    Measurements {
+        name: "Normal/High/Portrait"
+        smallFontSize: 11
+        normalFontSize: 14
+        largeFontSize: 22
+        statusBarHeight: 18
+        headerHeight: 55
+        pageTabHeight: 60
+        inputPanelHeight: 180
+        defButtonHeight: 40
+        defLineEditHeight:30
+        dockHeight: 50
+        spacingSmall:1
+        spacingMedium:3
+        spacingNormal:5
+        spacingLarge:9
+    }
+    Measurements {
+        name: "Normal/High/Landscape"
+        smallFontSize: 11
+        normalFontSize: 14
+        largeFontSize: 22
+        statusBarHeight: 18
+        headerHeight: 50
+        pageTabHeight: 55
+        inputPanelHeight: 140
+        defButtonHeight: 40
+        defLineEditHeight: 30
+        dockHeight: 50
+        spacingSmall:1
+        spacingMedium:3
+        spacingNormal:5
+        spacingLarge:9
     }
 
     Measurements {
-        name: "PortraitMeasures"
-        statusBarHeight: mm(4.5)
-        headerHeight: mm(17)
-        pageTabHeight: mm(18)
-        inputPanelHeight: mm(55)
-        defButtonHeight: mm(14)
-        defLineEditHeight:mm(13)
-        spacingSmall:0
-        spacingMedium:0
-        spacingNormal:0
-        spacingLarge:0
+        name: "Portrait"
+        smallFontSize: 11
+        normalFontSize: 14
+        largeFontSize: 22
+        statusBarHeight: 18
+        headerHeight: 55
+        pageTabHeight: 60
+        inputPanelHeight: 180
+        defButtonHeight: 45
+        defLineEditHeight:30
+        dockHeight: 50
+        spacingSmall:1
+        spacingMedium:3
+        spacingNormal:5
+        spacingLarge:9
     }
     Measurements {
-        name: "LandscapeMeasures"
-        statusBarHeight: mm(4.5)
-        headerHeight: mm(16)
-        pageTabHeight: mm(17)
-        inputPanelHeight: mm(48)
-        defButtonHeight: mm(14)
-        defLineEditHeight:mm(13)
+        name: "Landscape"
+        smallFontSize: 11
+        normalFontSize: 14
+        largeFontSize: 22
+        statusBarHeight: 18
+        headerHeight: 50
+        pageTabHeight: 55
+        inputPanelHeight: 140
+        defButtonHeight: 45
+        defLineEditHeight: 30
+        dockHeight: 50
+        spacingSmall:1
+        spacingMedium:3
+        spacingNormal:5
+        spacingLarge:9
     }
 
     // theme styles
@@ -126,7 +169,7 @@ Theme {
         borderColor: "silver"
         backgroundImageUrl: "qrc:/default/keypad"
         keyButtonStyle: "keyButton"
-        controlButtonStyle: "PushButton"
+        controlButtonStyle: "ThemePushButton"
     }
     /*------------------ApplicationWindow-----------------------------------------*/
     BackgroundStyle {
@@ -155,7 +198,7 @@ Theme {
         scalingDuration: 175
         rotationDuration: 500
         rotationEasing: Easing.InOutExpo
-        animationScaling: 0.7
+        animationScaling: 0.8
     }
 
     CornerFramerStyle {
@@ -246,7 +289,7 @@ Theme {
         name: "ThemeToolbar"
         frameStyle: "ThemeToolbarFrame"
         buttonStyle: "PageTabButton"
-        buttonSpacing: 3
+        buttonSpacing: THEME.measures.spacingSmall
     }
 
     /*-----------------------------------------------------------*/
@@ -257,9 +300,9 @@ Theme {
     }
 
     DockStyle {
-        name: "DockStyle"
+        name: "ThemeDockStyle"
         frameStyle: "dockFrame"
-        buttonSpacing: 3
+        buttonSpacing: THEME.measures.spacingSmall
     }
 
     /*-------------------ToolButton----------------------------------------*/
@@ -310,22 +353,18 @@ Theme {
         imageBorders: [6,6,6,6]
     }
     ButtonStyle {
-        name: "PushButton"
+        name: "ThemePushButton"
         type: Style.Normal
         frameStyle: "btnFrame"
         font: normalFontItem.font
-        //fontFamily: "Arial"
         fontColor: "white"
-        //fontPixels: textSizeNormal
     }
     ButtonStyle {
-        name: "PushButton"
+        name: "ThemePushButton"
         type: Style.Pressed
         frameStyle: "btnFrame"
         font: normalFontItem.font
-        //fontFamily: "Arial"
         fontColor: "lightgray"
-        //fontPixels: textSizeNormal
     }
 
     /*----------------NaviBack-------------------------------------------*/
@@ -344,22 +383,18 @@ Theme {
         name: "NaviBackStyle"
         frameStyle: "btnBackFrame"
         font: normalFontItem.font
-        //fontFamily: "Nokia Sans"
         fontColor: "white"
-        //fontPixels: textSizeNormal
     }
     ButtonStyle {
         name: "NaviBackStyle"
         frameStyle: "btnBackFrame"
         font: normalFontItem.font
-        //fontFamily: "Nokia Sans"
         fontColor: "white"
-        //fontPixels: textSizeNormal
     }
 
     /*----------------LineEdit-------------------------------------------*/
     TextEditStyle {
-        name: "LineEdit"
+        name: "ThemeLineEdit"
         image: "qrc:/default/editline-background"
         imageBorders: [10,5,10,5]
         hintFont: normalItalicFont.font
@@ -375,6 +410,7 @@ Theme {
 
     /*----------------Scrollbar-------------------------------------------*/
     ScrollBarStyle {
+        name: "ThemeScrollBar"
         frameColor: "transparent"
         barColor: "#9F9F9F"
         frameOpacity: 0

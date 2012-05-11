@@ -70,3 +70,15 @@ contains(MEEGO_EDITION,harmattan) {
     target.path = /opt/testapp/bin
     INSTALLS += target
 }
+
+contains(MEEGO_EDITION,harmattan) {
+    icon.files = testapp.png
+    icon.path = /usr/share/icons/hicolor/80x80/apps
+    INSTALLS += icon
+}
+
+contains(MEEGO_EDITION,harmattan) {
+    desktopfile.files = testapp.desktop
+    desktopfile.path = /usr/share/applications
+    INSTALLS += desktopfile
+}

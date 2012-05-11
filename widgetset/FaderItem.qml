@@ -1,7 +1,8 @@
 /**
-  FaderItem - base item for popup type components. Styling comes from the inherited
+  FaderItem - base item for popup type components. Styling comes from the derived
   components.
 
+  TODO: apply Background to handle fader desk
   */
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1

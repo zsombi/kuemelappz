@@ -32,7 +32,7 @@ Item {
         }
         z: 0
     }
-    ScrollBar {
+    ScrollBarDecorator {
         id: pageScroll
         flickableItem: scrollable
         anchors.right: parent.right

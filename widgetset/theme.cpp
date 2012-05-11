@@ -59,13 +59,29 @@ void ThemePrivate::_q_updateMeasurementObject()
 {
     //todo: implement
     Q_Q(Theme);
-    Screen::Orientation o = Screen::instance()->orientation();
-    if (o == Screen::Portrait)
-        m_measurements = q->style("PortraitMeasures");
-    else
-        m_measurements = q->style("LandscapeMeasures");
+    Screen *screen = Screen::instance();
+    QString sorientation = screen->orientationString();
+    // remove "Inverse" from orientation, for measurements it does not matter
+    sorientation.remove("Inverse");
+    // 1st priority: type/density/orientation
+    QString measuresPath = QString("%1/%2/%3").
+            arg(screen->typeString()).
+            arg(screen->densityString()).
+            arg(sorientation);
+    m_measurements = q->style(measuresPath);
+    if (!m_measurements) {
+        // 2nd priority: density/orientation
+        measuresPath = QString("%1/%2").
+                arg(screen->densityString()).
+                arg(sorientation);
+        m_measurements = q->style(measuresPath);
+    }
+    if (!m_measurements) {
+        // 3rd properity: orientation
+        m_measurements = q->style(sorientation);
+    }
 #ifdef TRACE_THEME
-    qDebug() << "Theme measurement: "<<m_measurements << "for orientation:" << o;
+    qDebug() << "Theme measurement: "<<m_measurements << "for path:" << measuresPath;
 #endif
 }
 
