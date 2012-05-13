@@ -37,11 +37,12 @@ StyledItem {
     //privates
     id: inputPanel
     width: parent.width
-    height: THEME.measures.inputPanelHeight
+    height: THEME.sizes.inputPanelHeight
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.bottom: undefined
     anchors.top: parent.bottom
+    onHeightChanged: console.debug("panelHeight="+height)
 
     QtObject {
         id: privates
@@ -166,7 +167,7 @@ StyledItem {
             anchors.margins: 3
 
             property int rows: 4
-            property real keyHeight: height/rows - THEME.measures.spacingNormal//4 rows
+            property real keyHeight: height/rows - THEME.sizes.spacingNormal//4 rows
             Button {
                 styleName: inputPanel.style.controlButtonStyle
                 id: btnClose

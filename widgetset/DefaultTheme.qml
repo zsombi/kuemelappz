@@ -30,37 +30,38 @@ Theme {
     Text {
         id: smallFontItem
         font.family: "Nokia Sans"
-        font.pixelSize: THEME.measures.smallFontSize
+        font.pixelSize: THEME.sizes.smallFontSize
         font.weight: Font.Light
     }
     Text {
         id: smallBoldFont
         font.family: "Nokia Sans"
-        font.pixelSize: THEME.measures.smallFontSize
+        font.pixelSize: THEME.sizes.smallFontSize
         font.weight: Font.Bold
     }
     Text {
         id: normalFontItem
         font.family: "Nokia Sans"
-        font.pixelSize: THEME.measures.normalFontSize
+        font.pixelSize: THEME.sizes.normalFontSize
         font.weight: Font.Normal
     }
     Text {
         id: normalItalicFont
         font.family: "Nokia Sans"
-        font.pixelSize: THEME.measures.normalFontSize
+        font.pixelSize: THEME.sizes.normalFontSize
         font.weight: Font.Normal
         font.italic: true
     }
     Text {
         id: largeFontItem
         font.family: "Nokia Sans"
-        font.pixelSize: THEME.measures.largeFontSize
+        font.pixelSize: THEME.sizes.largeFontSize
         font.weight: Font.DemiBold
     }
 
     /*-------------------Portrait/Landscape measurements-------------------*/
 
+    /*-------------------Normal dislay High density------------------------*/
     Measurements {
         name: "Normal/High/Portrait"
         smallFontSize: 11
@@ -96,6 +97,42 @@ Theme {
         spacingLarge:9
     }
 
+    /*-------------------Normal dislay ExtraHigh density-------------------*/
+    Measurements {
+        name: "Normal/ExtraHigh/Portrait"
+        smallFontSize: 11
+        normalFontSize: 16
+        largeFontSize: 24
+        statusBarHeight: 18
+        headerHeight: 60
+        pageTabHeight: 65
+        inputPanelHeight: 240
+        defButtonHeight: 50
+        defLineEditHeight:45
+        dockHeight: 65
+        spacingSmall:1
+        spacingMedium:3
+        spacingNormal:5
+        spacingLarge:9
+    }
+    Measurements {
+        name: "Normal/ExtraHigh/Landscape"
+        smallFontSize: 11
+        normalFontSize: 16
+        largeFontSize: 42
+        statusBarHeight: 18
+        headerHeight: 55
+        pageTabHeight: 60
+        inputPanelHeight: 190
+        defButtonHeight: 50
+        defLineEditHeight: 45
+        dockHeight: 60
+        spacingSmall:1
+        spacingMedium:3
+        spacingNormal:5
+        spacingLarge:9
+    }
+    /*-------------------Default measurements------------------------------*/
     Measurements {
         name: "Portrait"
         smallFontSize: 11
@@ -121,7 +158,7 @@ Theme {
         statusBarHeight: 18
         headerHeight: 50
         pageTabHeight: 55
-        inputPanelHeight: 140
+        inputPanelHeight: 160
         defButtonHeight: 45
         defLineEditHeight: 30
         dockHeight: 50
@@ -195,7 +232,7 @@ Theme {
         inputPanelStyle: "ThemeInputPanel"
         statusBarStyle: "statusBar"
         rotationStartPause: 200
-        scalingDuration: 175
+        scalingDuration: 100
         rotationDuration: 500
         rotationEasing: Easing.InOutExpo
         animationScaling: 0.8
@@ -223,7 +260,7 @@ Theme {
 
     PageLayoutStyle {
         name: "ThemeMenuLayout"
-        headerHeight: THEME.measures.headerHeight
+        headerHeight: THEME.sizes.headerHeight
         headerStyle: "ThemeMenuHeader"
         property string backgroundStyle: "ThemeMenuBackground"
     }
@@ -235,7 +272,7 @@ Theme {
     }
     PageLayoutStyle {
         name: "ThemePageLayout"
-        headerHeight: THEME.measures.headerHeight
+        headerHeight: THEME.sizes.headerHeight
         headerStyle: "ThemePageHeader"
         transitionDuration: 200
         transitionEasing: Easing.InOutExpo
@@ -289,7 +326,7 @@ Theme {
         name: "ThemeToolbar"
         frameStyle: "ThemeToolbarFrame"
         buttonStyle: "PageTabButton"
-        buttonSpacing: THEME.measures.spacingSmall
+        buttonSpacing: THEME.sizes.spacingSmall
     }
 
     /*-----------------------------------------------------------*/
@@ -302,7 +339,7 @@ Theme {
     DockStyle {
         name: "ThemeDockStyle"
         frameStyle: "dockFrame"
-        buttonSpacing: THEME.measures.spacingSmall
+        buttonSpacing: THEME.sizes.spacingSmall
     }
 
     /*-------------------ToolButton----------------------------------------*/

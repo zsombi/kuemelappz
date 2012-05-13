@@ -89,10 +89,10 @@ Item {
         }
 
         Behavior on width {
-            PropertyAnimation { duration: app.style.rotationDuration; easing.type: app.style.rotationEasing }
+            PropertyAnimation { duration: app.style.scalingDuration; easing.type: app.style.rotationEasing }
         }
         Behavior on height {
-            PropertyAnimation { duration: app.style.rotationDuration; easing.type: app.style.rotationEasing }
+            PropertyAnimation { duration: app.style.scalingDuration; easing.type: app.style.rotationEasing }
         }
 
         // rotate and animate
@@ -100,13 +100,13 @@ Item {
             SequentialAnimation {
                 //alwaysRunToEnd: true
                 PauseAnimation { duration: app.style.rotationStartPause }
-                PropertyAnimation { target: app; property: "scale"; from: 1.0; to: app.style.animationScaling; duration: app.style.rotationDuration}
+                PropertyAnimation { target: app; property: "scale"; from: 1.0; to: app.style.animationScaling; duration: app.style.scalingDuration}
                 RotationAnimation {
                     direction: RotationAnimation.Shortest
                     duration: app.style.rotationDuration
                     easing.type: app.style.rotationEasing
                 }
-                PropertyAnimation { target: app; property: "scale"; from: app.style.animationScaling; to: 1.0; duration: app.style.rotationDuration}
+                PropertyAnimation { target: app; property: "scale"; from: app.style.animationScaling; to: 1.0; duration: app.style.scalingDuration}
             }
         }
     }

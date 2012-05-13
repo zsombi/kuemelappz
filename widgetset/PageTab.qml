@@ -69,7 +69,7 @@ Item {
         id: control
         styleName: "ThemeToolbar"
         width: parent.width
-        height: THEME.measures.pageTabHeight
+        height: THEME.sizes.pageTabHeight
         anchors.top: (tabAlign == Qt.AlignTop) ? parent.top : undefined
         anchors.bottom: (tabAlign == Qt.AlignBottom) ? parent.bottom : undefined
         resizeChildrenToDock: true

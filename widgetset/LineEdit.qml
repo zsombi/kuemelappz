@@ -28,7 +28,7 @@ StyledItem {
       */
     id: textEdit
     width: 100
-    height: THEME.measures.defLineEditHeight
+    height: THEME.sizes.defLineEditHeight
     styleName: "ThemeLineEdit"
     objectName: "TextEditor"
     //properties.fillColor: "#5e2e2e"

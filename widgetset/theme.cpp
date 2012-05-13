@@ -42,14 +42,16 @@ public:
 
     Theme *q_ptr;
     ThemeSet m_styleMap;
-    Style *m_measurements;
+    Style *sizesHolder;
+    Screen::Orientation lastOrientation;
     QString m_name;
     QString m_resource;
 };
 
 ThemePrivate::ThemePrivate(Theme *qq) :
     q_ptr(qq),
-    m_measurements(0)
+    sizesHolder(0),
+    lastOrientation(Screen::Automatic)
 {
     // capture orientation changes to chose the proper measurements
     QObject::connect(Screen::instance(), SIGNAL(orientationChanged()), q_ptr, SLOT(_q_updateMeasurementObject()));
@@ -57,32 +59,34 @@ ThemePrivate::ThemePrivate(Theme *qq) :
 
 void ThemePrivate::_q_updateMeasurementObject()
 {
-    //todo: implement
     Q_Q(Theme);
     Screen *screen = Screen::instance();
-    QString sorientation = screen->orientationString();
-    // remove "Inverse" from orientation, for measurements it does not matter
-    sorientation.remove("Inverse");
-    // 1st priority: type/density/orientation
-    QString measuresPath = QString("%1/%2/%3").
-            arg(screen->typeString()).
-            arg(screen->densityString()).
-            arg(sorientation);
-    m_measurements = q->style(measuresPath);
-    if (!m_measurements) {
-        // 2nd priority: density/orientation
-        measuresPath = QString("%1/%2").
+    if (!sizesHolder || (sizesHolder && (lastOrientation != screen->orientation()))) {
+        QString sorientation = screen->orientationString();
+        // remove "Inverse" from orientation, for measurements it does not matter
+        sorientation.remove("Inverse");
+        // 1st priority: type/density/orientation
+        QString sizesPath = QString("%1/%2/%3").
+                arg(screen->typeString()).
                 arg(screen->densityString()).
                 arg(sorientation);
-        m_measurements = q->style(measuresPath);
+        sizesHolder = q->style(sizesPath);
+        if (!sizesHolder) {
+            // 2nd priority: density/orientation
+            sizesPath = QString("%1/%2").
+                    arg(screen->densityString()).
+                    arg(sorientation);
+            sizesHolder = q->style(sizesPath);
+        }
+        if (!sizesHolder) {
+            // 3rd properity: orientation
+            sizesHolder = q->style(sorientation);
+        }
+    //#ifdef TRACE_THEME
+        qDebug() << "Theme measurement: "<<sizesHolder << "for path:" << sizesPath;
+    //#endif
+        emit q->sizesChanged();
     }
-    if (!m_measurements) {
-        // 3rd properity: orientation
-        m_measurements = q->style(sorientation);
-    }
-#ifdef TRACE_THEME
-    qDebug() << "Theme measurement: "<<m_measurements << "for path:" << measuresPath;
-#endif
 }
 
 /***********************************************************************************
@@ -184,10 +188,10 @@ void Theme::setResource(const QString &s)
         emit resourceChanged();
     }
 }
-Style *Theme::measures() const
+Style *Theme::sizes() const
 {
     Q_D(const Theme);
-    return d->m_measurements;
+    return d->sizesHolder;
 }
 
 /**

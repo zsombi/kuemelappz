@@ -17,7 +17,7 @@ class Theme : public QDeclarativeItem
     Q_INTERFACES(QDeclarativeParserStatus)
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(QString resource READ resource WRITE setResource NOTIFY resourceChanged)
-    Q_PROPERTY(Style* measures READ measures NOTIFY measuresChanged)
+    Q_PROPERTY(Style* sizes READ sizes NOTIFY sizesChanged)
 public:
     Theme(QDeclarativeItem *parent = 0);
     ~Theme();
@@ -30,7 +30,7 @@ public:
     void setName(const QString &s);
     QString resource() const;
     void setResource(const QString &s);
-    Style *measures() const;
+    Style *sizes() const;
 
     Q_INVOKABLE Style *style(const QString &name, Style::StyleType type = Style::Normal);
 signals:
@@ -38,7 +38,7 @@ signals:
     void nameChanged();
     void resourceChanged();
     void styleSetChanged();
-    void measuresChanged();
+    void sizesChanged();
     
 public slots:
 

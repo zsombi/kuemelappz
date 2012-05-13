@@ -22,7 +22,7 @@ StyledItem {
     styleName: "ThemeDockStyle"
     id: dock
     width: parent.width
-    height: THEME.measures.dockHeight
+    height: THEME.sizes.dockHeight
 
     Background {
         id: frame
