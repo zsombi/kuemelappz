@@ -44,6 +44,7 @@ ScreenPrivate::ScreenPrivate(Screen *qq) :
 }
 ScreenPrivate::~ScreenPrivate()
 {
+    QObject::disconnect(desktop, SIGNAL(screenCountChanged(int)), q_ptr, SLOT(_q_updateScreenCount(int)));
 }
 
 void ScreenPrivate::_q_updateScreenCount(int count)
@@ -150,8 +151,10 @@ void Screen::setLockOnOrientation(Orientation o)
         if (lock)
             d->orientation = o;
         d->toggleSensorActive(!lock);
+        // emit three signals: start, action and end
+        emit orientationChangeStarted();
         emit orientationChanged();
-        //d->setOrientation(o);
+        emit orientationChangeEnded();
     }
 }
 

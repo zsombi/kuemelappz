@@ -9,21 +9,45 @@ function getPgStack()
     return pgStack
 }
 
-function rootObject(obj)
+function rootObject(item)
 {
-    if (!obj.parent)
-        return obj
-    else
-        return rootObject(obj.parent)
+    var obj = item
+    while (obj.parent)
+        obj = obj.parent
+    return obj
 }
 
-function namedParent(obj, name)
+function namedParent(item, name)
 {
-    //console.debug("obj: " + obj)
-    if (obj && (obj.objectName == name))
-        return obj
-    if (obj.parent)
-        return namedParent(obj.parent, name);
+    var obj = item
+    while (obj) {
+        //console.debug("obj: " + obj)
+        if (obj && (obj.objectName == name))
+            return obj
+        obj = obj.parent
+    }
+    return null
+}
+
+function flickableParent(item)
+{
+    var obj = item
+    while (obj) {
+        if ((obj.flicking !== undefined) && (obj.flickableDirection !== undefined))
+            return obj
+        obj = obj.parent
+    }
+    return null
+}
+
+function pageLayout(item)
+{
+    var obj = item
+    while (obj) {
+        if ((obj.hideHeaderWhenEmpty !== undefined) && (obj.hideToolbarWhenEmpty !== undefined))
+            return obj
+        obj = obj.parent
+    }
     return null
 }
 

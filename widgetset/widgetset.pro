@@ -80,7 +80,6 @@ OTHER_FILES = qmldir \
     IndicatorStyle.qml \
     StatusBarStyle.qml \
     CornerFramerStyle.qml \
-    DockStyle.qml \
     TextEditStyle.qml \
     LabelStyle.qml \
     ScrollBarStyle.qml \
@@ -91,14 +90,14 @@ OTHER_FILES = qmldir \
     ApplicationWindowStyle.qml \
     BackgroundStyle.qml \
     Background.qml \
-    PageLayout.qml \
-    PageLayoutStyle.qml \
     PageHeader.qml \
     PageHeaderStyle.qml \
     InputPanelStyle.qml \
     KeyItem.qml \
     Measurements.qml \
-    ScrollBarDecorator.qml
+    ScrollBarDecorator.qml \
+    PagePanel.qml \
+    ToolBarLayout.qml
 
 !equals(_PRO_FILE_PWD_, $$OUT_PWD) {
     copy_qmldir.target = $$OUT_PWD/qmldir
@@ -128,7 +127,6 @@ QML_FILES = ApplicationWindow.qml \
     IndicatorStyle.qml \
     StatusBarStyle.qml \
     CornerFramerStyle.qml \
-    DockStyle.qml \
     TextEditStyle.qml \
     LabelStyle.qml \
     ScrollBarStyle.qml \
@@ -139,14 +137,14 @@ QML_FILES = ApplicationWindow.qml \
     ApplicationWindowStyle.qml \
     BackgroundStyle.qml \
     Background.qml \
-    PageLayout.qml \
-    PageLayoutStyle.qml \
     PageHeader.qml \
     PageHeaderStyle.qml \
     InputPanelStyle.qml \
     KeyItem.qml \
     Measurements.qml \
-    ScrollBarDecorator.qml
+    ScrollBarDecorator.qml \
+    PagePanel.qml \
+    ToolBarLayout.qml
 
 qmldir.files = qmldir $$QML_FILES
 symbian {

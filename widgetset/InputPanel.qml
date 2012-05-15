@@ -11,8 +11,6 @@ StyledItem {
     /**
       API
       */
-    // app screen proportion to be used when faded in
-    //property int inputHeight: 20
 
     function openInput(control, flags, inputMethod)
     {
@@ -31,6 +29,11 @@ StyledItem {
         privates.isOpen = false
     }
 
+    function update()
+    {
+        privates.update()
+    }
+
     // handle control scrollup
     onYChanged: privates.adjustFocusControlPosition()
 
@@ -42,7 +45,7 @@ StyledItem {
     anchors.right: parent.right
     anchors.bottom: undefined
     anchors.top: parent.bottom
-    onHeightChanged: console.debug("panelHeight="+height)
+    //onHeightChanged: console.debug("panelHeight="+height)
 
     QtObject {
         id: privates
@@ -54,6 +57,8 @@ StyledItem {
         property Item holder
         // the layout containing the holder
         property Item holderLayout
+        // page layout holding all the stuff
+        property Item pageLayout
         // set to true if the holder layout is Scrolable
         property bool scrollableHolderLayout: false
         // bottom Y screen point of the holder, needed to keep control in visible area
@@ -61,35 +66,49 @@ StyledItem {
         property int holderBottom
         // drives the roll-up
         property bool isOpen: false
-        // to know when are we still in animation phase
-        property bool animating: false
+        // to know whether we should update focus control alignment base don panel's rolled up position
+        property bool isPanelRolling: false
         // margin to be applied when focus control is
 
+        // start roll-up
         function rollUp()
         {
             // the holder is named as TextEditor
             holder = Utils.namedParent(focusControl, "TextEditor")
             holderBottom = Utils.screenY(holder) + holder.height
             // check if the holder layout is a Scrollable
-            holderLayout = Utils.namedParent(holder, "Scrollable")
-            //console.debug("rollUp:: focus="+focusControl+", holder="+holder+", layout="+holderLayout)
+            holderLayout = Utils.flickableParent(holder)
             scrollableHolderLayout = (holderLayout != null)
             if (!holderLayout) {
                 // it is not, so it might be a positioner (TODO: what if not?)
                 holderLayout = holder.parent
             }
+            pageLayout = Utils.pageLayout(holderLayout)
+            console.debug("rollUp:: focus="+focusControl+", holder="+holder+", layout="+holderLayout+", page="+pageLayout+", holderBottom="+holderBottom)
             isOpen = true
+        }
+        // update coordinates upon rotation
+        function update()
+        {
+            if (!isOpen)
+                return
+            isPanelRolling = true
+            holderBottom = Utils.screenY(holder) + holder.height
+            console.debug("update:: holderBottom="+holderBottom)
+            adjustFocusControlPosition()
+            isPanelRolling = false
         }
         // adjusts focus control position on the screen, so it is visible even when the
         // panel is shown
         function adjustFocusControlPosition()
         {
-            if (!focusControl || !animating)
+            if (!focusControl || !isPanelRolling)
                 return
 
             var inputSy = Utils.screenY(inputPanel)
             var currBottom = Utils.screenY(holder) + holder.height
-            var diff = inputSy - currBottom
+            var diff = parseInt(inputSy - currBottom)
+            console.debug("adjustFocusControlPosition:: inputSy="+inputSy+", currBottom="+currBottom+"("+holderBottom+") , diff="+diff)
 
             if (isOpen) {
                 // roll up
@@ -106,10 +125,11 @@ StyledItem {
         {
             if (isOpen) {
                 if (points < 0) {
-                    if (scrollableHolderLayout)
+                    if (scrollableHolderLayout) {
                         holderLayout.contentY -= points
-                    else {
-                        holderLayout.anchors.topMargin += parseInt(points)
+                        console.debug("adjustHolder contentY="+holderLayout.contentY)
+                    } else {
+                        holderLayout.anchors.topMargin += points
                         console.debug("adjustHolder topMargin="+holderLayout.anchors.topMargin)
                     }
                 }
@@ -118,7 +138,7 @@ StyledItem {
                     if (scrollableHolderLayout)
                         holderLayout.contentY -= points
                     else
-                        holderLayout.anchors.topMargin += parseInt(points)
+                        holderLayout.anchors.topMargin += points
                 } else {
                     holderLayout.anchors.topMargin = 0
                 }
@@ -127,19 +147,18 @@ StyledItem {
 
         function clearPanel()
         {
-            animating = false
+            privates.pageLayout.anchors.bottomMargin = 0
+            isPanelRolling = false
             focusControl = null
             scrollableHolderLayout = false
             flags = 0
         }
     }
 
-    // hide it if not open; without this the panel is visible upon rotation7
+    // hide it if not open; without this the panel is visible upon rotation
     visible: privates.isOpen
     // eat presses!
-    MouseArea {
-        anchors.fill: parent
-    }
+    MouseArea { anchors.fill: parent }
 
     Rectangle {
         id: stripe
@@ -147,7 +166,7 @@ StyledItem {
         anchors.top: parent.top
         anchors.topMargin: 2
         anchors.right: parent.right
-        height: 1
+        height: 2
         border.color: inputPanel.style.borderColor
         border.width: 1
         color: inputPanel.style.borderColor
@@ -164,8 +183,8 @@ StyledItem {
         Item {
             id: layout
             anchors.fill: parent
-            anchors.margins: 3
-
+            anchors.margins: THEME.sizes.spacingMedium
+            // these wil be outa here in layout elements, only loading of those will be implemented here
             property int rows: 4
             property real keyHeight: height/rows - THEME.sizes.spacingNormal//4 rows
             Button {
@@ -198,15 +217,19 @@ StyledItem {
         Transition {
             from: ""; to: "rollUp"
             SequentialAnimation {
-                ScriptAction {script: privates.animating = true;}
+                ScriptAction {script: privates.isPanelRolling = true;}
                 AnchorAnimation {alwaysRunToEnd: true; duration: inputPanel.style.fadeInDuration; easing.type: inputPanel.style.fadeEasing}
-                ScriptAction {script: privates.animating = false;}
+                ScriptAction {script: {
+                        privates.isPanelRolling = false;
+                        privates.pageLayout.anchors.bottomMargin = height
+                    }
+                }
             }
         },
         Transition {
             from: "rollUp"; to: ""
             SequentialAnimation {
-                ScriptAction {script: privates.animating = true;}
+                ScriptAction {script: privates.isPanelRolling = true;}
                 PauseAnimation { duration: inputPanel.style.fadeOutDelay }
                 AnchorAnimation {alwaysRunToEnd: true; duration: inputPanel.style.fadeOutDuration; easing.type: inputPanel.style.fadeEasing}
                 ScriptAction {script: privates.clearPanel()}

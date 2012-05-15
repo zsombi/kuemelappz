@@ -16,6 +16,7 @@ class WidgetSet : public QObject
     Q_PROPERTY(bool mobilePlatform READ mobilePlatform NOTIFY mobilePlatformChanged)
     Q_PROPERTY(QDeclarativeItem *applicationBody READ rootBodyItem NOTIFY applicationBodyChanged)
     Q_PROPERTY(QDeclarativeItem *statusBar READ statusBar NOTIFY statusBarChanged)
+    Q_PROPERTY(QDeclarativeItem *toolBar READ toolBar CONSTANT FINAL)
     Q_PROPERTY(QDeclarativeItem *inputPanel READ inputPanel NOTIFY inputPanelChanged)
     Q_PROPERTY(bool busy READ busy WRITE setBusy NOTIFY busyChanged)
     Q_ENUMS(FaderStyle PageStatus)
@@ -54,6 +55,7 @@ public:
 
     QDeclarativeItem *rootBodyItem();
     QDeclarativeItem *statusBar();
+    QDeclarativeItem *toolBar();
     QDeclarativeItem *inputPanel();
     bool busy() const;
     void setBusy(bool v);

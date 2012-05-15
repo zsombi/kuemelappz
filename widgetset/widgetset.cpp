@@ -109,6 +109,17 @@ QDeclarativeItem *WidgetSet::statusBar()
     return 0;
 }
 
+QDeclarativeItem *WidgetSet::toolBar()
+{
+    ApplicationItem *appItem = qobject_cast<ApplicationItem*>(appWindow);
+    if (appItem) {
+        QVariant hdr = QDeclarativeProperty::read(appWindow, "toolBar");
+        QObject *ho = hdr.value<QObject*>();
+        return qobject_cast<QDeclarativeItem*>(ho);
+    }
+    return 0;
+}
+
 QDeclarativeItem *WidgetSet::inputPanel()
 {
     ApplicationItem *appItem = qobject_cast<ApplicationItem*>(appWindow);

@@ -63,8 +63,10 @@ public:
 Q_SIGNALS:
     void displayChanged();
     void displayTypeChanged();
+    void orientationChangeStarted();
     void orientationChanged();
-    
+    void orientationChangeEnded();
+
 public Q_SLOTS:
     
 private:

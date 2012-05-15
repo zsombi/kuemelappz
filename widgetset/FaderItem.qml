@@ -214,7 +214,7 @@ Rectangle {
                 ScriptAction {script: privates.showFader() }
                 ParallelAnimation {
                     AnchorAnimation {alwaysRunToEnd: true; duration: fadeInDuration; easing.type: Easing.OutCubic}
-                    PropertyAnimation {target: privates; properties: "alpha"; from: 0.0; to: opacityWhenFadeIn; duration: fadeInDuration; easing.type: Easing.OutCubic; }
+                    PropertyAnimation {target: privates; properties: "alpha"; duration: fadeInDuration; easing.type: Easing.OutCubic; }
                 }
             }
         },
@@ -224,7 +224,7 @@ Rectangle {
                 PauseAnimation { duration: fadeOutDelay }
                 ParallelAnimation {
                     AnchorAnimation {alwaysRunToEnd: true; duration: fadeOutDuration; easing.type: Easing.OutCubic}
-                    PropertyAnimation {target: privates; properties: "alpha"; from: opacityWhenFadeIn; to: 0.0; duration: fadeOutDuration; easing.type: Easing.OutCubic; }
+                    PropertyAnimation {target: privates; properties: "alpha"; duration: fadeOutDuration; easing.type: Easing.OutCubic; }
                 }
                 ScriptAction {script: privates.hideFader() }
             }

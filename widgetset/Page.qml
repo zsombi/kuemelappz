@@ -15,25 +15,35 @@ Item {
     property url imageActive: ""
     // page status
     property int status: WidgetSet.PageInactive
+
     // style of the background
     property alias backgroundStyle: background.styleName
-    // page layout style
-    property alias layoutStyle: layout.styleName
-    // page data holder
-    default property alias content: layout.content
+    // page header style
+    property real headerHeight: THEME.sizes.headerHeight
     // page header component
-    property alias header: layout.header
+    property alias header: headerItem
     // header layout; if not set, header is hidden automatically
-    property alias headerLayout: layout.headerLayout
+    property Item headerLayout
+    // set header hidden if layout is empty
+    property bool hideHeaderWhenEmpty: true
+
     // PageStack component set if the page is included in a page stack
     property PageStack pageStack
+    // tools used in the page
+    property Item tools
+    // property specifying the content item, needed to anchor content
+    property alias contentItem: bodyItem
+    // page data holder
+    default property alias content: bodyItem.data
 
     // signal emitted when page got opened
     signal opened()
     // signal emitted when page gets closed
     signal closed()
 
+    // make it as fullpage, but in case of parent is the app window, check the toolbar presence
     anchors.fill: parent
+    anchors.bottomMargin: (parent.parent.statusBar !== undefined && parent.parent.toolBar) ? parent.parent.toolBar.height : 0
 
     //controlListItem: body
     onStatusChanged: {
@@ -48,10 +58,28 @@ Item {
         anchors.fill: parent
     }
 
-    PageLayout {
-        id: layout
-        anchors.fill: parent
-        // header is invisible if no layout got connected to it
-        headerHidden: (layout.headerLayout == null)
+    // page header
+    PagePanel {
+        id: headerItem
+        alignment: Qt.AlignTop
+        objectName: "HeaderPanel"
+        height: headerHeight
+        transitionEasing: THEME.panelFadingEasing
+        transitionDuration: THEME.panelFadingDuration
+        hidden: (hideHeaderWhenEmpty) ? (headerLayout == undefined) : false
+    }
+    onHeaderLayoutChanged: {
+        if (headerLayout) {
+            headerLayout.parent = headerItem
+        }
+    }
+
+    Item {
+        id: bodyItem
+        anchors.top: headerItem.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.margins: THEME.sizes.spacingSmall
     }
 }

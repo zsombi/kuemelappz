@@ -16,24 +16,22 @@ Item {
 
     //page content
     default property alias content: stack.data
-    // tab alignment
-    property variant tabAlign: Qt.AlignTop
-    // tab style
-    property alias tabStyle: control.styleName
+    // tab button style
+    property string tabButtonStyle: "PageTabButton"
     // tab height
-    property alias tabHeight: control.height
+    property int tabHeight: THEME.sizes.pageTabHeight
     // current page Index
     property int currentIndex: -1
     // control page title visibility in tab control
     property bool hidePageTitles: false
 
     onCurrentIndexChanged: privates.setCurrentPage()
-    Component.onCompleted: privates.setOpacities()
+    Component.onCompleted: privates.initialize()
 
     QtObject {
         id: privates
         property Item prevPage
-        function setOpacities() {
+        function initialize() {
             for (var i = 0; i < stack.children.length; ++i) {
                 if (stack.children[i].hasOwnProperty("status"))
                     stack.children[i].status = WidgetSet.PageInactive
@@ -41,6 +39,7 @@ Item {
                 stack.children[i].visible = false
             }
             setCurrentPage()
+            widgetSet.toolBar.setLayout(tabBar)
         }
         function setCurrentPage()
         {
@@ -65,11 +64,38 @@ Item {
         }
     }
 
+    CheckGroup {
+        onActiveIdChanged: pageTab.currentIndex = activeId
+        ToolBarLayout {
+            id: tabBar
+            resizeToolsToFit: true
+            //centerLayout: true
+            Repeater {
+                objectName: "NonVisualElement"
+                anchors.fill: parent
+                model: stack.children.length
+                delegate: ToolButton {
+                    styleName: tabButtonStyle
+                    radio: true
+                    checkable: true
+                    buttonId: index
+                    //width: pageTab.width / stack.children.length;
+                    image: (stack.children[index].hasOwnProperty("image")) ? stack.children[index].image : ""
+                    imageActive: (stack.children[index].hasOwnProperty("imageActive")) ? stack.children[index].imageActive : ""
+                    text: (stack.children[index].hasOwnProperty("title") && !pageTab.hidePageTitles) ? stack.children[index].title : ""
+                    checked: pageTab.currentIndex == index
+                }
+            }
+        }
+    }
+
+
+/*
     Dock {
         id: control
-        styleName: "ThemeToolbar"
+        styleName: pageTab.tabStyle
         width: parent.width
-        height: THEME.sizes.pageTabHeight
+        height: pageTab.tabHeight
         anchors.top: (tabAlign == Qt.AlignTop) ? parent.top : undefined
         anchors.bottom: (tabAlign == Qt.AlignBottom) ? parent.bottom : undefined
         resizeChildrenToDock: true
@@ -90,11 +116,12 @@ Item {
             }
         }
     }
-
+*/
     Item {
         id: stack
         width: pageTab.width
-        anchors.top: (tabAlign == Qt.AlignTop) ? control.bottom : pageTab.top
-        anchors.bottom: (tabAlign == Qt.AlignTop) ? pageTab.bottom : control.top
+        anchors.fill: parent
+        //anchors.top: (tabAlign == Qt.AlignTop) ? control.bottom : pageTab.top
+        //anchors.bottom: (tabAlign == Qt.AlignTop) ? pageTab.bottom : control.top
     }
 }

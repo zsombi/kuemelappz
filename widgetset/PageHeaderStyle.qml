@@ -8,4 +8,5 @@ import "." 1.0
 BackgroundStyle {
     // default header margins
     property int headerMargins: 0
+    //
 }

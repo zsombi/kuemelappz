@@ -20,8 +20,8 @@ ButtonControl {
     styleName: "ThemeToolButton"
 
     id: toolButton
-    height: parent.height
-    width: height
+    //height: parent.height
+    //width: height
     radio: false; checkable: true
 
     onPressedChanged: {

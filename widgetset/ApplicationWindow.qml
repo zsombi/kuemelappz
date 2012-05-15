@@ -17,25 +17,15 @@ Item {
     property bool usePlatformInput: false
     // menu panel
     property alias mainMenu: statusBarItem.menu
+    // set whether the app has a toolbar or not; the toolbar is always in the bottom of the screen
+    property alias toolBar: app.toolBar
 
     /* load the default theme, just to make sure we have a valid
        theme  */
     DefaultTheme {}
 
-    Connections {
-        target: screen
-        onDisplayChanged: console.debug("screenW= "+screen.width+", screenH= "+screen.height)
-    }
-
-    Component.onCompleted: {
-        console.debug("screen info:")
-        console.debug("screen.width= "+screen.width)
-        console.debug("screen.height= "+screen.height)
-        console.debug("screen.dpi= "+screen.dpi)
-        console.debug("screen.displayDensity= "+screen.densityString)
-        console.debug("screen.displayType= "+screen.typeString)
-    }
-
+    // ApplicationItem handles rotation of the layout upon orientation changes. Here
+    // we set the layout elements needed by the entire system.
     ApplicationItem {
         id: app
         styleName: "ThemeApplicationWindow"
@@ -44,6 +34,7 @@ Item {
         property alias statusBar: statusBarItem
         property alias body: layout
         property alias inputPanel: inputPanelItem
+        property Item toolBar
 
         anchors.centerIn: parent
         StatusBar {
@@ -62,6 +53,16 @@ Item {
             styleName: app.style.backgroundStyle
         }
 
+        // content item
+        Item {
+            id: layout
+            objectName: "AppWindowBody"
+            anchors.top: statusBarItem.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+        }
+
         CornerFramer {
             styleName: "ThemeAppRoundCorners"
             anchors.top: statusBarItem.bottom
@@ -71,28 +72,24 @@ Item {
             z: Number.MAX_VALUE
         }
 
-        // content item
-        Item {
-            id: layout
-            anchors.top: statusBarItem.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-        }
-
         // input panel
         InputPanel {
             id: inputPanelItem
             styleName: app.style.inputPanelStyle
             parent: layout
-            //height: app.orientation == ApplicationItem.Portrait ? 440 : 200
+            // just below the corners
+            z: Number.MAX_VALUE - 1
         }
 
         Behavior on width {
             PropertyAnimation { duration: app.style.scalingDuration; easing.type: app.style.rotationEasing }
         }
         Behavior on height {
-            PropertyAnimation { duration: app.style.scalingDuration; easing.type: app.style.rotationEasing }
+            SequentialAnimation {
+                PropertyAnimation { duration: app.style.scalingDuration; easing.type: app.style.rotationEasing }
+                // adjust opened input panel so that
+                ScriptAction {script: inputPanelItem.update()}
+            }
         }
 
         // rotate and animate

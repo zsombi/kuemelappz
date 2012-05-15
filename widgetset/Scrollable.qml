@@ -6,31 +6,28 @@ import QtQuick 1.1
 import "." 1.0
 
 Item {
-    // enable or disable content scrolling
-    property bool enableScrolling: true
-    // enable automatic scroll
+    // control flicking even if the content is not reaching out of boundaries
     property bool alwaysScroll: true
     default property alias content: pageContent.data
     clip: true
 
-    anchors.fill: parent
+    //anchors.fill: parent
     Flickable {
         objectName: "Scrollable"
         id: scrollable
         anchors.fill: parent
-        anchors.margins: THEME.paddingMedium
+        anchors.margins: THEME.sizes.spacingMedium
 
         flickableDirection: Flickable.VerticalFlick
-        interactive: alwaysScroll || (enableScrolling && (pageContent.height > height))
+        interactive: alwaysScroll || (pageContent.height > height)
         contentWidth: width
-        contentHeight: pageContent.height
+        contentHeight: pageContent.childrenRect.height
 
         Item {
             id: pageContent
             width: parent.width
-            height: childrenRect.height
+            //height: childrenRect.height
         }
-        z: 0
     }
     ScrollBarDecorator {
         id: pageScroll

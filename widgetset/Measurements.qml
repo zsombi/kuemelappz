@@ -16,6 +16,7 @@ Style {
     property real inputPanelHeight:0
     property real defButtonHeight:0
     property real defLineEditHeight:0
+    property real scrollDecoratorThickness: 0
     property real dockHeight: 0
     property real spacingSmall:0
     property real spacingMedium:0

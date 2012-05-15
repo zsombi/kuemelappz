@@ -14,7 +14,7 @@ Background {
     default property alias content: body.data
 
     anchors.fill: parent
-    objectName: "PageHeader"
+    styleName: "ThemePageHeader"
 
     Item {
         id: body

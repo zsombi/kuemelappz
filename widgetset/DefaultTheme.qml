@@ -16,6 +16,8 @@ Theme {
     property int pageFadingDuration: 800
     property int pageFadingEasing: Easing.InOutExpo
     property int pageHeaderLayoutMargins: 6
+    property int panelFadingEasing: Easing.InOutExpo
+    property int panelFadingDuration: 200
     property int paddingThin: 2
     property int paddingLow: 4
     property int paddingMedium: 8
@@ -73,6 +75,7 @@ Theme {
         inputPanelHeight: 180
         defButtonHeight: 40
         defLineEditHeight:30
+        scrollDecoratorThickness: 8
         dockHeight: 50
         spacingSmall:1
         spacingMedium:3
@@ -90,6 +93,7 @@ Theme {
         inputPanelHeight: 140
         defButtonHeight: 40
         defLineEditHeight: 30
+        scrollDecoratorThickness: 8
         dockHeight: 50
         spacingSmall:1
         spacingMedium:3
@@ -109,6 +113,7 @@ Theme {
         inputPanelHeight: 240
         defButtonHeight: 50
         defLineEditHeight:45
+        scrollDecoratorThickness: 10
         dockHeight: 65
         spacingSmall:1
         spacingMedium:3
@@ -126,6 +131,7 @@ Theme {
         inputPanelHeight: 190
         defButtonHeight: 50
         defLineEditHeight: 45
+        scrollDecoratorThickness: 10
         dockHeight: 60
         spacingSmall:1
         spacingMedium:3
@@ -144,6 +150,7 @@ Theme {
         inputPanelHeight: 180
         defButtonHeight: 45
         defLineEditHeight:30
+        scrollDecoratorThickness: 8
         dockHeight: 50
         spacingSmall:1
         spacingMedium:3
@@ -161,6 +168,7 @@ Theme {
         inputPanelHeight: 160
         defButtonHeight: 45
         defLineEditHeight: 30
+        scrollDecoratorThickness: 8
         dockHeight: 50
         spacingSmall:1
         spacingMedium:3
@@ -258,32 +266,21 @@ Theme {
         radius: 15
     }
 
-    PageLayoutStyle {
-        name: "ThemeMenuLayout"
-        headerHeight: THEME.sizes.headerHeight
-        headerStyle: "ThemeMenuHeader"
-        property string backgroundStyle: "ThemeMenuBackground"
-    }
     /*------------------PageLayout-----------------------------------------*/
     PageHeaderStyle {
         name: "ThemePageHeader"
         color: __headerColor
         headerMargins: 5
     }
-    PageLayoutStyle {
-        name: "ThemePageLayout"
-        headerHeight: THEME.sizes.headerHeight
-        headerStyle: "ThemePageHeader"
-        transitionDuration: 200
-        transitionEasing: Easing.InOutExpo
-    }
 
     /*------------------ToolBar-----------------------------------------*/
 
+    // style for the dock/toolbar
     BackgroundStyle {
         name: "ThemeToolbarFrame"
         image: "qrc:/default/gradient"
     }
+
     BackgroundStyle {
         name: "pgTabFrame"
         type:Style.Normal
@@ -322,24 +319,12 @@ Theme {
         font: normalFontItem.font
         fontColor: __highlightColor
     }
-    DockStyle {
-        name: "ThemeToolbar"
-        frameStyle: "ThemeToolbarFrame"
-        buttonStyle: "PageTabButton"
-        buttonSpacing: THEME.sizes.spacingSmall
-    }
 
     /*-----------------------------------------------------------*/
     BackgroundStyle {
         name: "dockFrame"
         image: "qrc:/default/dock-background"
         imageBorders: [2,2,2,2]
-    }
-
-    DockStyle {
-        name: "ThemeDockStyle"
-        frameStyle: "dockFrame"
-        buttonSpacing: THEME.sizes.spacingSmall
     }
 
     /*-------------------ToolButton----------------------------------------*/

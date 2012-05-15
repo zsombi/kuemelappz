@@ -17,8 +17,13 @@ ApplicationWindow {
             parent: menuPanel.panelItem
             anchors.fill: parent
             backgroundStyle: "ThemeMenuBackground"
-            layoutStyle: "ThemeMenuLayout"
             headerLayout: PageHeader {
+                styleName: "ThemeMenuHeader"
+                Button {
+                    width: 80
+                    text: "Quit"
+                    onClicked: Qt.quit()
+                }
             }
         }
 
@@ -27,9 +32,39 @@ ApplicationWindow {
         leftMargin: 40
     }
 
+    toolBar: toolBarItem
+    Dock {
+        id: toolBarItem
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+    }
+/*
+    Page {
+        id: page
+        headerLayout: PageHeader { styleName: "ThemePageHeader"}
+        Button {
+            anchors.bottom: page.contentItem.bottom
+            height: 120
+            width: 100
+            text: "Test"
+        }
+        tools: ToolBarLayout {
+            resizeToolsToFit: false
+            centerLayout: true
+            Button {
+                text: "alpha"
+            }
+            Button {
+                text: "beta"
+            }
+        }
+        Component.onCompleted: toolBarItem.setLayout(tools)
+    }
+*/
+
     PageTab {
         anchors.fill: parent
-        tabAlign: Qt.AlignBottom
         //currentIndex: 2
         Component.onCompleted: currentIndex = 2
         View2 { image:"qrc:/default/quit"; imageActive: "qrc:/default/check-mark"}
@@ -43,7 +78,7 @@ ApplicationWindow {
             anchors.fill: parent
             //anchors.topMargin: toolbar.height
             headerLayout: PageHeader {
-                anchors.fill: parent
+                styleName: "ThemePageHeader"
                 Button {
                     text: "Quit"
                     onClicked: Qt.quit()
@@ -74,7 +109,7 @@ ApplicationWindow {
                 }
             }
         }
-
     }
+
 }
 

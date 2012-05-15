@@ -82,9 +82,9 @@ void ThemePrivate::_q_updateMeasurementObject()
             // 3rd properity: orientation
             sizesHolder = q->style(sorientation);
         }
-    //#ifdef TRACE_THEME
+#ifdef TRACE_THEME
         qDebug() << "Theme measurement: "<<sizesHolder << "for path:" << sizesPath;
-    //#endif
+#endif
         emit q->sizesChanged();
     }
 }

@@ -4,12 +4,10 @@ plugin widgetset
 Measurements 1.0 Measurements.qml
 ApplicationWindowStyle 1.0 ApplicationWindowStyle.qml
 BackgroundStyle 1.0 BackgroundStyle.qml
-PageLayoutStyle 1.0 PageLayoutStyle.qml
 InputPanelStyle 1.0 InputPanelStyle.qml
 FaderItemStyle 1.0 FaderItemStyle.qml
 StatusBarStyle 1.0 StatusBarStyle.qml
 CornerFramerStyle 1.0 CornerFramerStyle.qml
-DockStyle 1.0 DockStyle.qml
 ToolButtonStyle 1.0 ToolButtonStyle.qml
 TextEditStyle 1.0 TextEditStyle.qml
 LabelStyle 1.0 LabelStyle.qml
@@ -22,11 +20,11 @@ ButtonControl 1.0 ButtonControl.qml
 ApplicationWindow 1.0 ApplicationWindow.qml
 Background 1.0 Background.qml
 Page 1.0 Page.qml
-PageLayout 1.0 PageLayout.qml
 PageHeader 1.0 PageHeader.qml
 PageTab 1.0 PageTab.qml
 PageStack 1.0 PageStack.qml
 Dock 1.0 Dock.qml
+ToolBarLayout 1.0 ToolBarLayout.qml
 Label 1.0 Label.qml
 Button 1.0 Button.qml
 ToolButton 1.0 ToolButton.qml
