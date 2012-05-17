@@ -13,11 +13,11 @@ class QDeclarativeItem;
 class WidgetSet : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(bool mobilePlatform READ mobilePlatform NOTIFY mobilePlatformChanged)
-    Q_PROPERTY(QDeclarativeItem *applicationBody READ rootBodyItem NOTIFY applicationBodyChanged)
-    Q_PROPERTY(QDeclarativeItem *statusBar READ statusBar NOTIFY statusBarChanged)
+    Q_PROPERTY(bool mobilePlatform READ mobilePlatform CONSTANT FINAL)
+    Q_PROPERTY(QDeclarativeItem *applicationBody READ rootBodyItem CONSTANT FINAL)
+    Q_PROPERTY(QDeclarativeItem *statusBar READ statusBar CONSTANT FINAL)
     Q_PROPERTY(QDeclarativeItem *toolBar READ toolBar CONSTANT FINAL)
-    Q_PROPERTY(QDeclarativeItem *inputPanel READ inputPanel NOTIFY inputPanelChanged)
+    Q_PROPERTY(QDeclarativeItem *inputPanel READ inputPanel CONSTANT FINAL)
     Q_PROPERTY(bool busy READ busy WRITE setBusy NOTIFY busyChanged)
     Q_ENUMS(FaderStyle PageStatus)
     Q_FLAGS(InputLayout InputLayoutFlags)
@@ -64,12 +64,7 @@ public:
     bool mobilePlatform();
 
 signals:
-    void mobilePlatformChanged();
     void busyChanged();
-    // these signals are needed for proper property binding...
-    void applicationBodyChanged();
-    void statusBarChanged();
-    void inputPanelChanged();
     
 public slots:
 

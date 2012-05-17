@@ -44,7 +44,7 @@ function pageLayout(item)
 {
     var obj = item
     while (obj) {
-        if ((obj.hideHeaderWhenEmpty !== undefined) && (obj.hideToolbarWhenEmpty !== undefined))
+        if ((obj.pageStack !== undefined) && (obj.tools !== undefined))
             return obj
         obj = obj.parent
     }

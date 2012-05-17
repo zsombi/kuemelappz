@@ -11,6 +11,8 @@ StyledItem {
     /**
       API
       */
+    // specifies whether the input panel is open or not
+    property bool isOpen: false
 
     function openInput(control, flags, inputMethod)
     {
@@ -20,13 +22,18 @@ StyledItem {
         // the control is the TextInput editor control
         privates.flags = flags
         privates.focusControl = control;
+        // hide toolbar
+        if (widgetSet.toolBar)
+            widgetSet.toolBar.hidden = true
         privates.rollUp()
     }
     function closeInput()
     {
         // loose focus
         privates.focusControl.focus = false
-        privates.isOpen = false
+        isOpen = false
+        if (widgetSet.toolBar)
+            widgetSet.toolBar.hidden = false
     }
 
     function update()
@@ -45,7 +52,6 @@ StyledItem {
     anchors.right: parent.right
     anchors.bottom: undefined
     anchors.top: parent.bottom
-    //onHeightChanged: console.debug("panelHeight="+height)
 
     QtObject {
         id: privates
@@ -64,8 +70,6 @@ StyledItem {
         // bottom Y screen point of the holder, needed to keep control in visible area
         // when the panel is rolled up
         property int holderBottom
-        // drives the roll-up
-        property bool isOpen: false
         // to know whether we should update focus control alignment base don panel's rolled up position
         property bool isPanelRolling: false
         // margin to be applied when focus control is
@@ -84,7 +88,7 @@ StyledItem {
                 holderLayout = holder.parent
             }
             pageLayout = Utils.pageLayout(holderLayout)
-            console.debug("rollUp:: focus="+focusControl+", holder="+holder+", layout="+holderLayout+", page="+pageLayout+", holderBottom="+holderBottom)
+            //console.debug("rollUp:: focus="+focusControl+", holder="+holder+", layout="+holderLayout+", page="+pageLayout+", holderBottom="+holderBottom)
             isOpen = true
         }
         // update coordinates upon rotation
@@ -108,7 +112,7 @@ StyledItem {
             var inputSy = Utils.screenY(inputPanel)
             var currBottom = Utils.screenY(holder) + holder.height
             var diff = parseInt(inputSy - currBottom)
-            console.debug("adjustFocusControlPosition:: inputSy="+inputSy+", currBottom="+currBottom+"("+holderBottom+") , diff="+diff)
+            //console.debug("adjustFocusControlPosition:: inputSy="+inputSy+", currBottom="+currBottom+"("+holderBottom+") , diff="+diff)
 
             if (isOpen) {
                 // roll up
@@ -147,7 +151,6 @@ StyledItem {
 
         function clearPanel()
         {
-            privates.pageLayout.anchors.bottomMargin = 0
             isPanelRolling = false
             focusControl = null
             scrollableHolderLayout = false
@@ -156,7 +159,7 @@ StyledItem {
     }
 
     // hide it if not open; without this the panel is visible upon rotation
-    visible: privates.isOpen
+    visible: isOpen
     // eat presses!
     MouseArea { anchors.fill: parent }
 
@@ -205,7 +208,7 @@ StyledItem {
     states: [
         State {
             name: 'rollUp'
-            when: privates.isOpen
+            when: isOpen
             AnchorChanges {
                 target: inputPanel
                 anchors.bottom: parent.bottom
@@ -221,7 +224,6 @@ StyledItem {
                 AnchorAnimation {alwaysRunToEnd: true; duration: inputPanel.style.fadeInDuration; easing.type: inputPanel.style.fadeEasing}
                 ScriptAction {script: {
                         privates.isPanelRolling = false;
-                        privates.pageLayout.anchors.bottomMargin = height
                     }
                 }
             }

@@ -104,7 +104,7 @@ Theme {
     /*-------------------Normal dislay ExtraHigh density-------------------*/
     Measurements {
         name: "Normal/ExtraHigh/Portrait"
-        smallFontSize: 11
+        smallFontSize: 12
         normalFontSize: 16
         largeFontSize: 24
         statusBarHeight: 18
@@ -122,7 +122,7 @@ Theme {
     }
     Measurements {
         name: "Normal/ExtraHigh/Landscape"
-        smallFontSize: 11
+        smallFontSize: 12
         normalFontSize: 16
         largeFontSize: 42
         statusBarHeight: 18

@@ -3,6 +3,8 @@ import QtQuick 1.1
 import "." 1.0
 
 Item {
+    //application title string displayed in the status bar or to its system bar on desktops
+    property alias title: app.title
     // default property holding aplication content
     default property alias content: layout.data
     // status bas item
@@ -18,12 +20,13 @@ Item {
     // menu panel
     property alias mainMenu: statusBarItem.menu
     // set whether the app has a toolbar or not; the toolbar is always in the bottom of the screen
-    property alias toolBar: app.toolBar
+    property Item toolBar: null
 
     /* load the default theme, just to make sure we have a valid
        theme  */
     DefaultTheme {}
 
+    id: appHolder
     // ApplicationItem handles rotation of the layout upon orientation changes. Here
     // we set the layout elements needed by the entire system.
     ApplicationItem {
@@ -34,11 +37,12 @@ Item {
         property alias statusBar: statusBarItem
         property alias body: layout
         property alias inputPanel: inputPanelItem
-        property Item toolBar
+        property alias toolBar: appHolder.toolBar
 
         anchors.centerIn: parent
         StatusBar {
             id: statusBarItem
+            application: app
             styleName: app.style.statusBarStyle
             width: parent.width
             anchors.top: parent.top

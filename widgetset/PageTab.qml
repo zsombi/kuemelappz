@@ -28,6 +28,9 @@ Item {
     onCurrentIndexChanged: privates.setCurrentPage()
     Component.onCompleted: privates.initialize()
 
+    anchors.fill: parent
+    anchors.bottomMargin: (parent.parent.toolBar !== undefined && parent.parent.toolBar) ? parent.parent.toolBar.height : 0
+
     QtObject {
         id: privates
         property Item prevPage
@@ -88,40 +91,9 @@ Item {
             }
         }
     }
-
-
-/*
-    Dock {
-        id: control
-        styleName: pageTab.tabStyle
-        width: parent.width
-        height: pageTab.tabHeight
-        anchors.top: (tabAlign == Qt.AlignTop) ? parent.top : undefined
-        anchors.bottom: (tabAlign == Qt.AlignBottom) ? parent.bottom : undefined
-        resizeChildrenToDock: true
-        onActiveToolIdChanged: pageTab.currentIndex = activeToolId
-
-        Repeater {
-            model: stack.children.length
-            delegate: ToolButton {
-                styleName: control.style.buttonStyle
-                radio: true
-                checkable: true
-                buttonId: index
-                width: pageTab.width / stack.children.length;
-                image: (stack.children[index].hasOwnProperty("image")) ? stack.children[index].image : ""
-                imageActive: (stack.children[index].hasOwnProperty("imageActive")) ? stack.children[index].imageActive : ""
-                text: (stack.children[index].hasOwnProperty("title") && !pageTab.hidePageTitles) ? stack.children[index].title : ""
-                checked: pageTab.currentIndex == index
-            }
-        }
-    }
-*/
     Item {
         id: stack
         width: pageTab.width
         anchors.fill: parent
-        //anchors.top: (tabAlign == Qt.AlignTop) ? control.bottom : pageTab.top
-        //anchors.bottom: (tabAlign == Qt.AlignTop) ? pageTab.bottom : control.top
     }
 }

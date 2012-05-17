@@ -62,6 +62,8 @@ ApplicationItemPrivate::ApplicationItemPrivate(ApplicationItem *qq) :
         }
     }
 
+    title = QApplication::applicationName();
+
     initializePlatform();
     QObject::connect(Screen::instance(), SIGNAL(orientationChanged()), q_ptr, SLOT(_q_sensorUpdate()));
 }
@@ -131,6 +133,20 @@ Screen::Orientation ApplicationItem::orientation() const
 {
     return Screen::instance()->orientation();
 }
+QString ApplicationItem::title() const
+{
+    Q_D(const ApplicationItem);
+    return d->title;
+}
+void ApplicationItem::setTitle(const QString &txt)
+{
+    Q_D(ApplicationItem);
+    if (d->title != txt) {
+        d->title = txt;
+        emit titleChanged();
+    }
+}
+
 
 void ApplicationItem::componentComplete()
 {

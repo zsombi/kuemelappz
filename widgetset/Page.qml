@@ -43,7 +43,7 @@ Item {
 
     // make it as fullpage, but in case of parent is the app window, check the toolbar presence
     anchors.fill: parent
-    anchors.bottomMargin: (parent.parent.statusBar !== undefined && parent.parent.toolBar) ? parent.parent.toolBar.height : 0
+    anchors.bottomMargin: (parent.parent.toolBar !== undefined && parent.parent.toolBar) ? parent.parent.toolBar.height : 0
 
     //controlListItem: body
     onStatusChanged: {
@@ -76,6 +76,7 @@ Item {
 
     Item {
         id: bodyItem
+        clip: true
         anchors.top: headerItem.bottom
         anchors.left: parent.left
         anchors.right: parent.right

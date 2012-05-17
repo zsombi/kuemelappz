@@ -7,6 +7,7 @@ ApplicationWindow {
     height: 600
     //header.visible: false
     objectName: "AppWin"
+    title: "Widgetset test app (press for menu)"
 
     // application menu
     mainMenu: MenuPanel {
@@ -64,7 +65,6 @@ ApplicationWindow {
 */
 
     PageTab {
-        anchors.fill: parent
         //currentIndex: 2
         Component.onCompleted: currentIndex = 2
         View2 { image:"qrc:/default/quit"; imageActive: "qrc:/default/check-mark"}
@@ -107,6 +107,11 @@ ApplicationWindow {
                 LineEdit {
                     hint: "whatever"
                 }
+            }
+            Label {
+                text: "Bottom anchored label"
+                anchors.bottom: parent.bottom
+                color: "white"
             }
         }
     }

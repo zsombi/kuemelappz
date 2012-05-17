@@ -34,7 +34,8 @@ Item {
 
             // count visual items
             for (i = 0; i < itemList.length; i++) {
-                if (itemList[i].objectName !== "NonVisualElement")
+                // skip models!!!
+                if (itemList[i].model === undefined)
                     items.push(itemList[i])
             }
             itemCount = items.length
@@ -70,54 +71,3 @@ Item {
         }
     }
 }
-
-/*
-CheckGroup {
-    // toolbar item holding the layout
-    property Dock toolbar
-    // alignment
-    property int alignment: Qt.AlignJustify
-    default property alias content: body.data
-
-    id: group
-    anchors.fill: parent
-    autoId: true
-    resizeChildrenToGroup: false
-    Row {
-        id: body
-        property int marginOffset: 0
-        property int defSpacing: THEME.sizes.spacingSmall
-        anchors {
-            fill: parent
-            leftMargin: 1 + marginOffset
-            topMargin: 1
-            rightMargin: 1 + marginOffset
-            bottomMargin: 1
-        }
-        //width: parent.width
-        spacing: layoutChildren()
-        function layoutChildren()
-        {
-            if (group.resizeChildrenToGroup) {
-                console.debug("dock resizes its children")
-                return defSpacing
-            }
-
-            // todo: rework this a bit...
-            var icount = body.children.length
-            var fw = group.width - 2
-            switch (group.alignment) {
-            case Qt.AlignHCenter:
-                var cw = children[0].width * icount + (icount - 1) * defSpacing
-                marginOffset = (fw - cw) / 2
-                return defSpacing
-            case Qt.AlignJustify:
-                marginOffset = 0
-                return (fw - icount * children[0].width) / (icount - 1) - 1
-            default:
-                return defSpacing
-            }
-        }
-    }
-}
-*/

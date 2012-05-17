@@ -10,6 +10,7 @@ class ApplicationItem : public StyledItem
 {
     Q_OBJECT
 
+    Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged FINAL)
     Q_PROPERTY(Screen::Orientation orientation READ orientation NOTIFY orientationChanged FINAL)
 public:
 
@@ -20,11 +21,14 @@ protected: // to finalize layout setup
 
 Q_SIGNALS:
     void orientationChanged();
+    void titleChanged();
     
 public Q_SLOTS:
 
 public:
     Screen::Orientation orientation() const;
+    QString title() const;
+    void setTitle(const QString &txt);
 
 private:
     Q_PRIVATE_SLOT(d_func(), void _q_sceneUpdate(const QSize &sceneSize))

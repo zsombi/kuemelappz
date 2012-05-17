@@ -77,9 +77,6 @@ StyledItem {
                     if (!editor.activeFocus) {
                         editor.forceActiveFocus()
                         Utils.openInputPanel(editor, inputFlags, "QWERTY")
-                    } else {
-                        editor.focus = false;
-                        Utils.closeInputPanel(editor)
                     }
                 }
                 onPressAndHold: {

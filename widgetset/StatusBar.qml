@@ -8,6 +8,9 @@ import "." 1.0
 
 StyledItem {
     id: statusBar
+    // application instance holding the status bar
+    property ApplicationItem application: parent
+    // scontrols statsu bar visibility
     property bool hidden: false
     // menu panel item to be shown
     property MenuPanel menu
@@ -39,16 +42,14 @@ StyledItem {
         color: statusBar.style.fillColor
         Label {
             id: dateTimeText
-            width: 52
-            height: 26
+            width: paintedWidth
+            height: parent.height
             color: statusBar.style.fontColor
             font: statusBar.style.font
+            verticalAlignment: Text.AlignVCenter
             anchors.top: parent.top
-            anchors.topMargin: 0
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 0
             anchors.left: parent.left
-            anchors.leftMargin: 0
             text: getDateTime()
 
             function getDateTime() {
@@ -68,8 +69,27 @@ StyledItem {
         BusyIndicator {
             height: statusBar.height
             width: statusBar.height
+            /*
             anchors.left: dateTimeText.right
+            anchors.leftMargin: THEME.sizes.spacingMedium
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            */
+            anchors.centerIn: parent
             on: widgetSet.busy
+        }
+        Label {
+            id: appTitle
+            width: paintedWidth
+            height: parent.height
+            color: statusBar.style.fontColor
+            font: statusBar.style.font
+            verticalAlignment: Text.AlignVCenter
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+            horizontalAlignment: Text.AlignLeft
+            text: (application) ? application.title : ""
         }
     }
 

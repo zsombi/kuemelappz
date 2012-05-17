@@ -5,6 +5,9 @@ platforms, and to be able to change their look-and-feel runtime.
 
 TODOs
 =====
+- remove PagePanel as we already have the Dock...
+- FaderItem acts weirdly, fix needed
+- Menu rolls in in Landscape as it would roll in Portrait, then resizes - fix needed
 - register theme (rc) that contains styleset component; create component
 - more themes
 - StyledItem: method to query available style types

@@ -29,6 +29,7 @@ public: // members
     void setOrientation(Screen::Orientation o);
     QSize screenSize;
     QDeclarativeView *appView;
+    QString title;
 
 };
 
