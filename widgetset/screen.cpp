@@ -44,7 +44,6 @@ ScreenPrivate::ScreenPrivate(Screen *qq) :
 }
 ScreenPrivate::~ScreenPrivate()
 {
-    QObject::disconnect(desktop, SIGNAL(screenCountChanged(int)), q_ptr, SLOT(_q_updateScreenCount(int)));
 }
 
 void ScreenPrivate::_q_updateScreenCount(int count)
