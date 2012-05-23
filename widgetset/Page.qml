@@ -46,11 +46,15 @@ Item {
     anchors.bottomMargin: (parent.parent.toolBar !== undefined && parent.parent.toolBar) ? parent.parent.toolBar.height : 0
 
     //controlListItem: body
+    focus: true
+    objectName: "Page/"+title
+
     onStatusChanged: {
-        if (status == WidgetSet.PageActive)
+        if (status == WidgetSet.PageActive) {
             opened()
-        else if (status == WidgetSet.PageInactive)
+        } else if (status == WidgetSet.PageInactive) {
             closed()
+        }
     }
 
     Background {
@@ -74,7 +78,8 @@ Item {
         }
     }
 
-    Item {
+    FocusScope {
+    //Item {
         id: bodyItem
         clip: true
         anchors.top: headerItem.bottom

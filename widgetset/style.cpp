@@ -12,15 +12,14 @@
         proeprty name: string
             Defines the style name.
 
-        property type: StyleType
-            Defines the style type. This can be one of the following values:
+        property type: StyleTypes
+            Defines the style type. This can be a combination of the following values:
             Style.Normal - normal layout
             Style.Pressed - pressed layout
             Style.Dimmed - dimmed (disabled) layout
             Style.Highlighted - higlighted layout, e.g. used when mouse hovering over
                                 the component
             Style.Expanded - expanded layout, used in expand/collapse type components
-
   */
 #include "style.h"
 #include "globaldefs.h"
@@ -30,7 +29,7 @@
 Style::Style(QObject *parent) :
     QObject(parent),
     m_name(""),
-    m_type(LastStyleType)
+    m_type(Undefined)
 {
 }
 
@@ -51,31 +50,21 @@ void Style::setName(const QString &name)
     if (name != m_name) {
         m_name = name;
         // set the type to Normal if it hasn't been set yet
-        if (!m_name.isEmpty() && (m_type == LastStyleType))
+        if (!m_name.isEmpty() && (m_type == Undefined))
             m_type = Normal;
         emit nameChanged();
     }
 }
 
 // type proeprty getter/setter
-Style::StyleType Style::type() const
+Style::StyleTypes Style::type() const
 {
     return m_type;
 }
-void Style::setType(Style::StyleType set)
+void Style::setType(Style::StyleTypes set)
 {
     if (set != m_type) {
         m_type = set;
         emit typeChanged();
     }
-}
-QVariantList Style::types() const
-{
-    return m_types;
-}
-
-void Style::setTypes(const QVariantList &t)
-{
-    m_types = t;
-    qDebug() << "Types=" << t;
 }

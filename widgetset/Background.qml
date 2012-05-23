@@ -22,6 +22,8 @@ StyledItem {
     id: background
     width: 100
     height: 62
+    objectName: "bkgnd+"+parent.objectName
+    focusType: StyledItem.Decorative
 
     Component {
         id: imageBackground

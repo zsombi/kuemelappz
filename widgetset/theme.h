@@ -7,7 +7,7 @@
 #include <QDeclarativeParserStatus>
 #include <QDeclarativeItem>
 
-typedef QHash<Style::StyleType, Style*> StyleSet;
+typedef QHash<Style::StyleTypes, Style*> StyleSet;
 typedef QHash<QString, StyleSet> ThemeSet;
 
 class ThemePrivate;

@@ -20,7 +20,8 @@ SOURCES += \
     style.cpp \
     theme.cpp \
     screen.cpp \
-    screen_p_mobile.cpp
+    screen_p_mobile.cpp \
+    focuscontrol.cpp
 
 #platform specifioc sources
 symbian {
@@ -49,7 +50,9 @@ HEADERS += \
     style.h \
     theme.h \
     screen.h \
-    screen_p.h
+    screen_p.h \
+    focuscontrol.h \
+    focuscontrol_p.h
 
 OTHER_FILES = qmldir \
     README. \

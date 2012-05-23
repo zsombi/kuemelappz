@@ -9,46 +9,42 @@ class Style : public QObject
     Q_OBJECT
 
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
-    Q_PROPERTY(StyleType type READ type WRITE setType NOTIFY typeChanged)
-    Q_PROPERTY(QVariantList types READ types WRITE setTypes NOTIFY typesChanged)
+    Q_PROPERTY(StyleTypes type READ type WRITE setType NOTIFY typeChanged)
 
-    Q_ENUMS(StyleType)
+    Q_FLAGS(StyleType StyleTypes)
 public:
     enum StyleType {
-        Normal = 1,     // normal style
-        Pressed,        // pressed style
-        Dimmed,         // dimmed (disabled) style
-        Highlighted,    // highlighted/focused style
-        Expanded,       // expanded style
-        LastStyleType   // leave this as last, also means style is undefined or invalid
+        Undefined = 0,      // style is not defined
+        Normal = 0x01,      // normal style
+        Pressed = 0x02,     // pressed style
+        Dimmed = 0x04,      // dimmed (disabled) style
+        Highlighted = 0x08, // highlighted/focused style
+        Expanded = 0x10     // expanded style (deprecate?)
     };
+    Q_DECLARE_FLAGS(StyleTypes, StyleType)
 
     Style(QObject *parent = 0);
     ~Style();
 
     QString name() const;
     void setName(const QString &name);
-    StyleType type() const;
-    void setType(StyleType type);
-    QVariantList types() const;
-    void setTypes(const QVariantList &t);
+    StyleTypes type() const;
+    void setType(StyleTypes type);
     
 signals:
 
     void styleChanged();
     void nameChanged();
     void typeChanged();
-    void typesChanged();
     
 public slots:
     
 private:
     QString m_name;
-    StyleType m_type;
-    QVariantList m_types;
+    StyleTypes m_type;
 };
+Q_DECLARE_OPERATORS_FOR_FLAGS(Style::StyleTypes)
 
 QML_DECLARE_TYPE(Style)
-QML_DECLARE_TYPE(Style::StyleType)
 
 #endif // STYLE_H

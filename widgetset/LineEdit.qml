@@ -31,6 +31,8 @@ StyledItem {
     height: THEME.sizes.defLineEditHeight
     styleName: "ThemeLineEdit"
     objectName: "TextEditor"
+    focusType: StyledItem.Focusable
+    focus: true
     //properties.fillColor: "#5e2e2e"
 
     BorderImage {
@@ -61,6 +63,7 @@ StyledItem {
 
         TextInput {
             id: editor
+            focus: true
             anchors.fill: parent
             anchors.leftMargin: textEdit.style.imageBorders[0]; anchors.topMargin: textEdit.style.imageBorders[1]
             anchors.rightMargin: textEdit.style.imageBorders[2]; anchors.bottomMargin: textEdit.style.imageBorders[3]

@@ -28,11 +28,15 @@ ButtonControl {
     styleName: "ThemePushButton"
 
     id: pushButton
+    objectName: "PushButton/"+text
+    focus: true
+    focusType: StyledItem.Focusable
     width: 100
     height: THEME.sizes.defButtonHeight
     clip: true
     // handle style type change
     onPressedChanged: styleType = (pressed ? Style.Pressed : (highlighted ? Style.Highlighted : Style.Normal))
+    onInvoked: clicked()
 
     Background {
         id: frame

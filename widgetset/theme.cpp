@@ -137,7 +137,7 @@ void Theme::componentComplete()
         if ((i != d->m_styleMap.end()) && (i.key() == item->name())) {
             // style is in, check if type has been added...
             StyleSet set(i.value());
-            Style::StyleType setType = item->type();
+            Style::StyleTypes setType = item->type();
             StyleSet::const_iterator j = set.find(setType);
             if ((j == set.end()) || (j.key() != setType)) {
                 set[setType] = item;
@@ -214,12 +214,24 @@ Style *Theme::style(const QString &name, Style::StyleType type)
     ThemeSet::const_iterator i = d->m_styleMap.find(name);
     if ((i != d->m_styleMap.end()) && (i.key() == name)) {
         StyleSet setMap(i.value());
-        StyleSet::const_iterator j = setMap.find(type);
-        if ((j != setMap.end()) && (j.key() == type)) {
+        StyleSet::const_iterator styleI = setMap.find(type);
+        if ((styleI != setMap.end()) && (styleI.key() == type)) {
 #ifdef TRACE_THEME
-            qDebug() << "Found" << j.value();
+            qDebug() << "Found" << styleI.value();
 #endif
-            return j.value();
+            return styleI.value();
+        } else {
+            // check if there is a style that can handle the list
+            StyleSet::iterator j;
+            for (j = setMap.begin(); j != setMap.end(); ++j) {
+                Style::StyleTypes styleType = j.key();
+                if (styleType & type) {
+#ifdef TRACE_THEME
+                    qDebug() << "Multi found" << j.value();
+#endif
+                    return j.value();
+                }
+            }
         }
     }
     return 0;

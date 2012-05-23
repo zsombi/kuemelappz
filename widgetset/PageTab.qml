@@ -21,11 +21,13 @@ Item {
     // tab height
     property int tabHeight: THEME.sizes.pageTabHeight
     // current page Index
-    property int currentIndex: -1
+    property int currentPageIndex: -1
+    // current page item
+    property Item currentPage: (currentPageIndex >= 0) ? stack.children[currentPageIndex] : null
     // control page title visibility in tab control
     property bool hidePageTitles: false
 
-    onCurrentIndexChanged: privates.setCurrentPage()
+    onCurrentPageIndexChanged: privates.setCurrentPage()
     Component.onCompleted: privates.initialize()
 
     anchors.fill: parent
@@ -46,9 +48,9 @@ Item {
         }
         function setCurrentPage()
         {
-            if ((currentIndex < 0) || (currentIndex > stack.children.length))
+            if ((currentPageIndex < 0) || (currentPageIndex > stack.children.length))
                 return
-            //console.debug("PageTab.setCurrentPage - " + currentIndex + ", len - " + stack.children.length)
+            //console.debug("PageTab.setCurrentPage - " + currentPageIndex + ", len - " + stack.children.length)
             if (prevPage) {
                 if (prevPage.hasOwnProperty("status")) {
                     prevPage.status = WidgetSet.PageDeactivating
@@ -57,7 +59,7 @@ Item {
                 prevPage.opacity = 0.0
                 prevPage.visible = false
             }
-            prevPage = stack.children[currentIndex]
+            prevPage = stack.children[currentPageIndex]
             if (prevPage.hasOwnProperty("status")) {
                 prevPage.status = WidgetSet.PageActivating
                 prevPage.status = WidgetSet.PageActive
@@ -68,7 +70,8 @@ Item {
     }
 
     CheckGroup {
-        onActiveIdChanged: pageTab.currentIndex = activeId
+        objectName: "PageTabCheckGroup"
+        onActiveIdChanged: pageTab.currentPageIndex = activeId
         ToolBarLayout {
             id: tabBar
             resizeToolsToFit: true
@@ -86,11 +89,26 @@ Item {
                     image: (stack.children[index].hasOwnProperty("image")) ? stack.children[index].image : ""
                     imageActive: (stack.children[index].hasOwnProperty("imageActive")) ? stack.children[index].imageActive : ""
                     text: (stack.children[index].hasOwnProperty("title") && !pageTab.hidePageTitles) ? stack.children[index].title : ""
-                    checked: pageTab.currentIndex == index
+                    checked: pageTab.currentPageIndex == index
+                    onActivated: checked = true
+                    actions: [
+                        Action {
+                            key: Qt.Key_Tab
+                            keyModifier: Qt.ControlModifier
+                            onTriggered: focusOnNext()
+                        },
+                        Action {
+                            key: Qt.Key_Backtab
+                            keyModifier: Qt.ShiftModifier | Qt.ControlModifier
+                            onTriggered: focusOnPrevious()
+                        }
+
+                    ]
                 }
             }
         }
     }
+    //FocusScope {
     Item {
         id: stack
         width: pageTab.width

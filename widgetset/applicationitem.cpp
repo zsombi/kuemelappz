@@ -122,6 +122,20 @@ ApplicationItem::ApplicationItem(QDeclarativeItem *parent) :
     StyledItem(parent),
     d_ptr(new ApplicationItemPrivate(this))
 {
+    setFocusType(FocusGroup);
+    //setFlag(ItemIsFocusable);
+    //setFlag(ItemIsFocusScope);
+
+    // set the default keys for non-mobile platforms (yet)
+    if (!WidgetSet::instance()->mobilePlatform()) {
+        installEventFilter(DeclarativeAction::createAction(this, Qt::Key_Left, "focusOnPrevious"));
+        installEventFilter(DeclarativeAction::createAction(this, Qt::Key_Up, "focusOnPrevious"));
+        installEventFilter(DeclarativeAction::createAction(this, Qt::Key_Right, "focusOnNext"));
+        installEventFilter(DeclarativeAction::createAction(this, Qt::Key_Down, "focusOnNext"));
+        installEventFilter(DeclarativeAction::createAction(this, Qt::Key_Space, "invoked"));
+        installEventFilter(DeclarativeAction::createAction(this, Qt::Key_Enter, "invoked"));
+
+    }
 }
 
 ApplicationItem::~ApplicationItem()

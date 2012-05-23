@@ -20,9 +20,11 @@ ButtonControl {
     styleName: "ThemeToolButton"
 
     id: toolButton
-    //height: parent.height
-    //width: height
+    //focus: true
+    focusType: StyledItem.Focusable
     radio: false; checkable: true
+    //onActivated: checked = true
+    //onDeactivated: checked = false
 
     onPressedChanged: {
         if (pressed)
@@ -36,7 +38,7 @@ ButtonControl {
             styleType = Style.Normal
     }
 
-    objectName: text
+    objectName: "ToolButton/"+text
 
     Background {
         anchors.fill: parent

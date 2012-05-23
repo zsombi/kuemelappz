@@ -31,6 +31,8 @@ Background {
         dockLayout.visible = true
     }
 
+    // make sure the dock doesn't capture key events
+    focusType: StyledItem.Decorative
     QtObject {
         id: privates
         property variant parentStack
@@ -74,6 +76,7 @@ Background {
         }
     }
 
+    objectName: "Dock"
     styleName: "ThemeToolbarFrame" //"dockFrame"
     width: parent ? parent.width : 0
     height: THEME.sizes.dockHeight

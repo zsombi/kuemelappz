@@ -4,6 +4,10 @@
   either by themes or can be local. Upon theme change, themed components get notified
   about the change and the layout is refreshed automatically because of property binding.
 
+  Another fuctionality of the item is the automatic tab-order handling. The tab-order is
+  considered to be the order of the children, the focus handling is driven inside the
+  StyledItem.
+
   Properties:
     property styleName: string
         Style identifier string i.e. "Button" or "ToolButton"
@@ -22,9 +26,25 @@
         declared locally must also have names set and the StyledItem should use the name
         defined for the styles.
 
-    property controlListItem: Item
-        This item is set by the components that drive several sub-components key handling
-        (i.e. tab-order).
+    property focusType: FocusType
+        Specifies the behavior of the styled item.
+        StyledItem.Decorative - purely decorative item
+        StyledItem.Focusable - the item captures key events
+        StyledItem.FocusGroup - the item groups focusable elements
+
+    property controlId: int
+        Control identifier
+
+  Slots:
+    focusOnNext()
+    focusOnPrevious()
+    focusOnFirst()
+    focusOnLast()
+
+  Signals:
+    activated()
+    deactivated()
+    invoked()
 
     TODO: method for styles available?
 
@@ -35,37 +55,38 @@
 #include "checkgroup.h"
 #include "style.h"
 #include "theme.h"
+#include "widgetset.h"
 
 #include <QtDeclarative/qdeclarative.h>
 #include <QKeyEvent>
+#include <QPainter>
 
 //#define TRACE_STYLEDITEM
 
+/*====================================================================================
+  ====================================================================================*/
+
+/*====================================================================================
+  ====================================================================================*/
 StyledItemPrivate::StyledItemPrivate(StyledItem *qq) :
     q_ptr(qq),
     styleName(""),
-    currentStyle(Style::LastStyleType),
-    controlListItem(0)
+    currentStyle(Style::Undefined)
 {
     // connect enableChanged() to handle Dimmed style type
     QObject::connect(q_ptr, SIGNAL(enabledChanged()), q_ptr, SLOT(_q_activateStyle()));
-    // connect parentChanged() to add component to CheckGroup
-    QObject::connect(q_ptr, SIGNAL(parentChanged()), q_ptr, SLOT(_q_updateParent()));
-    // this may not be needed after all...
-    QObject::connect(q_ptr, SIGNAL(focusChanged(bool)), q_ptr, SLOT(_q_handleFocusChange(bool)));
     // connect to theme manager to activate theme and style changes
     QObject::connect(StyleManager::instance(), SIGNAL(themeChanged()), q_ptr, SLOT(_q_activateStyle()));
+    // capture child item changes
+    //QObject::connect(q_ptr, SIGNAL(childrenChanged()), q_ptr, SLOT(_q_updateKeyOrder()));
 }
 
 StyledItemPrivate::~StyledItemPrivate()
 {
     // for some reason disconnects are not happening automatically on Linux\Windows platforms ?!
-    if (controlListItem)
-        QObject::disconnect(controlListItem, SIGNAL(childrenChanged()), q_ptr, SLOT(_q_updateKeyOrder()));
+    //QObject::disconnect(q_ptr, SIGNAL(childrenChanged()), q_ptr, SLOT(_q_updateKeyOrder()));
     QObject::disconnect(StyleManager::instance(), SIGNAL(themeChanged()), q_ptr, SLOT(_q_activateStyle()));
     QObject::disconnect(q_ptr, SIGNAL(enabledChanged()), q_ptr, SLOT(_q_activateStyle()));
-    QObject::disconnect(q_ptr, SIGNAL(parentChanged()), q_ptr, SLOT(_q_updateParent()));
-    QObject::disconnect(q_ptr, SIGNAL(focusChanged(bool)), q_ptr, SLOT(_q_handleFocusChange(bool)));
 }
 
 /*
@@ -80,7 +101,7 @@ Style* StyledItemPrivate::styleForType(Style::StyleType type) const
         if ((item->name() == styleName) && (item->type() == type))
             return item;
     }
-    // if none found check for in theme styles
+    // if none found look after it in theme styles
     return (StyleManager::instance()) ? StyleManager::instance()->activeTheme()->style(styleName, type) : 0;
 }
 
@@ -98,7 +119,7 @@ void StyledItemPrivate::_q_activateStyle()
 {
     Q_Q(StyledItem);
     if (!StyleManager::activeTheme())
-        currentStyle = Style::LastStyleType;
+        currentStyle = Style::Undefined;
     else {
         if (!q->isEnabled())
             currentStyle = Style::Dimmed;
@@ -109,73 +130,37 @@ void StyledItemPrivate::_q_activateStyle()
     emit q->styleChanged();
 }
 
-/*
-  Handle parent change to add component to CheckGroup
-*/
-void StyledItemPrivate::_q_updateParent()
+void StyledItemPrivate::_q_updateKeyOrder()
 {
-    Q_Q(StyledItem);
-    QDeclarativeItem *parent = q->parentItem();
-    if (!parent || (parent && !parent->parentItem()))
-        return;
-    // dirrect parent can be either CheckGroup or a positioner element
-    CheckGroup *grp = qobject_cast<CheckGroup*>(parent);
-    if (!grp)
-        grp = qobject_cast<CheckGroup*>(parent->parentItem());
-    // add item to group, group will check the rest
-    if (grp)
-        grp->addGroupItem(q);
-}
-
-void StyledItemPrivate::_q_handleFocusChange(bool f)
-{
-#ifdef TRACE_STYLEDITEM
-    qDebug() << __FUNCTION__ << q_ptr << "focus =" << f;
+    // todo: dive deeper in children in case we have layout elements
+    // consider styled items only!
+#ifdef TRACE_FOCUSING
+    if (q_ptr->objectName().isEmpty())
+        qDebug() << __FUNCTION__ << q_ptr << "children changed";
+    else
+        qDebug() << __FUNCTION__ << q_ptr->objectName() << "children changed";
 #endif
 }
 
-void StyledItemPrivate::_q_updateKeyOrder()
-{
-    if (controlListItem) {
-        QDeclarativeListReference ref(controlListItem, "children");
-        // todo: dive deeper in children in case we have layout elements
-        // consider styled items only!
-    }
-}
+
+
 
 /*
   ---------------PUBLIC----------------
   */
 StyledItem::StyledItem(QDeclarativeItem *parent):
-    QDeclarativeItem(parent),
+    FocusControl(parent),
     d_ptr(new StyledItemPrivate(this))
 {
-    // By default, QDeclarativeItem does not draw anything. If you subclass
-    // QDeclarativeItem to create a visual item, you will need to uncomment the
-    // following line:
-    
-    // setFlag(ItemHasNoContents, false);
+
     setImplicitWidth(100);
     setImplicitHeight(80);
-    //setFlag(ItemIsFocusable);
-    //setFlag(ItemIsFocusScope);
-    //setFlag(ItemIsSelectable);
 }
 
 StyledItem::~StyledItem()
 {
 }
 
-void StyledItem::keyPressEvent(QKeyEvent *event)
-{
-    // TODO: at some point...
-    QDeclarativeItem::keyPressEvent(event);
-    if (event) {
-#ifdef TRACE_STYLEDITEM
-        qDebug()<< this <<"key pressed:" << event->key();
-#endif
-    }
-}
 
 /*******************************************************************************
     PROPERTY GETTER/SETTER
@@ -234,30 +219,6 @@ void StyledItem::setStyleName(const QString &val)
         d->_q_activateStyle();
 
         emit styleNameChanged();
-    }
-}
-
-QDeclarativeItem* StyledItem::controlListItem() const
-{
-    Q_D(const StyledItem);
-    return d->controlListItem;
-}
-void StyledItem::setControlListItem(QDeclarativeItem *list)
-{
-#ifdef TRACE_STYLEDITEM
-    qDebug() << __FUNCTION__ << list;
-#endif
-    Q_D(StyledItem);
-    if (d->controlListItem != list) {
-        if (d->controlListItem)
-            QObject::disconnect(d->controlListItem, SIGNAL(childrenChanged()), this, SLOT(_q_updateKeyOrder()));
-        d->controlListItem = list;
-        if (d->controlListItem) {
-            QObject::connect(d->controlListItem, SIGNAL(childrenChanged()), this, SLOT(_q_updateKeyOrder()));
-            // do the first update as children may already been set by this time
-            d->_q_updateKeyOrder();
-        }
-        emit controlListItemChanged();
     }
 }
 

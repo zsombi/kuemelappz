@@ -14,6 +14,7 @@ ApplicationWindow {
         id: menuPanel
         fadeStyle: WidgetSet.FadeTop
         parent: app
+
         Page {
             parent: menuPanel.panelItem
             anchors.fill: parent
@@ -66,7 +67,7 @@ ApplicationWindow {
 
     PageTab {
         //currentIndex: 2
-        Component.onCompleted: currentIndex = 2
+        Component.onCompleted: currentPageIndex = 2
         View2 { image:"qrc:/default/quit"; imageActive: "qrc:/default/check-mark"}
 
         View1 { image:"qrc:/default/quit"; imageActive: "qrc:/default/check-mark"}

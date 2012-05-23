@@ -180,8 +180,7 @@ Theme {
     /*-------------------InputPanel----------------------------------------*/
     BackgroundStyle {
         name: "keyBtnFrame"
-        type: Style.Normal
-        types: [Style.Normal, Style.Pressed]
+        type: Style.Normal | Style.Highlighted
         image: "qrc:/default/toolbutton-normal"
         imageBorders: [6,6,6,6]
     }
@@ -193,7 +192,7 @@ Theme {
     }
     ButtonStyle {
         name: "keyButton"
-        type: Style.Normal
+        type: Style.Normal | Style.Highlighted
         font: normalFontItem.font
         frameStyle: "toolBtnFrame"
         fontColor: "white"

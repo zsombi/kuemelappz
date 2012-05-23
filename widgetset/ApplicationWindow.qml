@@ -31,6 +31,8 @@ Item {
     // we set the layout elements needed by the entire system.
     ApplicationItem {
         id: app
+        //focus: true
+        objectName: "AppItem"
         styleName: "ThemeApplicationWindow"
         property bool animate: false
         // properties to store item instances, transfered to native code
