@@ -24,21 +24,22 @@ Item {
 
     /* load the default theme, just to make sure we have a valid
        theme  */
-    DefaultTheme {}
+    DefaultTheme {objectName:"DefaultTheme"}
 
     id: appHolder
+    objectName: "ApplicationWindowItem"
     // ApplicationItem handles rotation of the layout upon orientation changes. Here
     // we set the layout elements needed by the entire system.
     ApplicationItem {
         id: app
         //focus: true
-        objectName: "AppItem"
+        objectName: "FC_ApplicationItem"
         styleName: "ThemeApplicationWindow"
         property bool animate: false
         // properties to store item instances, transfered to native code
         property alias statusBar: statusBarItem
         property alias body: layout
-        property alias inputPanel: inputPanelItem
+        //property alias inputPanel: inputPanelItem
         property alias toolBar: appHolder.toolBar
 
         anchors.centerIn: parent
@@ -79,6 +80,7 @@ Item {
         }
 
         // input panel
+        /*
         InputPanel {
             id: inputPanelItem
             styleName: app.style.inputPanelStyle
@@ -86,6 +88,7 @@ Item {
             // just below the corners
             z: Number.MAX_VALUE - 1
         }
+        */
 
         Behavior on width {
             PropertyAnimation { duration: app.style.scalingDuration; easing.type: app.style.rotationEasing }
@@ -94,7 +97,7 @@ Item {
             SequentialAnimation {
                 PropertyAnimation { duration: app.style.scalingDuration; easing.type: app.style.rotationEasing }
                 // adjust opened input panel so that
-                ScriptAction {script: inputPanelItem.update()}
+                //ScriptAction {script: inputPanelItem.update()}
             }
         }
 

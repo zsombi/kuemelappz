@@ -17,6 +17,8 @@ StyledItem {
 
     width: parent.width
     styleName: "ThemeStatusBar"
+    focusType: StyledItem.Decorative
+    objectName: "SI_StatusBar"
 
     anchors.left: parent.left
     anchors.top: parent.top

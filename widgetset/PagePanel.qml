@@ -22,6 +22,7 @@ Item {
     anchors.bottom: (alignment == Qt.AlignBottom) ? parent.bottom : undefined
     anchors.right: parent.right
     anchors.left: parent.left
+    objectName: "PagePanelItem"
 
     states: [
         State {

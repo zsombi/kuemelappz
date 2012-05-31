@@ -6,6 +6,7 @@ import QtQuick 1.1
 import "." 1.0
 
 Item {
+//FocusControl { focusType: FocusControl.FocusGroup
     id: page
     // page title string - used by the PageTab to display and identify page
     property string title
@@ -47,7 +48,7 @@ Item {
 
     //controlListItem: body
     focus: true
-    objectName: "Page/"+title
+    objectName: "Page["+title+"]Item"
 
     onStatusChanged: {
         if (status == WidgetSet.PageActive) {
@@ -66,7 +67,6 @@ Item {
     PagePanel {
         id: headerItem
         alignment: Qt.AlignTop
-        objectName: "HeaderPanel"
         height: headerHeight
         transitionEasing: THEME.panelFadingEasing
         transitionDuration: THEME.panelFadingDuration
@@ -78,14 +78,22 @@ Item {
         }
     }
 
-    FocusScope {
+    //FocusScope {
+    FocusControl { focusType: FocusControl.FocusGroup
     //Item {
         id: bodyItem
+        objectName: "FG_PageBody"
         clip: true
         anchors.top: headerItem.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.margins: THEME.sizes.spacingSmall
+        onChildrenChanged: {
+            console.debug("Page: "+bodyItem.objectName)
+            var i;
+            for (i = 0; i < bodyItem.children.length; i++)
+                console.debug("QML child " + bodyItem.children[i] + ", objectName= "+bodyItem.children[i].objectName)
+        }
     }
 }

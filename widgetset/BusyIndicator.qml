@@ -10,6 +10,7 @@ StyledItem {
     // drive busy indication
     property bool on: false
     styleName: "Indicators"
+    objectName: "SI_BusyIndicator"
 
     id: busyIndicator
     Image {

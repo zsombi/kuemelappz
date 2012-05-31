@@ -31,8 +31,6 @@ Background {
         dockLayout.visible = true
     }
 
-    // make sure the dock doesn't capture key events
-    focusType: StyledItem.Decorative
     QtObject {
         id: privates
         property variant parentStack
@@ -101,4 +99,21 @@ Background {
         }
 
     ]
+
+    // make sure the dock captures group switching
+    focusType: StyledItem.FocusGroup
+/*
+    actions: [
+        Action {
+            key: Qt.Key_Tab
+            onTriggered: focusOnNextGroup()
+        },
+        Action {
+            key: Qt.Key_Backtab
+            keyModifier: Qt.ShiftModifier
+            onTriggered: focusOnPreviousGroup()
+        }
+
+    ]
+*/
 }

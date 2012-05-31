@@ -237,6 +237,14 @@ void CheckGroup::addGroupItem(QObject *item)
     }
 }
 
+void CheckGroup::removeGroupItem(QObject *item)
+{
+    if (!item)
+        return;
+    Q_D(CheckGroup);
+    d->delItem(item);;
+}
+
 void CheckGroup::adjustLayout()
 {
     Q_D(CheckGroup);

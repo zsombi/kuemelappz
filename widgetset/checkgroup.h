@@ -51,6 +51,7 @@ signals:
 
 public slots:
     void addGroupItem(QObject *item);
+    void removeGroupItem(QObject *item);
     void adjustLayout();
 
 private:

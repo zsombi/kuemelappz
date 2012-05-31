@@ -40,7 +40,7 @@ void WidgetsetPlugin::registerTypes(const char *uri)
 
     qmlRegisterType<FocusControl>(uri, 1, 0, "FocusControl");
     qmlRegisterType<StyledItem>(uri, 1, 0, "StyledItem");
-    qmlRegisterType<DeclarativeAction>(uri, 1, 0, "Action");
+    qmlRegisterType<ControlAction>(uri, 1, 0, "Action");
     qmlRegisterType<CheckGroup>(uri, 1, 0, "CheckGroup");
     qmlRegisterType<ApplicationItem>(uri, 1, 0, "ApplicationItem");
     qmlRegisterUncreatableType<WidgetSet>(uri, 1, 0, "WidgetSet", "Component type");

@@ -11,6 +11,7 @@ import "." 1.0
   */
 StyledItem {
     id: cornerFramer
+    objectName: "SI_CornerFramer"
 
     width: 100
     height: 100

@@ -66,6 +66,7 @@ Item {
             }
             prevPage.opacity = 1.0
             prevPage.visible = true
+            prevPage.focus = true
         }
     }
 

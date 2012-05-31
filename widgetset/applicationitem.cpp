@@ -122,19 +122,20 @@ ApplicationItem::ApplicationItem(QDeclarativeItem *parent) :
     StyledItem(parent),
     d_ptr(new ApplicationItemPrivate(this))
 {
-    setFocusType(FocusGroup);
+    //setFocusType(FocusGroup);
     //setFlag(ItemIsFocusable);
     //setFlag(ItemIsFocusScope);
 
     // set the default keys for non-mobile platforms (yet)
     if (!WidgetSet::instance()->mobilePlatform()) {
-        installEventFilter(DeclarativeAction::createAction(this, Qt::Key_Left, "focusOnPrevious"));
-        installEventFilter(DeclarativeAction::createAction(this, Qt::Key_Up, "focusOnPrevious"));
-        installEventFilter(DeclarativeAction::createAction(this, Qt::Key_Right, "focusOnNext"));
-        installEventFilter(DeclarativeAction::createAction(this, Qt::Key_Down, "focusOnNext"));
-        installEventFilter(DeclarativeAction::createAction(this, Qt::Key_Space, "invoked"));
-        installEventFilter(DeclarativeAction::createAction(this, Qt::Key_Enter, "invoked"));
-
+        installEventFilter(ControlAction::createAction(this, Qt::Key_Left, Qt::NoModifier, ControlAction::Controls, "focusOnPrevious"));
+        installEventFilter(ControlAction::createAction(this, Qt::Key_Up, Qt::NoModifier, ControlAction::Controls, "focusOnPrevious"));
+        installEventFilter(ControlAction::createAction(this, Qt::Key_Right, Qt::NoModifier, ControlAction::Controls, "focusOnNext"));
+        installEventFilter(ControlAction::createAction(this, Qt::Key_Down, Qt::NoModifier, ControlAction::Controls, "focusOnNext"));
+        installEventFilter(ControlAction::createAction(this, Qt::Key_Space, Qt::NoModifier, ControlAction::Controls, "invoked"));
+        installEventFilter(ControlAction::createAction(this, Qt::Key_Return, Qt::NoModifier, ControlAction::Controls, "invoked"));
+        installEventFilter(ControlAction::createAction(this, Qt::Key_Tab, Qt::NoModifier, ControlAction::Both, "focusOnNextGroup"));
+        installEventFilter(ControlAction::createAction(this, Qt::Key_Backtab, Qt::ShiftModifier, ControlAction::Both, "focusOnPreviousGroup"));
     }
 }
 

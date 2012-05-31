@@ -22,7 +22,7 @@ StyledItem {
     id: background
     width: 100
     height: 62
-    objectName: "bkgnd+"+parent.objectName
+    objectName: "SI_bkgnd+"+parent.objectName
     focusType: StyledItem.Decorative
 
     Component {

@@ -9,6 +9,8 @@ ApplicationWindow {
     objectName: "AppWin"
     title: "Widgetset test app (press for menu)"
 
+    Component.onCompleted: widgetSet.statusBar.hidden = false
+
     // application menu
     mainMenu: MenuPanel {
         id: menuPanel
@@ -41,15 +43,23 @@ ApplicationWindow {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
     }
-/*
+
     Page {
         id: page
-        headerLayout: PageHeader { styleName: "ThemePageHeader"}
+        //headerLayout: PageHeader { styleName: "ThemePageHeader"}
+        Button {
+            anchors.top: page.contentItem.top
+            height: 120
+            width: 200
+            text: "Top-anchored test"
+            onParentChanged: console.debug("Buton parent:"+parent)
+        }
         Button {
             anchors.bottom: page.contentItem.bottom
             height: 120
             width: 100
             text: "Test"
+            onParentChanged: console.debug("Buton parent:"+parent)
         }
         tools: ToolBarLayout {
             resizeToolsToFit: false
@@ -63,8 +73,8 @@ ApplicationWindow {
         }
         Component.onCompleted: toolBarItem.setLayout(tools)
     }
-*/
 
+/*
     PageTab {
         //currentIndex: 2
         Component.onCompleted: currentPageIndex = 2
@@ -116,6 +126,6 @@ ApplicationWindow {
             }
         }
     }
-
+*/
 }
 
