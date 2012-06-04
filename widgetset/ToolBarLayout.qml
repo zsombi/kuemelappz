@@ -5,7 +5,8 @@
 import QtQuick 1.1
 
 
-Item {
+//Item {
+FocusControl { focusType: FocusControl.FocusGroup; objectName: "FG_ToolBar"
     // set to true if content can be resized to cover toolbar area
     property bool resizeToolsToFit: true
     // specify whether to center buttons in the dock; not used if resuzeToolsToFit is set to true

@@ -19,8 +19,16 @@ FaderItem {
 
     backgroundSource: "qrc:/default/toolbutton-normal"
     id: menuPanel
+    objectName: "MenuPanelItem"
+    onFadedInChanged: {
+        if (!fadedIn)
+            panel.forceActiveFocus()
+        else
+            parent.forceActiveFocus()
+    }
 
-    Item {
+    //Item {
+    FocusControl { focusType: FocusControl.FocusGroup; objectName: "FG_MenuBody"
         id: panel
         visible: parent.fadedIn
         anchors.fill: parent

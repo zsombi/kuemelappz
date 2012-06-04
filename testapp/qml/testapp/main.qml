@@ -6,7 +6,6 @@ ApplicationWindow {
     width: 800
     height: 600
     //header.visible: false
-    objectName: "AppWin"
     title: "Widgetset test app (press for menu)"
 
     Component.onCompleted: widgetSet.statusBar.hidden = false
@@ -35,7 +34,6 @@ ApplicationWindow {
         rightMargin: 40
         leftMargin: 40
     }
-
     toolBar: toolBarItem
     Dock {
         id: toolBarItem
@@ -43,9 +41,10 @@ ApplicationWindow {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
     }
-
+/*
     Page {
         id: page
+        title: "single page"
         //headerLayout: PageHeader { styleName: "ThemePageHeader"}
         Button {
             anchors.top: page.contentItem.top
@@ -74,7 +73,7 @@ ApplicationWindow {
         Component.onCompleted: toolBarItem.setLayout(tools)
     }
 
-/*
+*/
     PageTab {
         //currentIndex: 2
         Component.onCompleted: currentPageIndex = 2
@@ -126,6 +125,6 @@ ApplicationWindow {
             }
         }
     }
-*/
+
 }
 

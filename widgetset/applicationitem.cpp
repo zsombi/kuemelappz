@@ -172,6 +172,11 @@ void ApplicationItem::componentComplete()
 #endif
     Q_D(ApplicationItem);
     d->platformCompleted();
+    // set focus to the first group's element
+    // topmost focus group is in the "body" property
+    FocusControl *body = qobject_cast<FocusControl*>(WidgetSet::instance()->rootBodyItem());
+    if (body)
+        body->forceActiveFocus();
 }
 
 #include "moc_applicationitem.cpp"

@@ -61,6 +61,7 @@ class FocusControl : public QDeclarativeItem
     Q_PROPERTY(FocusType focusType READ focusType WRITE setFocusType NOTIFY focusTypeChanged FINAL)
     Q_PROPERTY(QString focusTypeString READ focusTypeString NOTIFY focusTypeChanged FINAL)
     Q_PROPERTY(int controlId READ controlId WRITE setControlId NOTIFY controlIdChanged FINAL)
+    Q_PROPERTY(QDeclarativeItem *attachedControl READ attachedControl WRITE setAttachedControl NOTIFY attachedControlChanged)
     Q_PROPERTY(QDeclarativeListProperty<ControlAction> actions READ actions)
     Q_PROPERTY(FocusControl *prevControl READ prevControl CONSTANT FINAL)
     Q_PROPERTY(FocusControl *nextControl READ nextControl CONSTANT FINAL)
@@ -81,6 +82,7 @@ public:
 signals:
     void focusTypeChanged();
     void controlIdChanged();
+    void attachedControlChanged();
     // triggered upon activation/deactivation and action invocation using keys
     void activated();
     void deactivated();
@@ -107,11 +109,13 @@ protected:
     QString focusTypeString() const;
     int controlId() const;
     void setControlId(int id);
+    QDeclarativeItem *attachedControl() const;
+    void setAttachedControl(QDeclarativeItem *item);
     QDeclarativeListProperty<ControlAction> actions();
 
-    FocusControl *prevControl() const;
-    FocusControl *nextControl() const;
-    FocusControl *groupControl() const;
+    FocusControl *prevControl();
+    FocusControl *nextControl();
+    FocusControl *groupControl();
 
 private:
     Q_DECLARE_PRIVATE(FocusControl)

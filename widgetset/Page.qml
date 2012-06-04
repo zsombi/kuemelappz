@@ -89,11 +89,5 @@ Item {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.margins: THEME.sizes.spacingSmall
-        onChildrenChanged: {
-            console.debug("Page: "+bodyItem.objectName)
-            var i;
-            for (i = 0; i < bodyItem.children.length; i++)
-                console.debug("QML child " + bodyItem.children[i] + ", objectName= "+bodyItem.children[i].objectName)
-        }
     }
 }

@@ -32,6 +32,7 @@ StyledItem {
     styleName: "ThemeLineEdit"
     objectName: "TextEditor"
     focusType: StyledItem.Focusable
+    attachedControl: editor
     focus: true
     //properties.fillColor: "#5e2e2e"
 

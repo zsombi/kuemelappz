@@ -7,7 +7,7 @@
 #include <QKeyEvent>
 #include <QPainter>
 
-#define TRACE_FOCUSING
+//#define TRACE_FOCUSING
 
 typedef QDeclarativeListProperty<QGraphicsObject> ChildrenPropertyType;
 
@@ -134,11 +134,7 @@ FocusControlPrivate::FocusControlPrivate(FocusControl *qq) :
     controlId(-1),
     focusableControl(0),
     lastFocusItem(0),
-    prev(0),
-    next(0),
-    first(0),
-    last(0),
-    parent(0),
+    parentSibling(0),
     group(0)
 {
     // connect parentChanged() to add component to CheckGroup
@@ -156,11 +152,28 @@ FocusControlPrivate::~FocusControlPrivate()
 }
 
 /*
-  Handle parent change to add component to CheckGroup
+  Handle parent change to add component to CheckGroup, or to update its closest FocusControl
+  parent sibling.
 */
 void FocusControlPrivate::_q_updateParent()
 {
     Q_Q(FocusControl);
+
+    FocusControl *parent = focusSibling(Parent);
+    // check if the control had already a parent sibling
+    if (parentSibling && (parentSibling != parent)) {
+        // remove from that parent!
+        parentSibling->d_ptr->controlList.removeAll(q);
+        // add to the new parent
+        parent->d_ptr->addControlToParent();
+    }
+    if (parentSibling != parent)
+        parentSibling = parent;
+
+    // check if the parent's last focus item can be set...
+    if (parent && !parent->d_ptr->lastFocusItem)
+        parent->d_ptr->lastFocusItem = q;
+    // check if the control belongs to a CheckGroup, if yes add it to the group
     QDeclarativeItem *po = q->parentItem();
     if (!po || (po && !po->parentItem()))
         return;
@@ -173,29 +186,47 @@ void FocusControlPrivate::_q_updateParent()
     // add item to group, group will check the rest
     if (group)
         group->addGroupItem(q);
-    // update parent sibling
-    //updateParentSibling();
-    updateFocusSiblings();
 }
 
-void FocusControlPrivate::_q_handleFocusChange(bool f)
+/*
+  Handle focus changes, updates last focused element for a focus group
+  */
+void FocusControlPrivate::_q_handleFocusChange(bool focused)
 {
 #ifdef TRACE_FOCUSING
-    if (q_ptr->objectName().isEmpty())
-        qDebug() << __FUNCTION__ << q_ptr << "focus=" << f;
-    else
-        qDebug() << __FUNCTION__ << q_ptr->objectName() << "focus=" << f;
+    qDebug() << __FUNCTION__ << q_ptr->objectName() << "focus=" << focused;
 #endif
     Q_Q(FocusControl);
-    if (focusableControl && (focusableControl != q))
-        focusableControl->setFocus(f);
-    if (f) {
-        focusGroupElement();
+    // if the focus is on group, propagate the focus to it's last focused element!
+    if (focusType == FocusControl::FocusGroup) {
+        if (focused) {
+            if (lastFocusItem)
+                lastFocusItem->forceActiveFocus();
+            else
+                qWarning() << "WARNING!" << __FUNCTION__ << "no lastFocusItem is set for the group!";
+        }
+    } else if (focusType == FocusControl::Focusable) {
+        // focus on the element and update parent's lastFocusItem
+        FocusControl *parent = focusSibling(Parent);
+        if (focused && parent) {
+            parent->d_ptr->lastFocusItem = q;
+        }
+        // if there is a separate focusable element, then activate that (e.g. in edit control case)
+        // this may screw the focus flow...
+        if (focusableControl && (focusableControl != q))
+            focusableControl->setFocus(focused);
+    } else {
+        qWarning() << "UUPS!!! FOCUS ON A DECORATIVE ELEMENT??!";
+    }
+    if (focused) {
         emit q->activated();
     } else
         emit q->deactivated();
 }
 
+/*
+  Set first focusable item for groups
+  */
 void FocusControlPrivate::_q_handleChildrenChange()
 {
     if (focusType != FocusControl::FocusGroup)
@@ -204,228 +235,138 @@ void FocusControlPrivate::_q_handleChildrenChange()
     if (lastFocusItem)
         return;
     Q_Q(FocusControl);
-    QList<QGraphicsItem*> ilist = q->childItems();
+    QList<QGraphicsItem*> children = q->childItems();
 #ifdef TRACE_FOCUSING
-    qDebug() << __FUNCTION__ << q->objectName()<<"children.size="<< ilist.size();
+    qDebug() << __FUNCTION__ << "object:" << q->objectName() << ", items=" << children.size();
 #endif
-    for (int i = 0; i < ilist.size(); i++) {
-        FocusControl *cl = qobject_cast<FocusControl*>(ilist[i]);
+    for (int i = 0; i < children.size(); i++) {
+#ifdef TRACE_FOCUSING
+            qDebug() << __FUNCTION__ << "child:" << children[i];
+#endif
+        FocusControl *cl = qobject_cast<FocusControl*>(children[i]);
         if (cl) {
-#ifdef TRACE_FOCUSING
-            qDebug() << "child:" << cl->objectName() << "::OBJ::"<< cl;
-#endif
-            if (cl && (cl->focusType() == FocusControl::Focusable)) {
+            if (cl && (cl->focusType() != FocusControl::Decorative)) {
                 lastFocusItem = cl;
                 break;
             }
         }
     }
-    /*
-    if (focusType != FocusControl::FocusGroup)
-        return;
-    Q_Q(FocusControl);
-    QList<FocusControl*> clist = q->findChildren<FocusControl*>();
-    foreach(FocusControl *cl, clist)
-        cl->setParentItem(q);
-    */
 }
 
-void FocusControlPrivate::updateParentSibling()
+void FocusControlPrivate::addControlToParent()
 {
-    if (focusType == FocusControl::Decorative)
-        return;
     Q_Q(FocusControl);
-    if (!parent) {
-        QDeclarativeItem *po = q->parentItem();
-        //QObject *po = q->parent();
-        while (po && !parent) {
-            qDebug() << "\tpo=" << po << po->objectName();
-            parent = qobject_cast<FocusControl*>(po);
-            if (parent && (parent->d_ptr->focusType != FocusControl::FocusGroup))
-                parent = 0;
-            po = po->parentItem();
-            //po = po->parent();
-        }
+    FocusControl *parent = focusSibling(Parent);
+    if (parent && (parent->d_ptr->controlList.indexOf(q) < 0)) {
+        parent->d_ptr->controlList << q;
     }
-#ifdef TRACE_FOCUSING
-    if (!parent) {
-        if (q->parent())
-            qDebug() << __FUNCTION__ << q->objectName() << "::focusType"<< q->focusTypeString() << "parent()" << q->parent()->objectName();
-        else
-            qDebug() << __FUNCTION__ << q->objectName() << "::focusType"<< q->focusTypeString() << "parent()null";
-    } else
-        qDebug() << __FUNCTION__ << q->objectName() << "::focusType"<< q->focusTypeString() << "group" << parent->objectName();
-#endif
 }
 
-void FocusControlPrivate::updateFocusSiblings()
+FocusControl *FocusControlPrivate::focusSibling(SiblingType siblingType, FocusControl *relativeTo)
 {
     Q_Q(FocusControl);
+    FocusControl *ret = 0;
+    int idx;
+    if (!relativeTo)
+        relativeTo = q;
 
-    first = last = prev = next = 0;
-    if (focusType == FocusControl::Decorative)
-        return;
-    if (!parent) {
-        qWarning() << __FUNCTION__<< "Parent was not set yet!";
-        updateParentSibling();
-        if (!parent && !q->parentItem())
-            return;
-    }
-
-    //QList<FocusControl*> children = parent->findChildren<FocusControl*>();
 #ifdef TRACE_FOCUSING
-    qDebug() << __FUNCTION__ << q->parentItem()->objectName();
+    QString dbg("%1() - object %4, %3 of %2");
+    dbg = dbg.arg(__FUNCTION__).arg(q->objectName());
 #endif
-    QDeclarativeItem *pp = (parent) ? parent : qobject_cast<QDeclarativeItem*>(q->parent());
-    Q_ASSERT(pp != NULL);
 
-    //QList<FocusControl*> children = pp->findChildren<FocusControl*>();
-    QList<QGraphicsItem*> children = pp->childItems();
-    const int size = children.size();
-    int i;
-    FocusControl *cl = 0;
-    // set the first and last
-    for (i = 0; (i < size) && !first; i++) {
-        cl = qobject_cast<FocusControl*>(children[i]);
-        if (cl && cl->d_ptr->focusType == focusType)
-            first = cl;
-    }
-    for (i = size - 1; (i >= 0) && !last; i--) {
-        cl = qobject_cast<FocusControl*>(children[i]);
-        if (cl && cl->d_ptr->focusType == focusType)
-            last = cl;
-    }
-    // set close siblings (prev and next)
-    i = children.indexOf(q);
-    if (i >= 0) {
-        int j;
-        for (j = i - 1; (j >= 0) && !prev; j--) {
-            cl = qobject_cast<FocusControl*>(children[j]);
-            if (cl && cl->d_ptr->focusType == focusType)
-                prev = cl;
-        }
-        for (j = i + 1; (j < size) && !next; j++) {
-            cl = qobject_cast<FocusControl*>(children[j]);
-            if (cl && cl->d_ptr->focusType == focusType)
-                next = cl;
-        }
-    }
-    // update last focused item in the group
-    if (parent) {
-        if (focusType == FocusControl::Focusable) {
-            parent->d_ptr->lastFocusItem = q;
-        } else if (!lastFocusItem) {
-            children = q->childItems();
-            for (int i = 0; i < children.size(); i++) {
-                cl = qobject_cast<FocusControl*>(children[i]);
-                if (cl && cl->d_ptr->focusType == FocusControl::Focusable) {
-                    lastFocusItem = cl;
-                    break;
-                }
+    switch (siblingType) {
+        // previous sibling control of a type
+        case Previous: {
+            #ifdef TRACE_FOCUSING
+            dbg = dbg.arg("Previous");
+            #endif
+            FocusControl *parentControl = focusSibling(Parent);
+            if (parentControl) {
+                idx = parentControl->d_ptr->controlList.indexOf(relativeTo);
+                idx--;
+                if (idx >= 0)
+                    ret = parentControl->d_ptr->controlList[idx];
             }
-        }
-    }
-}
-/*
-FocusControl* FocusControlPrivate::prevFocusable(FocusControl *rel, FocusControl::FocusType focus)
-{
-    if (!rel) {
-        Q_Q(FocusControl);
-        rel = q;
-    }
-    //QList<FocusControl*> children = rel->parent()->findChildren<FocusControl*>();
-    QList<FocusControl*> children = controlGroup()->findChildren<FocusControl*>();
-    for (int i = children.indexOf(rel) - 1; i >= 0; i--) {
-        FocusControl *cl = children[i];
-        if (cl->d_ptr->focusType == focus) {
-#ifdef TRACE_FOCUSING
-            qDebug() << __FUNCTION__ << cl->objectName() << "parent=" << rel->parent()->objectName();
-#endif
-            return cl;
-        }
-    }
-    return 0;
-}
-
-FocusControl* FocusControlPrivate::nextFocusable(FocusControl *rel, FocusControl::FocusType focus)
-{
-    if (!rel) {
-        Q_Q(FocusControl);
-        rel = q;
-    }
-    //QList<FocusControl*> children = rel->parent()->findChildren<FocusControl*>();
-    QList<FocusControl*> children = controlGroup()->findChildren<FocusControl*>();
-    for (int i = children.indexOf(rel) + 1; i < children.size(); i++) {
-        FocusControl *cl = children[i];
-        if (cl->d_ptr->focusType == focus) {
-#ifdef TRACE_FOCUSING
-            qDebug() << __FUNCTION__ << cl->objectName() << "parent=" << rel->parent()->objectName();
-#endif
-            return cl;
-        }
-    }
-    return 0;
-}
-FocusControl* FocusControlPrivate::firstFocusable(FocusControl *rel, FocusControl::FocusType focus)
-{
-    if (!rel) {
-        Q_Q(FocusControl);
-        rel = q;
-    }
-    //QList<FocusControl*> children = rel->parent()->findChildren<FocusControl*>();
-    QList<FocusControl*> children = controlGroup()->findChildren<FocusControl*>();
-    for (int i = 0; i < children.size(); i++) {
-        FocusControl *cl = children[i];
-        if (cl->d_ptr->focusType == focus) {
-#ifdef TRACE_FOCUSING
-            qDebug() << __FUNCTION__ << cl->objectName() << "parent=" << rel->parent()->objectName();
-#endif
-            return cl;
-        }
-    }
-
-    return 0;
-}
-
-FocusControl* FocusControlPrivate::lastFocusable(FocusControl *rel, FocusControl::FocusType focus)
-{
-    if (!rel) {
-        Q_Q(FocusControl);
-        rel = q;
-    }
-    //QList<FocusControl*> children = rel->parent()->findChildren<FocusControl*>();
-    QList<FocusControl*> children = controlGroup()->findChildren<FocusControl*>();
-    for (int i = children.size() - 1; i >= 0; i--) {
-        FocusControl *cl = children[i];
-        if (cl->d_ptr->focusType == focus) {
-#ifdef TRACE_FOCUSING
-            qDebug() << __FUNCTION__ << cl->objectName() << "parent=" << rel->parent()->objectName();
-#endif
-            return cl;
-        }
+        } break;
+        // next sibling control of a type
+        case Next: {
+            #ifdef TRACE_FOCUSING
+            dbg = dbg.arg("Next");
+            #endif
+            FocusControl *parentControl = focusSibling(Parent);
+            if (parentControl) {
+                idx = parentControl->d_ptr->controlList.indexOf(relativeTo);
+                idx++;
+                if (idx < parentControl->d_ptr->controlList.size())
+                    ret = parentControl->d_ptr->controlList[idx];
+            }
+        } break;
+        // first sibling control of a type
+        case First: {
+            #ifdef TRACE_FOCUSING
+            dbg = dbg.arg("First");
+            #endif
+            FocusControl *parentControl = focusSibling(Parent);
+            if (parentControl && (parentControl->d_ptr->controlList.size() > 0)) {
+                ret = parentControl->d_ptr->controlList.first();
+            }
+        } break;
+        // last sibling control of a type
+        case Last: {
+            #ifdef TRACE_FOCUSING
+            dbg = dbg.arg("Last");
+            #endif
+            FocusControl *parentControl = focusSibling(Parent);
+            if (parentControl && (parentControl->d_ptr->controlList.size() > 0)) {
+                ret = parentControl->d_ptr->controlList.last();
+            }
+        } break;
+        // parent sibling control, always looks after group controls
+        case Parent: {
+            #ifdef TRACE_FOCUSING
+            dbg = dbg.arg("Parent");
+            #endif
+            QDeclarativeItem *parent = q->parentItem();
+            while (parent && !ret) {
+                ret = qobject_cast<FocusControl*>(parent);
+                if (ret && (ret->d_ptr->focusType != FocusControl::FocusGroup))
+                    ret = 0;
+                parent = parent->parentItem();
+            }
+        } break;
+        // root control, always looks after focus groups
+        case Root: {
+            #ifdef TRACE_FOCUSING
+            dbg = dbg.arg("Root");
+            #endif
+            QDeclarativeItem *parent = q->parentItem();
+            FocusControl *tmp = 0;
+            while (parent) {
+                tmp = qobject_cast<FocusControl*>(parent);
+                if (tmp && (tmp->d_ptr->focusType == FocusControl::FocusGroup))
+                    ret = tmp;
+                parent = parent->parentItem();
+            }
+        } break;
+        // current focus item of a group
+        case FocusItem: {
+            #ifdef TRACE_FOCUSING
+            dbg = dbg.arg("FocusItem");
+            #endif
+            if (focusType == FocusControl::FocusGroup)
+                ret = lastFocusItem;
+        } break;
     }
 
-    return 0;
-}
-*/
-void FocusControlPrivate::focusGroupElement()
-{
-    if (focusType != FocusControl::FocusGroup)
-        return;
-    Q_Q(FocusControl);
-    if (!lastFocusItem) {
-        // set the first focusable child
-        qWarning() << "No focusable set to group!";
-    }
 #ifdef TRACE_FOCUSING
-    if (lastFocusItem)
-        qDebug() << __FUNCTION__ << lastFocusItem->objectName();
+    if (ret)
+        dbg = dbg.arg(ret->objectName());
     else
-        qDebug() << __FUNCTION__ << lastFocusItem;
+        dbg = dbg.arg("null");
+    qDebug() << dbg;
 #endif
-    if (lastFocusItem)
-        lastFocusItem->forceActiveFocus();
-
+    return ret;
 }
 
 /**
@@ -471,18 +412,18 @@ void FocusControl::componentComplete()
 {
     QDeclarativeItem::componentComplete();
     Q_D(FocusControl);
-/*
-    if (d->focusType & FocusGroup) {
-        // set the focus to the first styled item
-        QList<FocusControl*> items = findChildren<FocusControl*>();
-        if (!items.isEmpty())
-            items[0]->forceActiveFocus();
-    }
-*/
     if (d->focusType == FocusControl::Decorative)
         return;
-    // get the siblings, depending on the focus type these can be either controls or groups
-    d->updateFocusSiblings();
+#ifdef TRACE_FOCUSING
+    qDebug() << __FUNCTION__ << ">>";
+#endif
+
+    // register control at its parent
+    d->addControlToParent();
+    // update group's lastFocusItem if not set yet
+    FocusControl *parent = d->focusSibling(FocusControlPrivate::Parent);
+    if (parent && !parent->d_ptr->lastFocusItem)
+        parent->d_ptr->lastFocusItem = this;
 
     // check if there are no actions defined, set the root ones as event filters
     if (d->focusType != Decorative) {
@@ -496,6 +437,9 @@ void FocusControl::componentComplete()
                 installEventFilter(a);
         }
     }
+#ifdef TRACE_FOCUSING
+    qDebug() << __FUNCTION__ << "<<";
+#endif
 }
 
 // paint a frame around the focus item, yet for testing purposes as each focusable item
@@ -506,6 +450,8 @@ void FocusControl::paint(QPainter *painter, const QStyleOptionGraphicsItem *gi, 
     Q_UNUSED(w)
     Q_D(FocusControl);
 
+    if (d->focusType != Focusable)
+        return;
     if (!hasFocus())
         return;
 
@@ -550,16 +496,11 @@ void FocusControl::setFocusType(FocusControl::FocusType type)
     if (d->focusType != type) {
         d->focusType = type;
         // update tab order
-        d->updateFocusSiblings();
         if (!WidgetSet::instance()->mobilePlatform()) {
             // toggle key focus
-            bool toggle = (d->focusType == Focusable);
+            bool toggle = (d->focusType != Decorative);
             setFlag(QGraphicsItem::ItemIsFocusable, toggle);
             //setFlag(QGraphicsItem::ItemIsPanel, toggle);
-            /*
-            toggle = (d->focusType == FocusGroup);
-            setFlag(QGraphicsItem::ItemIsFocusScope, toggle);
-            */
         }
         emit focusTypeChanged();
     }
@@ -578,6 +519,19 @@ void FocusControl::setControlId(int id)
         emit controlIdChanged();
     }
 }
+QDeclarativeItem *FocusControl::attachedControl() const
+{
+    Q_D(const FocusControl);
+    return d->focusableControl;
+}
+void FocusControl::setAttachedControl(QDeclarativeItem *item)
+{
+    Q_D(FocusControl);
+    if (d->focusableControl != item) {
+        d->focusableControl = item;
+        emit attachedControlChanged();
+    }
+}
 
 QDeclarativeListProperty<ControlAction> FocusControl::actions()
 {
@@ -585,103 +539,84 @@ QDeclarativeListProperty<ControlAction> FocusControl::actions()
     return QDeclarativeListProperty<ControlAction>(this, d->actions);
 }
 
-FocusControl *FocusControl::prevControl() const
+FocusControl *FocusControl::prevControl()
 {
-    Q_D(const FocusControl);
-    return d->prev;
+    Q_D(FocusControl);
+    return d->focusSibling(FocusControlPrivate::Previous);
 }
-FocusControl *FocusControl::nextControl() const
+FocusControl *FocusControl::nextControl()
 {
-    Q_D(const FocusControl);
-    return d->next;
+    Q_D(FocusControl);
+    return d->focusSibling(FocusControlPrivate::Next);
 }
-FocusControl *FocusControl::groupControl() const
+FocusControl *FocusControl::groupControl()
 {
-    Q_D(const FocusControl);
-    return d->parent;
+    Q_D(FocusControl);
+    return d->focusSibling(FocusControlPrivate::Parent);
 }
 
 void FocusControl::focusOnNext()
 {
-    Q_D(FocusControl);
-    if (d->next)
-        d->next->forceActiveFocus();
+    FocusControl *next = nextControl();
+    if (next)
+        next->forceActiveFocus();
 }
 void FocusControl::focusOnPrevious()
 {
-    Q_D(FocusControl);
-    if (d->prev)
-        d->prev->forceActiveFocus();
+    FocusControl *prev = prevControl();
+    if (prev)
+        prev->forceActiveFocus();
 }
 void FocusControl::focusOnFirst()
 {
     Q_D(FocusControl);
-    if (d->first)
-        d->first->forceActiveFocus();
+    FocusControl *first = d->focusSibling(FocusControlPrivate::First);
+    if (first)
+        first->forceActiveFocus();
 }
 void FocusControl::focusOnLast()
 {
     Q_D(FocusControl);
-    if (d->last)
-        d->last->forceActiveFocus();
+    FocusControl *last = d->focusSibling(FocusControlPrivate::Last);
+    if (last)
+        last->forceActiveFocus();
 }
 
 void FocusControl::focusOnFirstGroup()
 {
-    Q_D(FocusControl);
-    if (d->focusType == FocusGroup) {
-        if (d->first)
-            d->first->d_ptr->focusGroupElement();
-    } else {
-        // not a group, look after its parent
-        if (d->parent)
-            d->parent->focusOnFirstGroup();
-        else // no group item, focus on first
-            focusOnFirst();
-    }
+    FocusControl *parent = groupControl();
+    if (parent)
+        parent->focusOnFirst();
+    else // no group item, focus on first
+        focusOnFirst();
 }
 void FocusControl::focusOnLastGroup()
 {
-    Q_D(FocusControl);
-    if (d->focusType == FocusGroup) {
-        if (d->last)
-            d->last->d_ptr->focusGroupElement();
-    } else {
-        // not a group, look after its parent
-        if (d->parent)
-            d->parent->focusOnLastGroup();
-        else
-            // no group item, focus on first
-            focusOnLast();
-    }
+    FocusControl *parent = groupControl();
+    if (parent)
+        parent->focusOnLast();
+    else // no group item, focus on first
+        focusOnLast();
 }
 void FocusControl::focusOnNextGroup()
 {
-    Q_D(FocusControl);
-    if (d->focusType == FocusGroup) {
-        if (d->next)
-            d->prev->d_ptr->focusGroupElement();
-    } else {
-        if (d->parent)
-            d->parent->focusOnNextGroup();
-        else
-            // no group item, focus on first
-            focusOnNext();
-    }
+    FocusControl *nextGroup = groupControl();
+    if (nextGroup)
+        nextGroup = nextGroup->nextControl();
+    if (nextGroup)
+        nextGroup->forceActiveFocus();
+    else
+        focusOnNext();
 }
 void FocusControl::focusOnPreviousGroup()
 {
-    Q_D(FocusControl);
-    if (d->focusType == FocusGroup) {
-        if (d->prev)
-            d->prev->d_ptr->focusGroupElement();
-    } else {
-        if (d->parent)
-            d->parent->focusOnPreviousGroup();
-        else
-            // no group item, focus on first
-            focusOnPrevious();
-    }
+    FocusControl *prevGroup = groupControl();
+    if (prevGroup)
+        prevGroup = prevGroup->prevControl();
+    if (prevGroup)
+        prevGroup->forceActiveFocus();
+    else
+        focusOnPrevious();
 }
 
 #include "moc_focuscontrol.cpp"

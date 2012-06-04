@@ -16,7 +16,8 @@ Background {
     anchors.fill: parent
     styleName: "ThemePageHeader"
 
-    Item {
+    //Item {
+    FocusControl { focusType: FocusControl.FocusGroup; objectName: "FG_PageHeader"
         id: body
         anchors.fill: parent
         anchors.margins: headerLayout.style.headerMargins

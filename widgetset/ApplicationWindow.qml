@@ -33,13 +33,13 @@ Item {
     ApplicationItem {
         id: app
         //focus: true
-        objectName: "FC_ApplicationItem"
+        objectName: "ApplicationItem"
         styleName: "ThemeApplicationWindow"
         property bool animate: false
         // properties to store item instances, transfered to native code
         property alias statusBar: statusBarItem
         property alias body: layout
-        //property alias inputPanel: inputPanelItem
+        property alias inputPanel: inputPanelItem
         property alias toolBar: appHolder.toolBar
 
         anchors.centerIn: parent
@@ -61,9 +61,10 @@ Item {
         }
 
         // content item
-        Item {
+        //Item {
+        FocusControl { focusType: FocusControl.FocusGroup
             id: layout
-            objectName: "AppWindowBody"
+            objectName: "FG_AppWindowBody"
             anchors.top: statusBarItem.bottom
             anchors.left: parent.left
             anchors.right: parent.right
@@ -80,7 +81,6 @@ Item {
         }
 
         // input panel
-        /*
         InputPanel {
             id: inputPanelItem
             styleName: app.style.inputPanelStyle
@@ -88,7 +88,6 @@ Item {
             // just below the corners
             z: Number.MAX_VALUE - 1
         }
-        */
 
         Behavior on width {
             PropertyAnimation { duration: app.style.scalingDuration; easing.type: app.style.rotationEasing }

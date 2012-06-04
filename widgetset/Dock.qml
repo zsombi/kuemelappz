@@ -74,7 +74,7 @@ Background {
         }
     }
 
-    objectName: "Dock"
+    objectName: "FG_Dock"
     styleName: "ThemeToolbarFrame" //"dockFrame"
     width: parent ? parent.width : 0
     height: THEME.sizes.dockHeight
@@ -101,7 +101,7 @@ Background {
     ]
 
     // make sure the dock captures group switching
-    focusType: StyledItem.FocusGroup
+    //focusType: StyledItem.FocusGroup
 /*
     actions: [
         Action {
